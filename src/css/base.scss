@@ -1,0 +1,22 @@
+$grey-back: #e4e3e3;
+$grey-line: #d8dadb;
+$grey-font: #909393;
+
+$dark-color: #222928;
+
+
+$base-font: 14px;
+$big-font: 16px;
+$small-font: 12px;
+$mini-font: 10px;
+$large-font: 18px;
+
+$base-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+
+
+@mixin default_font{
+  font-weight: normal;
+  color: $dark-color;
+  font-family: $base-family;
+  font-size: $base-font;
+}

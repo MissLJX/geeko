@@ -1,0 +1,531 @@
+@import "./reset.scss";
+@import "./base.scss";
+
+
+@font-face {
+  font-family: 'iconfont';  /* project id 384296 */
+  src: url('//at.alicdn.com/t/font_384296_vm55jhhnuao.eot');
+  src: url('//at.alicdn.com/t/font_384296_vm55jhhnuao.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_384296_vm55jhhnuao.woff') format('woff'),
+  url('//at.alicdn.com/t/font_384296_vm55jhhnuao.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_384296_vm55jhhnuao.svg#iconfont') format('svg');
+}
+
+.iconfont{
+  font-family:"iconfont" !important;
+  font-size:16px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+//some basic css
+body {
+  @include default_font;
+}
+
+.contactseller{
+  font-size: 30px !important;
+  color: #000;
+  position: relative;
+  top: -8px;
+  cursor: pointer;
+}
+
+.st-header {
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 100;
+}
+
+.st-table {
+  display: table;
+}
+
+.st-row {
+  display: table-row;
+}
+
+.st-cell {
+  display: table-cell;
+}
+
+.st-v-m{
+  vertical-align: middle;
+}
+
+.st-v-t{
+  vertical-align: top;
+}
+
+.st-v-b{
+  vertical-align: bottom;
+}
+
+.st-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn {
+  background-color: #fff;
+  color: $dark-color;
+  text-align: center;
+  font-size: $base-font;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 1px;
+  border: 1px solid #222;
+}
+.black{
+  background-color: #222 !important;
+  color: #fff;
+}
+//progress
+#progress {
+  height: 1px;
+  width: 100%;
+  span {
+    width: 0;
+    display: block;
+    background-color: blue;
+    box-shadow: blue 1px 0 2px 1px;
+    opacity: 0;
+
+    &.processing {
+      animation: processing 1s forwards;
+    }
+
+  }
+}
+
+@keyframes processing {
+  0% {
+    opacity: 1;
+    width: 0;
+  }
+
+  100% {
+    width: 90%;
+    opacity: 1;
+  }
+}
+
+//order list
+
+.st-order-home {
+  & > .hd {
+    width: 100%;
+    height: 50px;
+    padding: 0 10px;
+    margin: 10px 0;
+    & > div {
+      vertical-align: middle;
+      &:last-child {
+        text-align: right;
+      }
+    }
+
+    h2 {
+      font-size: $big-font;
+      font-weight: bold;
+    }
+
+    select {
+      width: 100%;
+      height: 40px;
+      background-color: #fff;
+      padding-left: 10px;
+      border:1px solid #cacaca;
+    }
+  }
+}
+
+.st-order {
+  padding-left: 10px;
+  border-bottom: 8px solid #f6f6f6;
+
+  & > .hd {
+    padding: 10px 10px 10px 0;
+    border-bottom: 1px solid #e6e6e6;
+    .label {
+      color: #999;
+    }
+    & > div {
+      text-decoration: none;
+      line-height: 27px;
+      .fl-r{
+        float: right;
+      }
+      .statusColor{
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin: 7px 4px 0 0;
+      }
+      &:after{
+        display: block;
+        content: '';
+        clear: both;
+      }
+    }
+  }
+
+  & > .bd {
+    padding: 10px 0;
+    border-bottom: 1px solid #e6e6e6;
+    cursor: pointer;
+  }
+  .pd{
+    color: #666;
+    line-height: 42px;
+    text-align: right;
+    padding-right: 10px;
+    .b-total{
+      color: #000;
+    }
+  }
+  .fd {
+    text-align: right;
+    .timeLeft{
+      display: inline-block;
+      max-width: 195px;
+      height: 45px;
+      background-color: #f46e6d;
+      color: white;
+      text-align: center;
+      line-height: 22px;
+      position: absolute;
+      left: -205px;
+      top: -5px;
+      .triangle{
+        position: absolute;
+        right: -11px;
+        top: 17px;
+        width:0;
+        height:0;
+        border:6px solid;
+        border-color: transparent transparent transparent #f46e6d;
+      }
+    }
+  }
+
+  .btn {
+    width: 130px;
+    line-height: 36px;
+    margin-bottom: 15px;
+    position: relative;
+    display: inline-block;
+    background-color: #222;
+    color: #fff;
+  }
+}
+
+.st-product-item {
+  .btn {
+    padding: 5px 10px;
+  }
+  .content {
+    /*width: 100%;
+    table-layout: fixed;*/
+    & > div {
+      /*vertical-align: top;
+      border-bottom: 1px solid #eee;*/
+      img{
+        width: 75px;
+        height: 100px;
+        margin-right: 12px;
+      }
+      /*&:first-child {
+        width: 60px;
+        img {
+          display: block;
+          width: 50px;
+        }
+
+        border-bottom: none;
+      }
+      &:last-child {
+        width: 50px;
+        text-align: right;
+      }*/
+
+    }
+
+    .item-name {
+      text-overflow: -o-ellipsis-lastline;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+
+    }
+
+    .dsc {
+      font-size: 13px;
+      & > div {
+        line-height: 20px;
+      }
+
+      position: relative;
+
+      & > .btn {
+        position: absolute;
+        bottom: 4px;
+        right: -60px;
+        font-size: $small-font;
+      }
+    }
+  }
+}
+
+.st-order-items {
+  display: flex;
+  overflow-x: scroll;
+  .st-product-item {
+    float: left;
+    list-style: none;
+    display: inline-block;
+  }
+  &:after{
+    display: block;
+    content: '';
+    clear: both;
+  }
+}
+
+.st-address {
+  color: #666;
+  i{
+    color: #9a9a9a;
+    margin-right: 10px;
+    &:last-child{
+      font-size: 18px;
+    }
+  }
+  font-style: normal;
+  border-bottom: 1px solid #e6e6e6;
+  & > div {
+    line-height: 20px;
+  }
+  & > div:first-child{
+    margin-bottom: 8px;
+    color: #222;
+  }
+  & > div:last-child{
+    padding-left: 28px;
+  }
+  padding: 14px 0;
+}
+
+.st-order-body {
+  padding-left: 10px;
+  & > .fd {
+    text-align: right;
+    padding-right: 10px;
+    .btn {
+      margin-left: 6px;
+      margin-top: 10px;
+      padding: 9px 22px;
+    }
+    margin-top: 10px;
+    border-top: 1px solid $grey-line;
+
+  }
+
+  .st-order-summary {
+
+    padding: 0 10px;
+    .st-table {
+      width: 100%;
+    }
+    .st-row {
+      & > .st-cell {
+        padding-top: 5px;
+        &:last-child {
+          text-align: right;
+        }
+      }
+    }
+  }
+}
+
+.ticket-date {
+  font-size: $mini-font;
+  color: $grey-line;
+  text-align: center;
+  height: 40px;
+  line-height: 40px;
+}
+
+.ticket-msg {
+  width: 100%;
+  & > .st-cell {
+    vertical-align: top;
+  }
+  .ticket-icon {
+    width: 40px;
+  }
+
+  padding-right: 40px;
+
+  &[position=right] {
+    .ticket-icon, .ticket-content {
+      text-align: right;
+    }
+    padding-right: 0;
+    padding-left: 40px;
+  }
+}
+
+.ticket-msgs {
+  .ticket-msg {
+    margin-top: 15px;
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  padding: 0 10px;
+}
+
+.st-ticket-msg-container {
+  border-top: 1px solid $grey-line;
+  padding-bottom: 130px;
+}
+
+.st-ticket-order-info {
+  padding: 10px;
+  & > div {
+    line-height: $large-font;
+  }
+
+  .label {
+    color: $grey-font;
+  }
+
+  .value {
+    font-size: $small-font;
+  }
+}
+
+.st-ticket-select-container {
+  border-top: 1px solid $grey-line;
+  text-align: center;
+  padding: 10px;
+  h2 {
+    font-size: $large-font;
+    font-weight: 400;
+  }
+  & > * {
+    margin-top: 5px;
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+  p {
+    font-size: $small-font;
+    color: $grey-font;
+  }
+
+  select {
+    height: 30px;
+    padding: 0 10px;
+    text-align: center;
+  }
+}
+
+.st-ticket-container {
+  display: flex;
+  flex-direction: column;
+
+  .st-ticket-msg-container {
+    overflow: auto;
+  }
+  height: 100vh;
+}
+
+.st-type-message-container {
+  border-top: 1px solid $grey-line;
+  position: fixed;
+  background-color: #fff;
+  width: 100%;
+  bottom: 0;
+  .textarea {
+    height: 70px;
+    width: 100%;
+    padding: 10px;
+    textarea {
+      resize: none;
+      width: 100%;
+      height: 100%;
+      padding: 5px 10px;
+    }
+  }
+
+  .sender {
+
+    .image-loader {
+      width: 40px;
+      height: 30px;
+      border-radius: 3px;
+      border: 1px solid #d6d6d6;
+      background: url(https://dgzfssf1la12s.cloudfront.net/site/pc/icon61.png) center/60% no-repeat;
+
+      #imageFiles {
+        width: 40px;
+        height: 30px;
+        opacity: 0;
+        filter: Alpha(opacity=0);
+      }
+
+      input {
+        -webkit-appearance: none;
+        border-radius: 0;
+        outline: none;
+        box-shadow: none;
+      }
+
+    }
+
+    .st-table {
+      width: 100%;
+      padding: 0 10px 10px 10px;
+      & > .st-cell {
+        vertical-align: middle;
+        &:last-child {
+          text-align: right;
+        }
+      }
+    }
+
+    .btn {
+      padding: 8px 10px;
+      &:active {
+        opacity: 0.95;
+      }
+    }
+
+  }
+
+}
+
+
+.uper-enter-active, .uper-leave-to{
+  top:0 !important;
+}
+
+.uper-enter-active , .uper-leave-active{
+  transition: top .3s !important;
+}
+
+.uper-leave-active , .uper-enter{
+  top: 100% !important;
+}
