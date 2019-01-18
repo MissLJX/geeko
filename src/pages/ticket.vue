@@ -5,23 +5,28 @@
         </page-header>
         <div class="st-ticket-order-info">
             <div>
-                <span class="label">Order No.: </span>
+                <span class="label">{{$t("label.orderNo")}}</span>
                 <span class="value">{{ticketVO.order.id}}</span>
             </div>
 
             <div>
-                <span class="label">Time of payment: </span>
+                <span class="label">{{$t("label.timeOfPayment")}}</span>
                 <span class="value">{{paymentDate}}</span>
             </div>
 
         </div>
 
         <div class="st-ticket-select-container">
-            <h2>How can we help you?</h2>
-            <div>
-                <geeko-select :items="questions" @change="changeQuestion"/>
+            <h2>{{$t("message.helpTip")}}?</h2>
+            <div v-if="ticketVO.subjectSelections">
+                <select v-model="selected" :class="{'redBorder':isRequired}" @change="isRequired=false">
+                    <option disabled="disabled" value="666">Please select your question type</option>
+                    <option v-for="option in ticketVO.subjectSelections" :value="option.value">
+                        {{ option.label }}
+                    </option>
+                </select>
             </div>
-            <p>Expected response time:1 business days(s)</p>
+            <p>{{$t("message.responseTime")}}</p>
         </div>
 
 
@@ -39,7 +44,7 @@
 
         <div class="st-type-message-container" :class="{down: typeDown}">
             <div class="textarea">
-                <textarea placeholder="Type a message..." v-model="chart.message"></textarea>
+                <textarea :placeholder="$t('message.typemsg')+'...'" v-model="chart.message"></textarea>
             </div>
 
             <div class="sender">
@@ -53,13 +58,14 @@
                             </form>
                         </div>
                     </div>
+
                     <div v-if="canBeRated" class="st-cell">
                         <i class="iconfont el-rate-star">&#xe60d;</i>
-                        <span class="el-rate-label" @click="giveRate">Rate My Service</span>
+                        <span class="el-rate-label" @click="giveRate">{{$t("label.rateMyService")}}</span>
                     </div>
 
                     <div class="st-cell">
-                        <span class="btn black" @click="sendReply">Send</span>
+                        <span class="btn black" @click="sendReply">{{$t("label.send")}}</span>
                     </div>
 
                 </div>
@@ -69,39 +75,82 @@
 
         <transition name="uper">
             <div v-if="showRater" class="el-rate">
-                <div class="hd">
-                    <span>Rate My Service</span>
-                    <i class="iconfont close" @click="showRater=false">&#xe69a;</i>
+                <div class="evaluate">
+                    <p>{{$t("message.rateYourExper")}}</p>
+                    <div class="rate-flex">
+                        <div class="box" :class="{'like-active': this.rateData.rate===5}" @click="rateHandle(5)"><i class="iconfont">&#xe756;</i>Satisfied</div>
+                        <div class="box" :class="{'unlike-active': this.rateData.rate===1}" @click="rateHandle(1)"><i class="iconfont">&#xe757;</i>Unsatisfied</div>
+                    </div>
+                    <!--<star-list :score="rateData.rate" @star="rateHandle"></star-list>-->
                 </div>
-                <div class="bd">
-                    <p>Please rate your experience of the service</p>
-                    <ul class="rates">
-                        <li @click="rateHandle(rate.value)" v-for="rate in rates" :data-rate="rate.value"
-                            :class="{'active':rateData.rate === rate.value}">
+                <!--<div  class="rates" v-if="rateData.rate<4">
+                    <p>{{$t("message.whichPart")}}</p>
+                    <ul>
+                        <li :class="{'active': isActive(rate.value)}" @click="reviewMsgHandle(rate.label, rate.value)" v-for="rate in reviewMsg" :data-rate="rate.value" :data-label="rate.label">
                             <span>{{rate.label}}</span>
                         </li>
                     </ul>
-
-                    <div class="rate-text">
-                        <textarea v-model="rateData.message" placeholder="A suggestion..."></textarea>
-                    </div>
-
-                    <div @click="rateSend" class="btn rate-submit">
-                        Submit
-                    </div>
+                </div>-->
+                <div class="rate-text">
+                    <textarea v-model="rateData.message" placeholder="Add a comment on the customer service here.(optional)"></textarea>
                 </div>
+
+                <div @click="rateSend" class="btn rate-submit">
+                    Confirm
+                </div>
+
             </div>
         </transition>
-
+        <div v-if="showalert">
+            <div class="mask"></div>
+            <comment-alert :data="commentAlert" @hideAlert="hideAlert()"></comment-alert>
+        </div>
 
 
     </div>
 </template>
 
 
-<style scoped>
-
-
+<style scoped lang="scss">
+    @font-face {
+        font-family: 'iconfont';  /* project id 384296 */
+        src: url('//at.alicdn.com/t/font_384296_utjiw4kvxj7.eot');
+        src: url('//at.alicdn.com/t/font_384296_utjiw4kvxj7.eot?#iefix') format('embedded-opentype'),
+        url('//at.alicdn.com/t/font_384296_utjiw4kvxj7.woff2') format('woff2'),
+        url('//at.alicdn.com/t/font_384296_utjiw4kvxj7.woff') format('woff'),
+        url('//at.alicdn.com/t/font_384296_utjiw4kvxj7.ttf') format('truetype'),
+        url('//at.alicdn.com/t/font_384296_utjiw4kvxj7.svg#iconfont') format('svg');
+    }
+    .rate-flex{
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        .box{
+            width: 48%;
+            text-align: center;
+            height: 33px;
+            line-height: 33px;
+            border: 1px solid #eee;
+            border-radius: 2px;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            cursor: pointer;
+            i{
+                display: inline-block;
+                margin-right: 5px;
+            }
+        }
+        .unlike-active{
+            background-color: #f46e6d;
+            color: #fff;
+            border-color: #f46e6d;
+        }
+        .like-active{
+            background-color: #57b936;
+            color: #fff;
+            border-color: #57b936;
+        }
+    }
     .st-type-message-container {
         transition: bottom .3s linear;
     }
@@ -132,35 +181,26 @@
         z-index: 10;
     }
 
-    .el-rate .hd {
-        height: 50px;
-        line-height: 50px;
-        padding: 0 10px;
-        position: relative;
-        border-bottom: 1px solid #efefef;
-    }
-
-    .el-rate .hd span {
-        font-size: 14px;
-        font-weight: bold;
-    }
-
-    .el-rate .hd .close {
-        font-size: 25px;
-        position: absolute;
-        right: 10px;
-        cursor: pointer;
+    .el-rate .evaluate{
+        padding:15px 12px;
+        background:#fff;
     }
 
     .el-rate p {
-        padding: 10px;
+        padding:0px 0px 12px 0px;
     }
 
     .el-rate .rates {
         padding: 0 10px;
+        margin-top:10px;
+        background:#fff;
     }
 
-    .el-rate .rates > li {
+    .el-rate .rates p{
+        padding:15px 0px 10px 0px;
+    }
+
+    .el-rate .rates li {
         height: 40px;
         border-top: 1px solid #efefef;
         line-height: 40px;
@@ -168,11 +208,11 @@
         cursor: pointer;
     }
 
-    .el-rate .rates > li:first-child {
+    .el-rate .rates li:first-child {
         border-top: none;
     }
 
-    .el-rate .rates > li::after {
+    .el-rate .rates li::after {
         display: block;
         width: 15px;
         height: 15px;
@@ -181,17 +221,17 @@
         position: absolute;
         right: 0;
         top: 13px;
-        border-radius: 50%;
     }
 
-    .el-rate .rates > li.active::after {
-        border: 5px solid #e5004f;
+    .el-rate .rates li.active::after {
+        background-image: url(https://s3-us-west-2.amazonaws.com/image.chic-fusion.com/promotion/1206/chic+me-26.png);
+        background-size:cover ;
     }
 
     .rate-text {
         padding: 0 10px;
         margin-top: 10px;
-        height: 100px;
+        height: 115px;
     }
 
     .rate-text textarea {
@@ -199,20 +239,33 @@
         width: 100%;
         height: 100%;
         padding: 5px 10px;
+        border:1px solid #ddd;
     }
 
     .rate-submit {
-        width: 120px;
+        width: 95%;
         height: 40px;
         line-height: 40px;
-        padding: 0;
+        margin: 20px auto;
         font-size: 16px;
         display: block;
         cursor: pointer;
-        margin: 20px auto 20px auto;
+        background-color: #222;
+        border-radius: 4px;
+        color: #fff;
     }
-
-
+    .mask{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top:0;
+        background-color: rgba(0,0,0,0.4);
+        z-index: 200;
+    }
+    .redBorder{
+        border: 1px solid #E64545;
+    }
 </style>
 
 <script type="text/ecmascript-6">
@@ -223,25 +276,15 @@
     import dateutil from 'dateutil'
     import GeekoSelect from '../components/geeko-select'
     import * as utils from '../utils/geekoutil'
+    import starList from '../components/star-list.vue'
+    import commentAlert from '../components/comment-alert.vue'
     import PageHeader from "../components/page-header.vue";
-
 
     export default {
         name: 'contact',
         data(){
             return {
-                questions: [
-                    {label: 'Size/Color Preference', value: '0', selected: false},
-                    {label: 'Change Shipping Address', value: '2', selected: false},
-                    {label: 'Shipping Status or ETA Inquery', value: '3', selected: false},
-                    {label: 'Received Damaged or Wrong Item', value: '4', selected: false},
-                    {label: 'Upgrade Shipping Method', value: '5', selected: false},
-                    {label: 'Return Or Exchange', value: '6', selected: false},
-                    {label: 'Request Refund/Cancel Order', value: '8', selected: false},
-                    {label: 'Others', value: '7', selected: false},
-                ],
-
-
+                selected:'',
                 chart: {
                     message: '',
                     operaId: '',
@@ -250,23 +293,19 @@
                 y: 0,
                 typeDown: false,
                 inited: false,
-                rates: [
-                    {label: 'Excellent', value: 5},
-                    {label: 'Good', value: 4},
-                    {label: 'Average', value: 3},
-                    {label: 'Poor', value: 2},
-                    {label: 'Very Poor', value: 1}
-                ],
                 rateData: {
                     rate: 5,
                     message: '',
-                    id: ''
+                    id: '',
+                    reviewMsg:''
                 },
-                showRater: false
+                reviewMsgArr:[],
+                showRater: false,
+                showalert:false,
+                isRequired:false,
             };
         },
         computed: {
-
             paymentDate(){
                 if(!this.ticketVO.order.paymentTime){
                     return '-'
@@ -300,24 +339,45 @@
 
             },
             canBeRated(){
-                return this.ticketVO && this.ticketVO.ticket && this.ticketVO.ticket.canBeRated
+                if(this.ticketVO && this.ticketVO.ticket){
+                    if(this.ticketVO.ticket.canBeRated){
+                        this.rateData.rate = this.ticketVO.ticket.ticketRateService ? this.ticketVO.ticket.ticketRateService.rate : 5
+                        this.rateData.message = this.ticketVO.ticket.ticketRateService ? this.ticketVO.ticket.ticketRateService.message : ''
+                        this.rateData.id = this.ticketVO.ticket ? this.ticketVO.ticket.id: null
+                        return true
+                    }
+                }else{
+                    return false
+                }
+            },
+            commentAlert(){
+                return{
+                    'isagree':true,
+                    'message':'Thank you for your comments.Received goods. get <b style="color:#e5004f">50%</b> Coupon for useful reviews.',
+                    'agreeText':'I Got it'
+                }
+            },
+            reviewMsg(){
+                return this.$store.getters.reviewMsg
             }
         },
 
         methods: {
             initChart(){
-                var _subject = this.ticketVO.ticket ? this.ticketVO.ticket.subject : '0'
-                this.questions.find(q => q.value == _subject).selected = true
-                this.chart.operaId = this.ticketVO.order ? this.ticketVO.order.id : null
-                this.chart.subject = this.questions.find(q => q.selected).value
-                this.rateData.rate = this.ticketVO.ticket && this.ticketVO.ticket.ticketRateService ? this.ticketVO.ticket.ticketRateService.rate : 5
-                this.rateData.message = this.ticketVO.ticket && this.ticketVO.ticket.ticketRateService ? this.ticketVO.ticket.ticketRateService.message : ''
-                this.rateData.id = this.ticketVO.ticket ? this.ticketVO.ticket.id: null
+                this.selected = this.ticketVO.ticket ? this.ticketVO.ticket.subject : '666'
+                this.chart.operaId = this.$route.params.orderId
+                this.chart.subject = ''
             },
             sendReply(evt){
                 evt.preventDefault()
-                var _this = this
-                if (this.chart.message) {
+                let _this = this;
+                if(_this.selected && _this.selected !== '666'){
+                    _this.chart.subject = _this.selected
+                }else{
+                    _this.isRequired = true;
+                    return ''
+                }
+                if (this.chart.message && this.chart.operaId) {
                     this.$store.dispatch('sendTicket', this.chart).then(() => {
                         _this.chart.message = ''
                         _this.initScroll()
@@ -326,24 +386,22 @@
 
             },
             sendImage(evt){
-                evt.preventDefault();
-                console.log("这");
-
-                var files = evt.target.files;
-                var formData = new FormData(this.$refs.imageLoader);
-                formData.append('operaId', this.chart.operaId);
-                formData.append('subject', this.chart.subject);
-                formData.append('message', '-');
-
-                var _this = this
-                this.$store.dispatch('sendImageTicket', {reply:formData, files}).then(() => {
-                    _this.initScroll()
-                })
-
-            },
-            changeQuestion(evt){
                 evt.preventDefault()
-                this.chart.subject = evt.target.value
+                var files = evt.target.files;
+                var maxSize = 2097152;
+                if(files[0].size<maxSize){
+                    var formData = new FormData(this.$refs.imageLoader);
+                    formData.append('operaId', this.chart.operaId);
+                    formData.append('subject', this.chart.subject);
+                    formData.append('message', '-');
+
+                    let _this = this;
+                    this.$store.dispatch('sendImageTicket', {reply:formData, files}).then(() => {
+                        _this.initScroll()
+                    })
+                }else{
+                    alert("A single image should not exceed 2M");
+                }
             },
             initScroll(){
                 this.inited = false
@@ -365,20 +423,47 @@
                 }
             },
             rateHandle(r){
-                this.rateData.rate = r
+                this.rateData.rate = r;
             },
+
+            reviewMsgHandle(label, value){
+                var haveElem=false;
+                for(let i=0;i<this.reviewMsgArr.length;i++){
+                    if(this.reviewMsgArr[i].label==label){
+                        this.reviewMsgArr.splice(i,1);
+                        haveElem=true;
+                    }
+                }
+                if(!haveElem){
+                    this.reviewMsgArr.push({label, value});
+                }
+                this.rateData.reviewMsg = JSON.stringify(this.reviewMsgArr);
+            },
+
             giveRate(){
                 this.showRater = true
+            },
+            hideAlert(){
+                this.showRater = false
+                this.showalert=false
             },
             rateSend(){
                 this.$store.dispatch('rate', this.rateData).then(() => {
                     this.ticketVO.ticketRateService = this.rateData
                     this.showRater = false
                 })
-
+            },
+            isActive(v){
+                var isActive = false;
+                _.each(this.reviewMsgArr, (review) => {
+                    if(review.value == v){
+                        isActive = true;
+                        return false;
+                    }
+                })
+                return isActive;
             }
         },
-
         components: {
             'page-header':PageHeader,
             'ticket-msg': TicketMsg,

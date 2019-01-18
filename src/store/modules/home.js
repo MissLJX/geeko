@@ -184,7 +184,7 @@ const actions = {
     commit(types.HOME_LOADING_ALL, true);
     api.getOrders({
       skip: state.allSkip,
-      api_suffix: 'get-orders'
+      api_suffix: 'get-orders2'
     }, (orders) => {
       if (orders && orders.length > 0) {
         commit(types.HOME_ORDERS_ALL, orders);

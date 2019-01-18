@@ -167,11 +167,12 @@
                         if(window.name === 'joyshoetique'){
                             window.ninimour.shoppingcartutil.notify(true);
                         }else{
-                            window.notifyMinicart();
+                            window.countShoppingCart();
                         }
                     }).catch((e) => {
                         this.isAddProductstTip = 'Add Failed';
                         this.isAddProducts = true;
+                        alert(e);
                         setTimeout(() => {
                             this.isAddProducts = false;
                         }, 2000);
