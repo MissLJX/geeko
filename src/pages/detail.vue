@@ -52,20 +52,15 @@
                 </div>
             </div>
             <div class="fd_fixed">
-                <a class="paybtn" :href="checkoutUrl(order.id)" v-if="order.boletoPayCodeURL && order.status === 0 && orderoffset >= 0">Outro método de pagamento</a>
-                <a v-if="order.boletoPayCodeURL && order.status === 0" class="btn" :href="order.boletoPayCodeURL"
-                   target="_blank">
-                    Imprimir boleto
-                    <div class="timeLeft" v-if="orderoffset >= 1000 && order.boletoPayCodeURL && order.status == 0">
+                <a class="paybtn" :href="checkoutUrl(order.id)" v-if="getPayUrl && getBtnText && getBtnText2 && order.status === 0 && orderoffset >= 0">{{getBtnText2}}</a>
+                <a :href="getPayUrl" v-if="getPayUrl && order.status === 0" class="btn" target="_blank">
+                    {{getBtnText}}
+                    <div class="timeLeft" v-if="orderoffset >= 1000 && getBtnText==='Imprimir boleto' && order.status == 0 && getPayUrl">
                         <div class="triangle"></div>
                         <span class="label">Presente de cupão expirs</span>
                         <count-down :timeLeft="orderoffset"></count-down>
                     </div>
-                </a>
-
-                <a v-if="order.mercadopagoPayURL && order.status == 0" class="btn" :href="order.mercadopagoPayURL" target="_blank">
-                    Generar Ticket
-                    <div class="timeLeft" v-if="orderoffset >= 1000 && order.mercadopagoPayURL && order.status == 0">
+                    <div class="timeLeft" v-if="orderoffset >= 1000 && getBtnText==='Generar Ticket' && order.status == 0 && getPayUrl">
                         <div class="triangle"></div>
                         <span class="label">Tiempo restante para realizar el pago</span>
                         <count-down :timeLeft="orderoffset"></count-down>
@@ -87,7 +82,7 @@
         <div v-else>no data..</div>
 
 
-        <div v-if="order.boletoPayCodeURL && order.status == 0 && orderoffset >= 1000 && couponshow">
+        <div v-if="getBtnText==='Imprimir boleto' && order.status == 0 && orderoffset >= 1000 && couponshow && getPayUrl">
             <div class="mask"></div>
             <div class="coupon-window">
                 <span class="coupon-close" @click="() => {this.couponshow = false}">X</span>
@@ -101,13 +96,13 @@
                     </div>
                     <div class="white bottom-line">
                         <p>O cupom de <span class="fc-r">15%</span> de desconto será enviado para sua conta após o pagamento. Não perca</p>
-                        <a  class="blackbtn" :href="order.boletoPayCodeURL">Pague agora</a>
+                        <a  class="blackbtn" :href="getPayUrl">Pague agora</a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div v-if="order.mercadopagoPayURL && order.status == 0 && orderoffset >= 1000 && couponshow">
+        <div v-if="getBtnText==='Generar Ticket' && order.status == 0 && orderoffset >= 1000 && couponshow && getPayUrl">
             <div class="mask"></div>
             <div class="coupon-window">
                 <span class="coupon-close" @click="() => {this.couponshow = false}">X</span>
@@ -121,7 +116,7 @@
                     </div>
                     <div class="white bottom-line">
                         <p>Después de realizar el pago, recibirás un cupón de regalo con un <span class="fc-r">15%</span> de descuento para tu siguiente compra.</p>
-                        <a  class="blackbtn" :href="order.mercadopagoPayURL">Pague ahora</a>
+                        <a  class="blackbtn" :href="getPayUrl">Pague ahora</a>
                     </div>
                 </div>
             </div>
@@ -548,9 +543,70 @@
         'latestTicket',
       'cancelReasons'
       ]),
+        getPayUrl(){
+            switch(this.order.payMethod){
+                case '20':
+                case '21':
+                    return this.order.mercadopagoPayURL
+                case '16':
+                case '23':
+                case '25':
+                case '29':
+                case '27':
+                case '28':
+                case '30':
+                case '31':
+                case '34':
+                case '35':
+                case '37':
+                    return this.order.boletoPayCodeURL
+                    return null
+            }
+        },
+        getBtnText(){
+            switch(this.order.payMethod){
+                case '20':
+                case '21':
+                case '27':
+                case '28':
+                case '30':
+                case '31':
+                case '34':
+                case '35':
+                case '37':
+                case '29':
+                    return 'Generar Ticket'
+                case '16':
+                case '23':
+                case '25':
+                    return 'Imprimir boleto'
+                default:
+                    return null
+            }
+        },
+        getBtnText2(){
+            switch(this.order.payMethod){
+                case '20':
+                case '21':
+                case '27':
+                case '28':
+                case '30':
+                case '31':
+                case '34':
+                case '35':
+                case '37':
+                case '29':
+                    return 'Otro método de pago'
+                case '16':
+                case '23':
+                case '25':
+                    return 'Outro método de pagamento'
+                default:
+                    return null
+            }
+        },
       paymentItemTotal() {
         return utils.price(this.order. paymentItemTotal);
-
       },
       orderTotal() {
           this.changePackage = _.cloneDeep(this.order.logistics.packages[0])
@@ -617,10 +673,6 @@
           let _this = this;
           if(this.selectedResaon){
               _this.$store.dispatch('cancelOrder', {orderId:_this.order.id,cancelReason:this.selectedResaon}).then(() => {
-                  _this.$store.dispatch('updateStatusInOrders', {
-                      id: _this.order.id,
-                      status: constant.STATUS_CANCELED
-                  });
                   _this.$store.dispatch('loadOrder', { id: this.$route.params.orderId });
                   this.isCancelOrder=false
               }).catch((e) => {

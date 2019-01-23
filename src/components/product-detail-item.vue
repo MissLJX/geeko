@@ -156,10 +156,11 @@
                         setTimeout(() => {
                             this.isAddProducts = false;
                         }, 2000);
-                        if(window.name === 'joyshoetique'){
-                            window.ninimour.shoppingcartutil.notify(true);
-                        }else{
+
+                        if(window.name === 'chicme' || window.name === 'boutiquefeel' || window.name === 'ivrose'){
                             window.countShoppingCart();
+                        }else{
+                            window.ninimour.shoppingcartutil.notify(true);
                         }
                     }).catch((e) => {
                             this.isAddProductstTip = 'Add Failed'

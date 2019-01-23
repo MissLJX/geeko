@@ -31,19 +31,14 @@
                 {{$t("label.track")}}
             </router-link>
             <a @click="confirmHandle(order.id)" v-if="order.status===3" class="btn black" style="margin-right: 10px;">Order Confirm</a>
-
-            <a v-if="order.boletoPayCodeURL && order.status === 0" class="btn black paycount" style="margin-right: 10px;" :href="order.boletoPayCodeURL" target="_blank">
-                Imprimir boleto
-                <div class="timeLeft" v-if="orderoffset >= 1000 && order.boletoPayCodeURL && order.status == 0">
+            <a :href="getPayUrl(order)" v-if="getPayUrl(order) && order.status === 0" class="btn black paycount" style="margin-right: 10px;" target="_blank">
+                {{getBtnText(order)}}
+                <div class="timeLeft" v-if="orderoffset >= 1000 && getBtnText(order)==='Imprimir boleto' && order.status == 0 && getPayUrl(order)">
                     <div class="triangle"></div>
                     <span class="label">Presente de cupão expirs</span>
                     <count-down :timeLeft="orderoffset"></count-down>
                 </div>
-            </a>
-
-            <a v-if="order.mercadopagoPayURL && order.status === 0" class="btn black" style="margin-right: 10px;" :href="order.mercadopagoPayURL" target="_blank">
-                Generar Ticket
-                <div class="timeLeft" v-if="orderoffset >= 1000 && order.mercadopagoPayURL && order.status === 0">
+                <div class="timeLeft" v-if="orderoffset >= 1000 && getBtnText(order)==='Generar Ticket' && order.status === 0 && getPayUrl(order)">
                     <div class="triangle"></div>
                     <span class="label">Tiempo restante para realizar el pago</span>
                     <count-down :timeLeft="orderoffset"></count-down>
@@ -164,10 +159,10 @@
                         setTimeout(() => {
                             this.isAddProducts = false;
                         }, 2000);
-                        if(window.name === 'joyshoetique'){
-                            window.ninimour.shoppingcartutil.notify(true);
-                        }else{
+                        if(window.name === 'chicme' || window.name === 'boutiquefeel' || window.name === 'ivrose'){
                             window.countShoppingCart();
+                        }else{
+                            window.ninimour.shoppingcartutil.notify(true);
                         }
                     }).catch((e) => {
                         this.isAddProductstTip = 'Add Failed';
@@ -202,6 +197,47 @@
                     }
                 });
             },
+            getPayUrl(item){
+                switch(item.payMethod){
+                    case '20':
+                    case '21':
+                        return item.mercadopagoPayURL
+                    case '16':
+                    case '23':
+                    case '25':
+                    case '29':
+                    case '27':
+                    case '28':
+                    case '30':
+                    case '31':
+                    case '34':
+                    case '35':
+                    case '37':
+                        return item.boletoPayCodeURL
+                        return null
+                }
+            },
+            getBtnText(item){
+                switch(item.payMethod){
+                    case '20':
+                    case '21':
+                    case '27':
+                    case '28':
+                    case '30':
+                    case '31':
+                    case '34':
+                    case '35':
+                    case '37':
+                    case '29':
+                        return 'Generar Ticket'
+                    case '16':
+                    case '23':
+                    case '25':
+                        return 'Imprimir boleto'
+                    default:
+                        return null
+                }
+            }
         },
         computed:{
             status(){
