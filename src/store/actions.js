@@ -8,7 +8,7 @@ import * as types from './mutation-types';
 export default {
     loadOrder: function ({commit}, {id}) {
         return new Promise(function (resolve, reject) {
-            api.getOrder(id, (order)=> {
+            api.getOrder({orderId:id}, (order)=> {
                 commit(types.DETAIL_LOAD_ORDER, order);
                 resolve(order);
             });

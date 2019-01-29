@@ -228,8 +228,9 @@
                     case '34':
                     case '35':
                     case '37':
-                    case '29':
                         return 'Generar Ticket'
+                    case '29':
+                        return 'Gerar Ticket'
                     case '16':
                     case '23':
                     case '25':

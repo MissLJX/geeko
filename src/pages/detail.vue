@@ -574,8 +574,9 @@
                 case '34':
                 case '35':
                 case '37':
-                case '29':
                     return 'Generar Ticket'
+                case '29':
+                    return 'Gerar Ticket'
                 case '16':
                 case '23':
                 case '25':
@@ -595,11 +596,11 @@
                 case '34':
                 case '35':
                 case '37':
-                case '29':
                     return 'Otro método de pago'
                 case '16':
                 case '23':
                 case '25':
+                case '29':
                     return 'Outro método de pagamento'
                 default:
                     return null

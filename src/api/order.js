@@ -14,7 +14,7 @@ export default{
         });
     },
     getOrder(orderId, callBack){
-        axios.get('/v8/order/anon/get-order-details',{orderId}).then((order) => {
+        axios.post('/v8/order/anon/get-order-details',orderId).then((order) => {
             callBack(order);
         }).catch((e) => {
             console.log(e)

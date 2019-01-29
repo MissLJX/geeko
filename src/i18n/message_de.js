@@ -55,6 +55,7 @@ export default {
         currentStatus:'Aktueller Status',
         paymentTime:'Zahlungszeit',
         review:'Rezension',
+        paymentMethod:' Payment Method',
         paynow:'ZAHL JETZT',
         repurchase:'Rückkauf',
         remaining:'Restliche Zahlungszeit'

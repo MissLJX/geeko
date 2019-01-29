@@ -57,6 +57,7 @@ export default {
         tracknum:'Tracking Number',
         currentStatus:'Current Stataus',
         review:'Review',
+        paymentMethod:' Payment Method',
         paynow:'PAY NOW',
         repurchase:'Repurchase',
         remaining:'Remaining Payment Time',
