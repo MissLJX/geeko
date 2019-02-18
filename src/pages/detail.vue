@@ -60,7 +60,7 @@
                         <span class="label">Presente de cupão expirs</span>
                         <count-down :timeLeft="orderoffset"></count-down>
                     </div>
-                    <div class="timeLeft" v-if="orderoffset >= 1000 && getBtnText==='Generar Ticket' && order.status == 0 && getPayUrl">
+                    <div class="timeLeft" v-if="orderoffset >= 1000 && (getBtnText==='Generar Ticket' || getBtnText==='Gerar Ticket') && order.status == 0 && getPayUrl">
                         <div class="triangle"></div>
                         <span class="label">Tiempo restante para realizar el pago</span>
                         <count-down :timeLeft="orderoffset"></count-down>
@@ -102,7 +102,7 @@
             </div>
         </div>
 
-        <div v-if="getBtnText==='Generar Ticket' && order.status == 0 && orderoffset >= 1000 && couponshow && getPayUrl">
+        <div v-if="(getBtnText==='Generar Ticket' || getBtnText==='Gerar Ticket') && order.status == 0 && orderoffset >= 1000 && couponshow && getPayUrl">
             <div class="mask"></div>
             <div class="coupon-window">
                 <span class="coupon-close" @click="() => {this.couponshow = false}">X</span>
@@ -559,6 +559,11 @@
                 case '34':
                 case '35':
                 case '37':
+                case '38':
+                case '40':
+                case '41':
+                case '43':
+                case '44':
                     return this.order.boletoPayCodeURL
                     return null
             }
@@ -574,6 +579,11 @@
                 case '34':
                 case '35':
                 case '37':
+                case '38':
+                case '40':
+                case '41':
+                case '43':
+                case '44':
                     return 'Generar Ticket'
                 case '29':
                     return 'Gerar Ticket'
@@ -596,6 +606,11 @@
                 case '34':
                 case '35':
                 case '37':
+                case '38':
+                case '40':
+                case '41':
+                case '43':
+                case '44':
                     return 'Otro método de pago'
                 case '16':
                 case '23':

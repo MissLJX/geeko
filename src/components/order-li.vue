@@ -38,7 +38,7 @@
                     <span class="label">Presente de cupão expirs</span>
                     <count-down :timeLeft="orderoffset"></count-down>
                 </div>
-                <div class="timeLeft" v-if="orderoffset >= 1000 && getBtnText(order)==='Generar Ticket' && order.status === 0 && getPayUrl(order)">
+                <div class="timeLeft" v-if="orderoffset >= 1000 && (getBtnText(order)==='Generar Ticket' || getBtnText(order)==='Gerar Ticket') && order.status === 0 && getPayUrl(order)">
                     <div class="triangle"></div>
                     <span class="label">Tiempo restante para realizar el pago</span>
                     <count-down :timeLeft="orderoffset"></count-down>
@@ -213,6 +213,11 @@
                     case '34':
                     case '35':
                     case '37':
+                    case '38':
+                    case '40':
+                    case '41':
+                    case '43':
+                    case '44':
                         return item.boletoPayCodeURL
                         return null
                 }
@@ -228,6 +233,11 @@
                     case '34':
                     case '35':
                     case '37':
+                    case '38':
+                    case '40':
+                    case '41':
+                    case '43':
+                    case '44':
                         return 'Generar Ticket'
                     case '29':
                         return 'Gerar Ticket'

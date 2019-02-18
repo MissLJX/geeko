@@ -124,7 +124,7 @@
                 return ''
             },
             productUrl(){
-                return window.ctx + '/w-product/anon/detail?productId='+this.product.id
+                return window.ctx + "/product/"+this.product.name+"/"+this.product.parentSku+"/"+this.product.id+".html"
             },
             isSoldOut(){
                 if(this.product.status === 2){

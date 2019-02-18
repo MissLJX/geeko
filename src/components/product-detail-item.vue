@@ -175,7 +175,7 @@
         },
         computed:{
             productUrl(){
-                return window.ctx + '/w-product/anon/detail?productId=' + this.item.productId
+                return window.ctx + "/product/"+this.item.name+"/"+this.item.sku+"/"+this.item.productId+".html"
             },
         }
     }
