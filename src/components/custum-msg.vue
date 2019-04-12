@@ -12,6 +12,10 @@
         color: #fff;
         position: relative;
         display: inline-block;
+        text-align: left;
+        white-space: pre-line;
+        word-break: break-all;
+        word-wrap: break-word;
     }
 
     .custum-msg::after{

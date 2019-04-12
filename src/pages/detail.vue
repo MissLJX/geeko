@@ -207,7 +207,6 @@
     }
     .fd_fixed{
         width: 100%;
-        line-height: 54px;
         text-align: right;
         position: fixed;
         bottom: 0;
@@ -216,18 +215,20 @@
         padding-right: 10px;
         background-color: #fff;
         z-index: 20;
+        padding: 5px 10px;
         .paybtn{
-            width: 200px;
+            width: 185px;
             height: 36px;
             line-height: 36px;
             color: #fff;
             background-color: #222222;
             border-radius: 1px;
             text-align: center;
-            display: inline-block;text-decoration: none;
+            display: inline-block;
+            text-decoration: none;
         }
         .btn{
-            width: 130px;
+            width: 120px;
             line-height: 36px;
             background-color: #222;
             color: #fff;
