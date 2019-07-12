@@ -58,6 +58,7 @@ export default {
         paymentMethod:'Método de pagamento',
         paynow:'PAGUE AGORA',
         repurchase:'Recompra',
-        remaining:'Tempo de Pagamento Restante'
+        remaining:'Tempo de Pagamento Restante',
+        returnlabel:"Etiqueta de devolução"
     }
 }

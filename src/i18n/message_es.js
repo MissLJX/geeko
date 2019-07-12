@@ -58,6 +58,7 @@ export default {
         paymentMethod:'Método de pago',
         paynow:'PAGUE AHORA',
         repurchase:'Readquirir',
-        remaining:'Tiempo de pago restante'
+        remaining:'Tiempo de pago restante',
+        returnlabel:"Etiqueta de devolución"
     }
 }

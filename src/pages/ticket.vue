@@ -364,9 +364,9 @@
 
         methods: {
             initChart(){
-                this.selected = this.ticketVO.ticket ? this.ticketVO.ticket.subject : '666'
-                this.chart.operaId = this.$route.params.orderId
-                this.chart.subject = ''
+                this.selected = this.ticketVO.ticket ? this.ticketVO.ticket.subject : '666';
+                this.chart.operaId = this.ticketVO.order ? this.ticketVO.order.id : '';
+                this.chart.subject = '';
             },
             sendReply(evt){
                 evt.preventDefault()
@@ -377,8 +377,8 @@
                     _this.isRequired = true;
                     return ''
                 }
-                if (this.chart.message && this.chart.operaId) {
-                    this.$store.dispatch('sendTicket', this.chart).then(() => {
+                if (_this.chart.message && _this.chart.operaId) {
+                    _this.$store.dispatch('sendTicket', this.chart).then(() => {
                         _this.chart.message = ''
                         _this.initScroll()
                     })

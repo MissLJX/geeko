@@ -45,8 +45,12 @@
                 <router-link v-if="order.trackingId" class="btn" :to="{ name: 'tracking', params: { orderId: order.id }}">
                     {{$t('label.track')}}
                 </router-link>
+                <span v-if="order.hasReturnLabel" class="btn">
+                    <a :href="getReturnLabel()">{{$t('label.returnlabel')}}</a>
+                </span>
 
                 <span v-if="order.status === 3" class="btn" @click="confirmHandle">Order Confirm</span>
+
                 <div class="tipmsg" v-if="order && order.unPayMessage">
                     <p>{{order.unPayMessage}}</p>
                 </div>
@@ -203,7 +207,6 @@
     }
     .el-me-like-area {
         background-color: #fff;
-        margin-top: 15px;
     }
     .fd_fixed{
         width: 100%;
@@ -235,6 +238,10 @@
             border-radius: 1px;
             position: relative;
             display: inline-block;
+            a{
+                display: block;
+                width: 100%;
+            }
             .timeLeft{
                 position: absolute;
                 width: 192px;
@@ -295,6 +302,12 @@
     }
     .st-order-body > .fd .btn{
         margin-top: 0;
+        a{
+            display: block;
+            width: 100%;
+            text-decoration: none;
+            color: #222;
+        }
     }
     .st-order{
         border: none;
@@ -698,6 +711,11 @@
               })
           }
       },
+    getReturnLabel(){
+        let _this = this;
+        window.recordReturnLabel(_this.order.id);
+        return window.ctx + "/v8/order/report-return-label?orderId="+_this.order.id ;
+    },
       confirmHandle(evt) {
         let _this = this;
         this.$store.dispatch('confirmShow', {

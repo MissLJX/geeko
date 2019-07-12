@@ -1,76 +1,79 @@
 <template id="contact">
     <div class="st-ticket-container">
-        <page-header>
-            <span>Ticket</span>
-        </page-header>
-        <div class="st-ticket-order-info">
-            <div>
-                <span class="label">{{$t("label.orderNo")}}</span>
-                <span class="value">{{ticketVO.order.id}}</span>
-            </div>
-
-            <div>
-                <span class="label">{{$t("label.timeOfPayment")}}</span>
-                <span class="value">{{paymentDate}}</span>
-            </div>
-
-        </div>
-
-        <div class="st-ticket-select-container">
-            <h2>{{$t("message.helpTip")}}?</h2>
-            <div v-if="ticketVO.subjectSelections">
-                <select v-model="selected" :class="{'redBorder':isRequired}" @change="isRequired=false">
-                    <option disabled="disabled" value="666">Please select your question type</option>
-                    <option v-for="option in ticketVO.subjectSelections" :value="option.value">
-                        {{ option.label }}
-                    </option>
-                </select>
-            </div>
-            <p>{{$t("message.responseTime")}}</p>
-        </div>
-
-
-        <div class="st-ticket-msg-container" ref="replyContainer" @scroll="ticketScroll">
-
-            <div v-if="replyGroups">
-                <div :key="key" v-for="(value , key) in replyGroups">
-                    <div class="ticket-date">{{key}}</div>
-                    <div class="ticket-msgs">
-                        <ticket-msg :key="item.date" v-for="item in value" :reply="item"/>
-                    </div>
+        <div v-if="!showRater">
+            <page-header>
+                <span>Ticket</span>
+            </page-header>
+            <div class="st-ticket-order-info">
+                <div>
+                    <span class="label">{{$t("label.orderNo")}}</span>
+                    <span class="value">{{ticketVO.order.id}}</span>
                 </div>
-            </div>
-        </div>
 
-        <div class="st-type-message-container" :class="{down: typeDown}">
-            <div class="textarea">
-                <textarea :placeholder="$t('message.typemsg')+'...'" v-model="chart.message"></textarea>
+                <div>
+                    <span class="label">{{$t("label.timeOfPayment")}}</span>
+                    <span class="value">{{paymentDate}}</span>
+                </div>
+
             </div>
 
-            <div class="sender">
-                <div class="st-table">
-                    <div class="st-cell">
-                        <div class="image-loader">
-                            <form ref="imageLoader">
-                                <input id="imageFiles" @change="sendImage" name="imageFiles" class="opacity"
-                                       multiple="multiple" type="file"
-                                       accept="image/jpg,image/jpeg,image/png,image/gif">
-                            </form>
+            <div class="st-ticket-select-container">
+                <h2>{{$t("message.helpTip")}}?</h2>
+                <div v-if="ticketVO.subjectSelections">
+                    <select v-model="selected" :class="{'redBorder':isRequired}" @change="isRequired=false">
+                        <option disabled="disabled" value="666">Please select your question type</option>
+                        <option v-for="option in ticketVO.subjectSelections" :value="option.value">
+                            {{ option.label }}
+                        </option>
+                    </select>
+                </div>
+                <p>{{$t("message.responseTime")}}</p>
+            </div>
+
+
+            <div class="st-ticket-msg-container" ref="replyContainer" @scroll="ticketScroll">
+
+                <div v-if="replyGroups">
+                    <div :key="key" v-for="(value , key) in replyGroups">
+                        <div class="ticket-date">{{key}}</div>
+                        <div class="ticket-msgs">
+                            <ticket-msg :key="item.date" v-for="item in value" :reply="item"/>
                         </div>
                     </div>
+                </div>
+            </div>
 
-                    <div v-if="canBeRated" class="st-cell">
-                        <i class="iconfont el-rate-star">&#xe60d;</i>
-                        <span class="el-rate-label" @click="giveRate">{{$t("label.rateMyService")}}</span>
+            <div class="st-type-message-container" :class="{down: typeDown}">
+                <div class="textarea">
+                    <textarea :placeholder="$t('message.typemsg')+'...'" v-model="chart.message"></textarea>
+                </div>
+
+                <div class="sender">
+                    <div class="st-table">
+                        <div class="st-cell">
+                            <div class="image-loader">
+                                <form ref="imageLoader">
+                                    <input id="imageFiles" @change="sendImage" name="imageFiles" class="opacity"
+                                           multiple="multiple" type="file"
+                                           accept="image/jpg,image/jpeg,image/png,image/gif">
+                                </form>
+                            </div>
+                        </div>
+
+                        <div v-if="canBeRated" class="st-cell">
+                            <i class="iconfont el-rate-star">&#xe60d;</i>
+                            <span class="el-rate-label" @click="giveRate">{{$t("label.rateMyService")}}</span>
+                        </div>
+
+                        <div class="st-cell">
+                            <span class="btn black" @click="sendReply">{{$t("label.send")}}</span>
+                        </div>
+
                     </div>
-
-                    <div class="st-cell">
-                        <span class="btn black" @click="sendReply">{{$t("label.send")}}</span>
-                    </div>
-
                 </div>
             </div>
         </div>
+
 
 
         <transition name="uper">
@@ -81,16 +84,7 @@
                         <div class="box" :class="{'like-active': this.rateData.rate===5}" @click="rateHandle(5)"><i class="iconfont">&#xe756;</i>Satisfied</div>
                         <div class="box" :class="{'unlike-active': this.rateData.rate===1}" @click="rateHandle(1)"><i class="iconfont">&#xe757;</i>Unsatisfied</div>
                     </div>
-                    <!--<star-list :score="rateData.rate" @star="rateHandle"></star-list>-->
                 </div>
-                <!--<div  class="rates" v-if="rateData.rate<4">
-                    <p>{{$t("message.whichPart")}}</p>
-                    <ul>
-                        <li :class="{'active': isActive(rate.value)}" @click="reviewMsgHandle(rate.label, rate.value)" v-for="rate in reviewMsg" :data-rate="rate.value" :data-label="rate.label">
-                            <span>{{rate.label}}</span>
-                        </li>
-                    </ul>
-                </div>-->
                     <div class="rate-text">
                         <textarea v-model="rateData.message" placeholder="Add a comment on the customer service here.(optional)"></textarea>
                     </div>
@@ -105,8 +99,6 @@
             <div class="mask"></div>
             <comment-alert :data="commentAlert" @hideAlert="hideAlert()"></comment-alert>
         </div>
-
-
     </div>
 </template>
 
@@ -173,12 +165,9 @@
     }
 
     .el-rate {
-        position: fixed;
         width: 100%;
         height: 100%;
         background-color: #fff;
-        top: 0;
-        z-index: 10;
     }
 
     .el-rate .evaluate{

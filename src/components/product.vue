@@ -49,7 +49,7 @@
             &::after{
                 content: '';
                 display: block;
-                margin-top: 133%;
+                margin-top: 125%;
             }
             overflow: hidden;
         }

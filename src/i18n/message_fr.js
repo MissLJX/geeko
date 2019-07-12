@@ -59,5 +59,6 @@ export default {
         paynow:'PAYEZ MAINTENANT',
         repurchase:'Rachat',
         remaining:'Temps de paiement restant',
+        returnlabel:"Étiquette de retour"
     }
 }
