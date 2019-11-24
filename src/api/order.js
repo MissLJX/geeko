@@ -7,28 +7,35 @@ import qs from 'qs'
 export default{
     getOrders({skip, api_suffix}, callBack){
 
-        axios.get('/v8/order/' + skip + '/20/' + api_suffix).then((orders) => {
+        axios.get('/v9/order/' + skip + '/20/' + api_suffix).then((orders) => {
             callBack(orders)
         }).catch((e) => {
             console.log(e)
         });
     },
     getOrder(orderId, callBack){
-        axios.post('/v8/order/anon/get-order-details',orderId).then((order) => {
+        axios.post('/v9/order/get-order-details',orderId).then((order) => {
+            callBack(order);
+        }).catch((e) => {
+            console.log(e)
+        });
+    },
+    getOrderByCode(code, callBack){
+        axios.post('/v9/order/anon/get-order-details-by-code',code).then((order) => {
             callBack(order);
         }).catch((e) => {
             console.log(e)
         });
     },
     cancelOrder({orderId,cancelReason}, callBack){
-        axios.get('/v8/order/cancel',{orderId,cancelReason}).then((order) => {
+        axios.get('/v9/order/cancel',{orderId,cancelReason}).then((order) => {
             callBack(order);
         }).catch((e) => {
             console.log(e)
         })
     },
     confirmOrder(orderId, callBack){
-        axios.get('/v8/order/'+orderId+'/receipt').then((order) => {
+        axios.get('/v9/order/'+orderId+'/receipt').then((order) => {
             callBack(order);
         }).catch((e) => {
             console.log(e)
@@ -36,6 +43,14 @@ export default{
     },
     getTicketVO(orderId, callBack){
         axios.get('/ticket/' + orderId + '/order/get').then((ticketVO) => {
+            callBack(ticketVO);
+        }).catch((e) => {
+            console.log(e)
+        });
+
+    },
+    getTicketVOByCode(code, callBack){
+        axios.get('/ticket/' + code + '/get-by-order').then((ticketVO) => {
             callBack(ticketVO);
         }).catch((e) => {
             console.log(e)
@@ -93,10 +108,10 @@ export default{
         return axios.post('/ticket/rate-service', rate)
     },
     getTracking(orderId){
-        return axios.get('/v8/tracking/anon/get-by-order-id',{orderId})
+        return axios.get('/v9/tracking/anon/get-by-order-id',{orderId})
     },
     getPackageTracking(type,id){
-        return axios.get('/v8/tracking/get-by-id',{type,id})
+        return axios.get('/v9/tracking/get-by-id',{type,id})
     },
 
     getMessage(code){
@@ -122,7 +137,7 @@ export default{
     },
 
     getOrderApacPay(orderId){
-        return axios.get('/v8/apacpay/get-pay-params-by-order',{orderId})
+        return axios.get('/v9/apacpay/get-pay-params-by-order',{orderId})
     },
 
     /*getOrderApacPay(orderId){
@@ -130,10 +145,10 @@ export default{
     },*/
 
     getYouLikeProducts(orderId,skip){
-        return axios.get('/v8/order/anon/'+skip+'/20/get-same-category-products', {orderId}, {})
+        return axios.get('/v9/order/anon/'+skip+'/20/get-same-category-products', {orderId}, {})
     },
 
     addProducts(products){
-        return axios.cpost('/v8/shopping-cart/add-products', products)
+        return axios.cpost('/v9/shopping-cart/add-products', products)
     },
 }

@@ -132,7 +132,7 @@
                 api.getOrderApacPay(this.order.id).then((result) => {
                     const {isFree, transactionId} = result
                     if (isFree) {
-                        window.location.href = `${window.ctx || ''}/v8/order/confirm/free?transationId=${transactionId}`
+                        window.location.href = `${window.ctx || ''}/v9/order/confirm/free?transationId=${transactionId}`
                     } else {
                       utils.submit(result)
                     }

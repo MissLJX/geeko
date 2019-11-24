@@ -36,8 +36,11 @@
                 <div :key="key" v-for="(value , key) in replyGroups">
                     <div class="ticket-date">{{key}}</div>
                     <div class="ticket-msgs">
-                        <ticket-msg :key="item.date" v-for="item in value" :reply="item"/>
+                        <ticket-msg :key="item.date" v-for="(item,index) in value" :reply="item" :ticketId="ticketVO.ticket.id"/>
                     </div>
+                </div>
+                <div class="ticket-msgs" v-if="isReplyRated && showAddRater" style="margin-top: 15px">
+                    <ticket-msg :reply="replyRated" :ticketId="ticketVO.ticket.id" :showAddRater="showAddRater" @rateDataHandle="rateDataHandle"/>
                 </div>
             </div>
         </div>
@@ -303,6 +306,8 @@
                 showRater: false,
                 showalert:false,
                 isRequired:false,
+                lastSellerId:'',
+                showAddRater:true
             };
         },
         computed: {
@@ -313,7 +318,6 @@
                     return dateutil.format(new Date(this.ticketVO.order.paymentTime), 'jS F Y h:m:s');
                 }
             },
-
             ticketVO(){
                 return this.$store.getters.ticketVO
             },
@@ -321,22 +325,40 @@
                 var _ticketvo = this.ticketVO;
                 if (!_ticketvo || !_ticketvo.ticket || !_ticketvo.ticket.ticketReplies) return null;
                 var mapedData = _ticketvo.ticket.ticketReplies.map((reply) => {
+                    if(reply.sender === 'seller'){
+                        this.lastSellerId = reply.date
+                    }
                     return {
                         icon: 'https://dgzfssf1la12s.cloudfront.net/icon/' + _ticketvo.headSculptureUrl,
                         message: reply.message,
                         imageUrls: reply.imageUrls,
                         position: reply.sender == 'buyers' ? 'right' : 'left',
-                        date: reply.date
+                        date: reply.date,
+                        type: 'normal',
                     };
                 });
 
                 var groups = _.groupBy(mapedData, function (obj) {
                     return utils.enDate(new Date(obj.date));
                 });
-
-
                 return groups;
-
+            },
+            replyRated(){
+                let _ticketVO = this.ticketVO;
+                if (!_ticketVO || !_ticketVO.ticket || _ticketVO.ticket.reviewFlag !== 1) return null;
+                return{
+                    message: _ticketVO.ticket.reviewPrompt ? _ticketVO.ticket.reviewPrompt : '',
+                    position:  'left',
+                    type: 'review',
+                }
+            },
+            isReplyRated(){
+                let _ticketVO = this.ticketVO;
+                if(_ticketVO && _ticketVO.ticket && _ticketVO.ticket.reviewFlag && _ticketVO.ticket.reviewFlag === 1){
+                    return true
+                }else{
+                    return false
+                }
             },
             canBeRated(){
                 if(this.ticketVO && this.ticketVO.ticket){
@@ -359,7 +381,7 @@
             },
             reviewMsg(){
                 return this.$store.getters.reviewMsg
-            }
+            },
         },
 
         methods: {
@@ -402,6 +424,12 @@
                 }else{
                     alert("A single image should not exceed 2M");
                 }
+            },
+            rateDataHandle(rate_data){
+                this.showAddRater = false;
+                this.rateData.rate = rate_data.rate;
+                this.rateData.message = rate_data.message;
+                this.ticketVO.ticketRateService = this.rateData.rate;
             },
             initScroll(){
                 this.inited = false

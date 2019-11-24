@@ -60,6 +60,14 @@ const actions = {
                 commit(types.CONTACT_LOAD_TICKET, vo);
                 resolve(vo);
             });
+        })
+    },
+    loadTicketByCode({commit}, {code}){
+        return new Promise(function (resolve, reject) {
+            api.getTicketVOByCode(code, (vo) => {
+                commit(types.CONTACT_LOAD_TICKET, vo);
+                resolve(vo);
+            });
 
         })
     },

@@ -1,5 +1,5 @@
 <template>
-    <div class="el-page-header">
+    <div class="el-page-header" :class="{'display': isLogin==false}">
         <i class="iconfont el-back-font" @click="$router.go(-1)">&#xe693;</i>
         <div class="el-header-title"><slot></slot></div>
         <div class="el-header-oplabel"><slot name="oplabel"></slot></div>
@@ -7,6 +7,9 @@
 </template>
 
 <style scoped lang="scss">
+    .display{
+        display: none;
+    }
     .el-page-header{
         background-color: #fff;
         position: relative;
@@ -49,8 +52,10 @@
 
 <script type="text/ecmascript-6">
     export default{
-        methods:{
-
+        data: function(){
+            return {
+                isLogin:window.__is_login__
+            }
         }
     }
 </script>

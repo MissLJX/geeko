@@ -11,9 +11,9 @@ export const getAll = (cb, eb) => {
     //});
 
     $.ajax({
-        url:'http://localhost:8080/joyshoetique/v8/msite/order/0/10/get-order-list',
+        url:'http://localhost:8080/joyshoetique/v9/msite/order/0/10/get-order-list',
         headers:{
-            accessToken: 'b026e19c-1f72-4884-a6fe-7dc943d1d3f0'
+            accessToken: '2a4dd936-d42c-b1eb-17ba-4e6982c38661'
         },
         method:'GET',
         success: function(data){

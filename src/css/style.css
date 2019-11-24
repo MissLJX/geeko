@@ -384,7 +384,7 @@ body {
 .st-ticket-container {
   display: flex;
   flex-direction: column;
-  height: 100vh; }
+  overflow: auto; }
   .st-ticket-container .st-ticket-msg-container {
     overflow: auto; }
 
@@ -439,5 +439,8 @@ body {
 
 .uper-leave-active, .uper-enter {
   top: 100% !important; }
+
+.st-type-message-container {
+  max-width: 900px; }
 
 /*# sourceMappingURL=style.css.map */

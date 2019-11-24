@@ -1,13 +1,5 @@
 <template id="order-detail">
     <div>
-        <page-header>
-            <span>Order Details</span>
-            <span slot="oplabel">
-                <router-link :to="{ name: 'contact', params: { orderId: $route.params.orderId }}">
-                    <i class="iconfont contactseller">&#xe716;</i>
-                </router-link>
-            </span>
-        </page-header>
         <div v-if="order" class="st-order-body">
             <div class="st-order-bgline">
                 <div class="orderheader">
@@ -41,108 +33,14 @@
             </div>
 
             <div class="fd">
-                <span v-if="order.isCanCanceled" class="btn" @click="isCancelOrder=true">{{$t('label.cancelOrder')}}</span>
-                <router-link v-if="order.trackingId" class="btn" :to="{ name: 'tracking', params: { orderId: order.id }}">
+                <router-link v-if="order.id && (order.status===2 || order.status===3) " class="btn" :to="{ name: 'tracking', params: { orderId: order.id }}">
                     {{$t('label.track')}}
                 </router-link>
-                <span v-if="order.hasReturnLabel" class="btn">
-                    <a :href="getReturnLabel()">{{$t('label.returnlabel')}}</a>
-                </span>
-
-                <span v-if="order.status === 3" class="btn" @click="confirmHandle">Order Confirm</span>
-
-                <div class="tipmsg" v-if="order && order.unPayMessage">
-                    <p>{{order.unPayMessage}}</p>
-                </div>
             </div>
-            <div class="fd_fixed">
-                <a class="paybtn" :href="checkoutUrl(order.id)" v-if="getPayUrl && getBtnText && getBtnText2 && order.status === 0 && orderoffset >= 0">{{getBtnText2}}</a>
-                <a :href="getPayUrl" v-if="getPayUrl && order.status === 0" class="btn" target="_blank">
-                    {{getBtnText}}
-                    <div class="timeLeft" v-if="orderoffset >= 1000 && getBtnText==='Imprimir boleto' && order.status == 0 && getPayUrl">
-                        <div class="triangle"></div>
-                        <span class="label">Presente de cupão expirs</span>
-                        <count-down :timeLeft="orderoffset"></count-down>
-                    </div>
-                    <div class="timeLeft" v-if="orderoffset >= 1000 && (getBtnText==='Generar Ticket' || getBtnText==='Gerar Ticket') && order.status == 0 && getPayUrl">
-                        <div class="triangle"></div>
-                        <span class="label">Tiempo restante para realizar el pago</span>
-                        <count-down :timeLeft="orderoffset"></count-down>
-                    </div>
-                </a>
-                <!--未付款订单-->
-                <a v-if="!order.mercadopagoPayURL && !order.boletoPayCodeURL && order.status === 0 && orderoffset >= 0" class="btn black" style="margin-right: 10px;" :href="checkoutUrl(order.id)">
-                    {{$t("label.paynow")}}
-                    <div class="timeLeft" v-if="orderoffset >= 1000 && order.status === 0">
-                        <div class="triangle"></div>
-                        <span class="label">{{$t("label.remaining")}}:</span>
-                        <count-down :timeLeft="orderoffset"></count-down>
-                    </div>
-                </a>
-            </div>
-
         </div>
 
         <div v-else>no data..</div>
 
-
-        <div v-if="getBtnText==='Imprimir boleto' && order.status == 0 && orderoffset >= 1000 && couponshow && getPayUrl">
-            <div class="mask"></div>
-            <div class="coupon-window">
-                <span class="coupon-close" @click="() => {this.couponshow = false}">X</span>
-                <div>
-                    <div class="white top-line">
-                        <h2>Atenção</h2>
-                        <img src="https://dgzfssf1la12s.cloudfront.net/upgrade/20180529/001.png">
-                    </div>
-                    <div class="middle-line">
-                        <img src="https://dgzfssf1la12s.cloudfront.net/upgrade/20180529/002.png">
-                    </div>
-                    <div class="white bottom-line">
-                        <p>O cupom de <span class="fc-r">15%</span> de desconto será enviado para sua conta após o pagamento. Não perca</p>
-                        <a  class="blackbtn" :href="getPayUrl">Pague agora</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div v-if="(getBtnText==='Generar Ticket' || getBtnText==='Gerar Ticket') && order.status == 0 && orderoffset >= 1000 && couponshow && getPayUrl">
-            <div class="mask"></div>
-            <div class="coupon-window">
-                <span class="coupon-close" @click="() => {this.couponshow = false}">X</span>
-                <div>
-                    <div class="white top-line">
-                        <h2>Atención</h2>
-                        <img src="https://dgzfssf1la12s.cloudfront.net/upgrade/20180529/001.png">
-                    </div>
-                    <div class="middle-line">
-                        <img src="https://dgzfssf1la12s.cloudfront.net/upgrade/20180529/002.png">
-                    </div>
-                    <div class="white bottom-line">
-                        <p>Después de realizar el pago, recibirás un cupón de regalo con un <span class="fc-r">15%</span> de descuento para tu siguiente compra.</p>
-                        <a  class="blackbtn" :href="getPayUrl">Pague ahora</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <you-likes class="el-me-like-area"  :orderId="order.id"/>
-
-        <div v-if="isCancelOrder">
-            <div class="mask"></div>
-            <div class="cancel-window">
-                <div class="flex-con">
-                    <p style="font-weight: bold">Select a reason</p>
-                    <p style="color:#999;cursor:pointer;" @click="isCancelOrder=false">Cancel</p>
-                </div>
-                <ul class="reason-select">
-                    <li v-if="cancelReasons" v-for="reason in cancelReasons" @click="selectedResaon=reason.value">
-                        <label :for="reason.value">{{reason.value}}.{{reason.label}}</label>
-                        <input type="radio" v-if="reason.value===selectedResaon">
-                    </li>
-                </ul>
-                <div class="cancel-btn" :class="{'active':selectedResaon!==''}" @click="cancelHandle">Submit</div>
-            </div>
-        </div>
     </div>
 </template>
 
@@ -538,11 +436,11 @@
     beforeRouteEnter(to, from, next) {
       store.dispatch('clearTicket');
       store.dispatch('paging', true);
-      store.dispatch('loadOrder', { id: to.params.orderId })
+      store.dispatch('loadOrderByCode', { id: to.params.code })
         .then(() => {
 
           next((vm) => {
-            vm.$store.dispatch('detailTicket', vm.$route.params.orderId);
+            vm.$store.dispatch('detailTicket', vm.$route.params.code);
           });
           store.dispatch('paging', false);
         });
@@ -757,8 +655,8 @@
     },
     watcher: {
       $route() {
-          console.log("天啊")
-          this.$store.dispatch('loadOrder', { id: this.$route.params.orderId });
+          console.log("我的天啊")
+          this.$store.dispatch('loadOrderByCode', { id: this.$route.params.code });
       }
     }
 

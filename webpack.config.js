@@ -46,7 +46,8 @@ module.exports = {
         contentBase: './dist',
         proxy: {
             '/api': {
-                target: 'http://localhost:8080/wanna/',
+                /*target: 'http://localhost:8080/wanna/',*/
+                target: 'https://www.chicme.xyz/',
                 pathRewrite: { '^/api': '' },
                 secure: false
             }

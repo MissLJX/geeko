@@ -17,7 +17,7 @@ const instance = axios.create({
     headers: {
         version: Constant.VERSION,
         appVersion: Constant.APP_VERSION,
-        countryCode: Utils.getCountry(),
+        /*countryCode: Utils.getCountry(),*/
         wid: Utils.getWid(),
         accessToken: window.accessToken || ''
     }

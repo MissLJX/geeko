@@ -13,7 +13,9 @@ import HomeConfirmed from '../pages/home-confirmed.vue';
 import HomeShipped from '../pages/home-shipped.vue';
 import HomeCanceled from '../pages/home-canceled.vue';
 import Contact from '../pages/contact.vue';
+import ContactCode from '../pages/contactcode.vue';
 import Detail from '../pages/detail.vue';
+import OrderCode from '../pages/code.vue';
 import Review from '../pages/review.vue';
 import ShippingPolicy from '../pages/shipping-policy.vue';
 import Tracking from '../pages/tracking.vue';
@@ -98,6 +100,12 @@ const routes = [
     meta: { keepAlive: false }
   },
   {
+    path: ROUTER_PATH_ORDER + '/code/:code',
+    name: 'code',
+    component: OrderCode,
+    meta: { keepAlive: false }
+  },
+  {
     path: ROUTER_PATH_ORDER + '/tracking/:orderId',
     name: 'tracking',
     component: Tracking,
@@ -118,6 +126,11 @@ const routes = [
     path: ROUTER_PATH_ORDER + '/contact/:orderId',
     name: 'contact',
     component: Contact
+  },
+  {
+    path: ROUTER_PATH_ORDER + '/contact/code/:code',
+    name: 'contactCode',
+    component: ContactCode
   },
   {
     path: ROUTER_PATH_ORDER + '/shipping-policy',

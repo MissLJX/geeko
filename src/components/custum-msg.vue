@@ -1,15 +1,14 @@
 <template>
-    <div class="custum-msg" :position="position">
+    <div class="customer-msg" :position="position">
         <slot></slot>
     </div>
 </template>
 
 
-<style scoped>
-    .custum-msg{
+<style type="text/scss" lang="scss">
+    .customer-msg{
         padding: 10px;
         border-radius: 2px;
-        color: #fff;
         position: relative;
         display: inline-block;
         text-align: left;
@@ -18,7 +17,7 @@
         word-wrap: break-word;
     }
 
-    .custum-msg::after{
+    .customer-msg::after{
         display: block;
         content: '';
         position: absolute;
@@ -28,24 +27,28 @@
         transform: rotate(-45deg);
     }
 
-    .custum-msg[position=left]{
-        background-color: #dcdcdc;
+    .customer-msg[position=left]{
+        background-color: #fff;
+        color: #222;
+        border: solid 1px #cacaca;
     }
 
-    .custum-msg[position=left]::after{
-        background-color: #dcdcdc;
-        top: 3px;
+    .customer-msg[position=left]::after{
+        background-color:  #fff;
+        top: 8px;
         left: -3px;
+        border: solid 1px #cacaca;
     }
 
 
-    .custum-msg[position=right]{
+    .customer-msg[position=right]{
         background-color: #1a95d3;
+        color: #fff;
     }
 
-    .custum-msg[position=right]::after{
+    .customer-msg[position=right]::after{
         background-color: #1a95d3;
-        top: 3px;
+        top: 8px;
         right: -3px;
     }
 

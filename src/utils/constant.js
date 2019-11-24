@@ -6,7 +6,7 @@
 export const DOMAIN = ''
 
 //version
-export const VERSION = 'v8'
+export const VERSION = 'v9'
 /*export const VERSION = 'v7'*/
 export const VPATH = '/'+VERSION
 export const APP_VERSION = '3.2.0'

@@ -31,11 +31,11 @@
                     <div :key="key" v-for="(value , key) in replyGroups">
                         <div class="ticket-date">{{key}}</div>
                         <div class="ticket-msgs">
-                            <ticket-msg :key="item.date" v-for="(item,index) in value" :reply="item" :ticketId="ticketVO.ticket.id"/>
+                            <ticket-msg :key="item.date" v-for="(item,index) in value" :reply="item" />
                         </div>
                     </div>
                     <div class="ticket-msgs" v-if="isReplyRated && showAddRater" style="margin-top: 15px">
-                        <ticket-msg :reply="replyRated" :ticketId="ticketVO.ticket.id" :showAddRater="showAddRater" @rateDataHandle="rateDataHandle"/>
+                        <ticket-msg :reply="replyRated" :showAddRater="showAddRater" @rateDataHandle="rateDataHandle"/>
                     </div>
                 </div>
             </div>
@@ -74,13 +74,13 @@
                         <div class="box" :class="{'unlike-active': this.rateData.rate===1}" @click="rateHandle(1)"><i class="iconfont">&#xe757;</i>Unsatisfied</div>
                     </div>
                 </div>
-                    <div class="rate-text">
-                        <textarea v-model="rateData.message" placeholder="Add a comment on the customer service here.(optional)"></textarea>
-                    </div>
+                <div class="rate-text">
+                    <textarea v-model="rateData.message" placeholder="Add a comment on the customer service here.(optional)"></textarea>
+                </div>
 
-                    <div @click="rateSend" class="btn rate-submit">
-                        Confirm
-                    </div>
+                <div @click="rateSend" class="btn rate-submit">
+                    Confirm
+                </div>
             </div>
         </transition>
         <div v-if="showalert">
@@ -316,7 +316,7 @@
         },
         beforeRouteEnter(to, from, next){
             store.dispatch('paging', true);
-            store.dispatch('loadTicket', {orderId: to.params.orderId}).then(() => {
+            store.dispatch('loadTicketByCode', {code: to.params.code}).then(() => {
                 store.dispatch('getReviewMsg').then(() => {
                     next(vm => {
                         vm.initChart()

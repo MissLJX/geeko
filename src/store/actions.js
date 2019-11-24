@@ -14,6 +14,14 @@ export default {
             });
         });
     },
+    loadOrderByCode: function ({commit}, {id}) {
+        return new Promise(function (resolve, reject) {
+            api.getOrderByCode({code:id}, (order)=> {
+                commit(types.DETAIL_LOAD_ORDER, order);
+                resolve(order);
+            });
+        });
+    },
     //Add To Cart
     addProducts({commit},products){
         return  api.addProducts(products);

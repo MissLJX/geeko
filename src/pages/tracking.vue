@@ -1,5 +1,6 @@
 <template>
     <div>
+
         <page-header>
             <span>Logistics Information</span>
             <span slot="oplabel">
@@ -9,16 +10,21 @@
             </span>
         </page-header>
 
-        <ul v-if="tracking && tracking.packages" class="packageTab">
-            <li class="tab" @click="changeTab(key)" :class="{'active': key===isActive}" v-for="(package,key) in tracking.packages" :key="key">
-                {{package.name}}{{trackName}}
-            </li>
-        </ul>
+            <ul v-if="tracking && tracking.packages" class="packageTab">
+                <li class="tab" @click="changeTab(key)" :class="{'active': key===isActive}" v-for="(package,key) in tracking.packages" :key="key">
+                    {{package.name}}{{trackName}}
+                </li>
+            </ul>
+
+
         <package-track :orderId="tracking.orderId" class="tracking-content" :package="changePackage"></package-track>
     </div>
 </template>
 
 <style lang="scss" scoped>
+    .display{
+        display: none;
+    }
     .packageTab{
         height: 45px;
         line-height: 45px;
@@ -108,7 +114,8 @@
         data: function(){
             return {
                 isActive:0,
-                changePackage:[]
+                changePackage:[],
+                isLogin:window.__is_login__
             }
         },
         mouted(){

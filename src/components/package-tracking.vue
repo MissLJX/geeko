@@ -62,7 +62,8 @@
         margin-left:-10px;
         border-bottom: 8px solid #f6f6f6;
         li{
-            width: 75px;
+            min-width: 75px;
+            max-width: 75px;
             height: 100px;
             margin-right: 12px;
             &:last-child{
