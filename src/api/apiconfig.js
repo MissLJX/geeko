@@ -19,9 +19,20 @@ const instance = axios.create({
         appVersion: Constant.APP_VERSION,
         /*countryCode: Utils.getCountry(),*/
         wid: Utils.getWid(),
-        accessToken: window.accessToken || ''
+        accessToken: window.accessToken || '',
+        deviceType: 'msite',
+        xtoken: window.secret || ''
     }
 });
+
+
+const reRequest = () => instance.get('/context/anon/gat', {}, []).then((res) => {
+    window.xtoken = res.data.result
+    instance.defaults.headers.common['xtoken'] = window.xtoken
+    return window.xtoken
+}).catch(() => {
+    window.location.reload()
+})
 
 const _api_result = function (res, resolve, reject) {
     var data = res.data
@@ -43,7 +54,16 @@ export default {
                     ...headers
                 }
             }).then((res) => {
-                _api_result(res, resolve, reject)
+                if (res.data.code === 310) {
+                    reRequest().then((res) => {
+                        this.get(url, params, headers)
+                    }).catch((e) => {
+                        console.error(e)
+                        reject(e)
+                    })
+                } else {
+                    _api_result(res, resolve, reject)
+                }
             }).catch(e => console.error(e))
         })
     },
@@ -58,7 +78,16 @@ export default {
                     }
                 }
             ).then((res) => {
-                _api_result(res, resolve, reject)
+                if (res.data.code === 310) {
+                    reRequest().then((res) => {
+                        this.get(url, params, headers)
+                    }).catch((e) => {
+                        console.error(e)
+                        reject(e)
+                    })
+                } else {
+                    _api_result(res, resolve, reject)
+                }
             }).catch(e => console.error(e))
         })
     },
