@@ -33,6 +33,7 @@ export default {
         all: 'Tous',
         processing: 'En cours',
         unpaid: 'Non payé',
+        paid:'Paid',
         shipped: 'Envoyée',
         confirmed: 'Confirmé',
         canceled: 'Annulé',
