@@ -34,7 +34,7 @@ export default {
         send: 'Send',
         all: 'Alle',
         processing: 'Behandler',
-        unpaid: 'Ikke betalt',
+        unpaid: 'Ikkebetalt',
         paid:'Betal',
         shipped: 'Leveret',
         confirmed: 'Bekr\u00e6ftet',

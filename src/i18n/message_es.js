@@ -32,7 +32,7 @@ export default {
         send:'Enviar',
         all: 'Todo',
         processing: 'Procesando',
-        unpaid: 'No pagado',
+        unpaid: 'Nopagado',
         paid:'Paid',
         shipped: 'Enviado',
         confirmed: 'Confirmado',

@@ -34,7 +34,7 @@ export default {
         send: 'L\u00e4het\u00e4',
         all: 'Kaikki',
         processing: 'K\u00e4sitell\u00e4\u00e4n',
-        unpaid: 'Ei maksettu',
+        unpaid: 'Eimaksettu',
         paid:'Maksettu',
         shipped: 'Toimitettu',
         confirmed: 'Vahvistettu',
