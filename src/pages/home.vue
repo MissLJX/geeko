@@ -3,7 +3,7 @@
         <div v-if="bbmessage" class="bbtip" v-html="bbmessage"></div>
         <div class="st-flex hd">
             <!--未付款订单-->
-            <p v-for="(item,key) in tabList" :key="item.value" :class="{'active': key===isActive}" :value="item.value" @click="changeHandle(item.value,key)">
+            <p v-for="(item,key) in tabList" :key="item.value" :class="{'active': item.value === isActive}" :value="item.value" @click="changeHandle(item.value,key)">
                 {{item.label}}
             </p>
             <!--<div class="st-cell">
@@ -46,7 +46,7 @@
         data() {
             var tab = this.$route.name;
             return {
-                isActive:0,
+                isActive:tab,
                 tabList: [
                     {
                         label: this.$t('label.all'),
@@ -102,7 +102,7 @@
             ]),
             /*未付款订单*/
             changeHandle(tab,key) {
-                this.isActive=key;
+                this.isActive = tab;
                 this.changeList(tab);
             },
             /*changeHandle(evt) {

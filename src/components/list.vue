@@ -53,21 +53,21 @@
                         this.$emit('listing');
                     }
                 }*/
-                const scrollTop = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop);
-                if(scrollTop + window.innerHeight >= document.body.offsetHeight-300) {
-                    if (!this.loading) {
-                        this.$emit('listing');
-                    }
-                }
+                // const scrollTop = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop);
+                // if(scrollTop + window.innerHeight >= document.body.offsetHeight-300) {
+                //     if (!this.loading) {
+                //         this.$emit('listing');
+                //     }
+                // }
             },
         },
 
-        mounted(){
-          document.addEventListener('scroll', this.bindScroll)
-        },
-        destroyed(){
-          document.removeEventListener('scroll', this.bindScroll)
-        },
+        // mounted(){
+        //   document.addEventListener('scroll', this.bindScroll)
+        // },
+        // destroyed(){
+        //   document.removeEventListener('scroll', this.bindScroll)
+        // },
 
         watch:{
             currentListing(newCurrentListing){

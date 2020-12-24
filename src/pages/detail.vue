@@ -71,7 +71,7 @@
                     </div>
                 </a>
                 <!--未付款订单-->
-                <a v-if="!order.mercadopagoPayURL && !order.boletoPayCodeURL && order.status === 0 && orderoffset >= 0" class="btn black" style="margin-right: 10px;" :href="checkoutUrl(order.id)">
+                <a v-if="!order.mercadopagoPayURL && !order.boletoPayCodeURL && order.status === 0 && orderoffset >= 0" class="btn black" style="margin: 5px 10px;" :href="checkoutUrl(order.id)">
                     {{$t("label.paynow")}}
                     <div class="timeLeft" v-if="orderoffset >= 1000 && order.status === 0">
                         <div class="triangle"></div>
@@ -218,7 +218,7 @@
         padding-right: 10px;
         background-color: #fff;
         z-index: 20;
-        padding: 5px 10px;
+        // padding: 5px 10px;
         .paybtn{
             width: 185px;
             height: 36px;

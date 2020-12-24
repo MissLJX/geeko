@@ -19,7 +19,8 @@ const getters = {
 
 const mutations = {
     [types.ME_GET_YOU_LIKE_PRODUCTS](state,youlikeProducts){
-        state.youlikeProducts = _.concat(state.youlikeProducts,youlikeProducts)
+        // state.youlikeProducts = _.concat(state.youlikeProducts,youlikeProducts)
+        state.youlikeProducts = _.concat(youlikeProducts)
     },
     [types.ME_GET_YOU_LIKE_SKIP](state){
         state.youlikeskip += 20

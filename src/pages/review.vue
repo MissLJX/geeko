@@ -1,16 +1,26 @@
 <template id="review">
     <div class="review-body">
-        <ul id="review-product">
-            <product-item :item="item"/>
-        </ul>
+        <div class="content">
+            <div class="">
+                <!-- <link-image href="#" :src="item.productImageUrl" :title="item.productName"/> -->
+                <a href="#" :title="item.productName">
+                    <img :alt="item.productName" :src="item.productImageUrl">
+                </a>
+            </div>
+
+            <div>
+                <div class="_name">{{item.productName}}</div>
+                <div class="_sizecolor">{{item.color}}/{{item.size}}</div>
+            </div>
+        </div>
 
         <div id="review-star-area">
-            <h3>{{$t("label.howItem")}}</h3>
+            <!-- <h3>{{$t("label.howItem")}}</h3> -->
             <star-list id="stars" :score="comment.score" @star="starClickHandle"/>
         </div>
 
         <div id="review-fit-area">
-            <h3>{{$t("label.howProduct")}}</h3>
+            <!-- <h3>{{$t("label.howProduct")}}</h3> -->
 
             <ul id="fit-select">
                 <li @click="fitClickHandle" v-for="fit in fits" :value="fit.value"
@@ -19,9 +29,46 @@
             </ul>
         </div>
 
+        <div id="review-measure-area">
+            <p>Your Measurements (Optional) </p>
+            <div>
+                <div>
+                    <div>
+                        <span class="_title">Height:</span>
+                        <input type="text" class="_input" v-model="comment.height">
+                        <span class="_size">cm/ in</span>
+                    </div>
+                    <div>
+                        <span class="_title">Bust:</span>
+                        <input class="_input" type="text" v-model="comment.bust">
+                        <span class="_size">cm/ in</span>
+                    </div>
+                    <div>
+                        <span class="_title">Waist:</span>
+                        <input class="_input" type="text" v-model="comment.waist">
+                        <span class="_size">cm/ in</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div>
+                        <span class="_title">Weight:</span>
+                        <input class="_input" type="text" v-model="comment.weight">
+                        <span class="_size">kg/lbs </span>
+                    </div>
+                    <div>
+                        <span class="_title">Hips:</span>
+                        <input class="_input" type="text" v-model="comment.hips">
+                        <span class="_size">cm/ in</span>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
         <div id="review-content">
-            <textarea :placeholder="$t('label.textAreaTip')"
-                      v-model="comment.content"></textarea>
+            <textarea placeholder="*What do you want to say ?"
+                      v-model="comment.content" maxlength="150"></textarea>
             <div v-if="isempty" class="please-fill">{{$t("label.fillField")}}</div>
             <div class="upload-container" id="imgboxid">
                 <ul v-if="uploadedImages && uploadedImages.length">
@@ -38,10 +85,13 @@
                     <div class="addnum">{{addnum}} / 5</div>
                 </div>
             </div>
+        </div>
 
+        <div class="mybg">
             <div v-if="sending" class="btn sending">{{$t("label.loading")}}</div>
             <div class="btn black" @click="confirmHandle" v-else>{{$t("label.confirm")}}</div>
         </div>
+
         <div v-if="isconfirm">
             <div class="mask"></div>
             <comment-alert :data="commentAler" @hideAlert="backOrderPage"></comment-alert>
@@ -52,20 +102,21 @@
 
 
     .review-body {
-
+        padding: 10px 20px 0px 20px;
+        margin-bottom: 82px;
         h3 {
             font-size: 14px;
-            font-weight: bold;
+            // font-weight: bold;
             padding-bottom: 5px;
         }
 
-        #review-product {
-            padding: 10px;
-        }
+        // #review-product {
+        //     padding: 10px;
+        // }
 
         #review-star-area {
-            padding: 0 10px 10px 10px;
-
+            // padding: 0 10px 10px 10px;
+            margin-top: 15px;
             #stars {
                 margin-top: 5px;
             }
@@ -73,48 +124,89 @@
         }
 
         #review-fit-area {
-            padding: 10px;
-            border-top: 1px solid #efefef;
+            // padding: 10px;
+            padding-top: 15px;
+            padding-bottom: 7px;
+            // border-top: 1px solid #efefef;
+            overflow: hidden;
         }
 
         #fit-select {
 
             & > li {
-                font-size: 12px;
+                font-size: 15px;
                 color: #9a9699;
-                border-bottom: 1px solid #efefef;
-                height: 35px;
-                line-height: 35px;
-                position: relative;
                 cursor: pointer;
+                border: 1px solid #dddddd;
+                float: left;
+                padding: 5px 10px;
+                margin-right: 10px;
+                border-radius: 4px;
 
-                &::after {
-                    display: block;
-                    width: 15px;
-                    height: 15px;
-                    border: 1px solid #dcdcdc;
-                    content: '';
-                    position: absolute;
-                    right: 0;
-                    top: 10px;
-                    border-radius: 50%;
-                }
+                // &::after {
+                //     display: block;
+                //     width: 15px;
+                //     height: 15px;
+                //     border: 1px solid #dcdcdc;
+                //     content: '';
+                //     position: absolute;
+                //     right: 0;
+                //     top: 10px;
+                //     border-radius: 50%;
+                // }
 
                 &.active {
 
-                    &::after {
-                        border: 5px solid #e5004f;
-                    }
+                    // &::after {
+                    //     border: 5px solid #e5004f;
+                    // }
 
-                    color: #222928;
+                    color: #ffffff;
+                    background-color: #111111;
                 }
+            }
+        }
+
+        #review-measure-area{
+            margin-top: 10px;
+            & > div{
+                display: flex;
+                ._title{
+                    font-size: 14px;
+                    color: #999999;
+                }
+
+                ._input{
+                    border:none;
+                    border-bottom:1px solid #dddddd;
+                    width:calc(50% - 25px);
+                    text-align: center;
+                }
+
+                ._size{
+                    font-size: 14px;
+                    color: #222222;
+                }
+
+                & > div{
+                    & > div{
+                        margin: 10px 0px;
+                    }
+                }
+            }
+
+            & > p{
+                font-size: 16px;
+                line-height: 18px;
+                color: #222222;
+                padding-bottom: 10px;
             }
         }
 
         #review-content {
 
-            margin-top: 5px;
-            padding: 10px;
+            margin-top: 20px;
+            // padding: 10px;
 
             textarea {
                 width: 100%;
@@ -122,6 +214,7 @@
                 resize: none;
                 padding: 5px 10px;
                 height: 110px;
+                border-color: #e6e6e6;
             }
 
             .please-fill{
@@ -211,6 +304,49 @@
                 }
             }
         }
+
+        .mybg{
+            position: fixed;
+            width: 100%;
+            left: 0px;
+            bottom: 0px;
+            height: 72px;
+            background-color: #ffffff;
+            box-shadow: 0px 2px 20px 0px rgba(153, 153, 153, 0.5);
+            padding: 12px 20px;
+
+            .btn{
+                height: 48px;
+                background-color: #121314;
+                border-radius: 2px;
+                line-height: 48px;
+                width: 100%;
+            }
+        }
+
+        .content{
+            display: flex;
+
+            & > div{
+                img{
+                    width: 40px;
+                    height: 50px;
+                    margin-right: 12px;
+                } 
+            }
+
+            ._name{
+                font-size: 14px;
+                color: #999999;
+                margin-top: 5px;
+                }
+
+            ._sizecolor{
+                font-size: 14px;
+                color: #222222;
+                margin-top: 5px;
+            }
+        }
     }
 
 </style>
@@ -237,9 +373,9 @@
         data(){
             return {
                 fits: [
-                    {label: this.$t('label.tooSmall'), value: '3'},
-                    {label: this.$t('label.goodFit'), value: '2'},
-                    {label: this.$t('label.tooLarge'), value: '1'}
+                    {label: "Small", value: '3'},
+                    {label: "True to size", value: '2'},
+                    {label: "Large", value: '1'}
                 ],
                 isconfirm:false,
                 isissatisfy:true,
@@ -304,16 +440,41 @@
                         let _files = results.map(result => result.file);
                         var formData = new FormData();
                         formData.append('content', this.comment.content);
-                        formData.append('id', this.comment.id);
-                        formData.append('productId', _this.$route.params.productId);
+
+                        if(!!this.comment.id && this.comment.id != null){
+                            formData.append('id', this.comment.id);
+                        }else{
+                            formData.append('variantId', this.$route.params.variantId);
+                        }
+
+
+                        // formData.append('productId', _this.$route.params.productId);
                         formData.append('score', this.comment.score);
                         formData.append('sizingRecommendation', this.comment.sizingRecommendation);
+
+                        if(!!_this.$route.params.orderId){
+                            formData.append('orderId',_this.$route.params.orderId);
+                        }
 
                         _files.forEach((file,index) => {
                             formData.append("imageFiles",  new File([file], files[index].name));
                         });
 
-
+                        if(_this.comment.height && _this.comment.height != null){
+                            formData.append('height', this.comment.height);
+                        }
+                        if(_this.comment.weight && _this.comment.weight != null){
+                            formData.append('weight', this.comment.weight);
+                        }
+                        if(_this.comment.bust && _this.comment.bust != null){
+                            formData.append('bust', this.comment.bust);
+                        }
+                        if(_this.comment.hips && _this.comment.hips != null){
+                            formData.append('hips', this.comment.hips);
+                        }
+                        if(_this.comment.waist && _this.comment.waist != null){
+                            formData.append('waist', this.comment.waist);
+                        }
 
                         if(!!!_this.comment.productId)
                             _this.comment.productId = _this.$route.params.productId

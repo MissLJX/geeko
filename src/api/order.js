@@ -88,7 +88,7 @@ export default{
     },
     sendComment(comment){
         return new Promise((resolve, reject) => {
-            axios.form('/comment/add2', comment).then((comment) => {
+            axios.form('/product-comment/add', comment).then((comment) => {
                 resolve(comment);
             }).catch((e) => {
                 reject(e)
@@ -97,7 +97,7 @@ export default{
     },
     updateComment(comment){
         return new Promise((resolve, reject) => {
-            axios.form('/comment/update2', comment).then((comment) => {
+            axios.form('/product-comment/update', comment).then((comment) => {
                 resolve(comment);
             }).catch((e) => {
                 reject(e)

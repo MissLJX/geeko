@@ -3,6 +3,8 @@ var webpack = require('webpack');
 
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 module.exports = {
     entry: './src/main.js',
     output: {
@@ -32,6 +34,13 @@ module.exports = {
         ]
     },
 
+    plugins:[
+        new HtmlWebpackPlugin({
+            title: 'index',
+            template: './index.ejs',
+            filename: 'index.html'
+        })
+    ],
 
     resolve: {
         alias: {
@@ -46,14 +55,14 @@ module.exports = {
         contentBase: './dist',
         proxy: {
             '/api': {
-                /*target: 'http://localhost:8080/wanna/',*/
-                target: 'https://www.chicme.xyz/',
+                target: 'http://localhost:8080/wanna/',
+                // target: 'https://www.chicme.xyz/',
                 pathRewrite: { '^/api': '' },
                 secure: false
             }
         }
     },
-    devtool: '#eval-source-map'
+    devtool: 'eval-source-map'
 };
 
 if (process.env.NODE_ENV === 'production') {

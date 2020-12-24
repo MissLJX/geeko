@@ -19,7 +19,9 @@ const instance = axios.create({
         appVersion: Constant.APP_VERSION,
         /*countryCode: Utils.getCountry(),*/
         wid: Utils.getWid(),
+        // wid: "6fd3b003-507f-43d7-9f06-e3244ae34dde",
         accessToken: window.accessToken || '',
+        // accessToken: "cc416293-8398-4a6c-a73f-00af03a9193c" || '',
         deviceType: 'msite',
         xtoken: window.secret || ''
     }

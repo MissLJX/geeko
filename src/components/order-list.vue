@@ -1,6 +1,6 @@
 <template id="order-list">
     <list class="st-order-list" :items="orders" :loading="loading" @listing="listing" :currentListing="currentListing">
-        <template slot="li" scope="props">
+        <template slot="li" slot-scope="props">
             <order-li :key="props.item.id" :order="props.item"/>
         </template>
     </list>

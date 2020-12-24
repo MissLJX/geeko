@@ -1,7 +1,7 @@
 <template>
     <div class="el-you-likes">
         <div class="hd">
-            YOU MAY ALSO LIKE
+            OFTEN BOUGHT WITH
         </div>
         <div class="bd">
             <product-list :products="products" :loading="loading" :finished="finished" @listing="listingHandle"/>
@@ -48,22 +48,22 @@
             }
         },
         methods: {
-            listingHandle(){
-                this.loading = true
-                store.dispatch("getYouLikeProducts",{orderId:this.orderId,skip: this.skip}).then(({empty, finished}) => {
-                    if(finished) this.finished = finished
-                    if(empty) this.empty = empty
-                    this.loading = false
-                    store.dispatch("getYouLikeSkip")
-                })
-            }
+            // listingHandle(){
+            //     this.loading = true
+            //     store.dispatch("getYouLikeProducts",{orderId:this.orderId,skip: this.skip}).then(({empty, finished}) => {
+            //         if(finished) this.finished = finished
+            //         if(empty) this.empty = empty
+            //         this.loading = false
+            //         store.dispatch("getYouLikeSkip")
+            //     })
+            // }
         },
         components: {
             'product-list': ProductList
         },
         created(){
             store.dispatch("getYouLikeProducts",{orderId:this.orderId,skip: 0}).then(() => {
-                store.dispatch("getYouLikeSkip")
+                // store.dispatch("getYouLikeSkip")
             })
         },
     }

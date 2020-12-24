@@ -20,7 +20,7 @@
                 <div class="st-p-price">{{price(item.price)}}</div>
                 <div v-if="orderId && status === 5">
                     <router-link class="btn reviewbtn"
-                                 :to="{ name: 'review', params: { productId: item.productId , orderId: orderId}}">
+                                 :to="{ name: 'review', params: { productId: item.productId , orderId: orderId , variantId:item.variantId}}">
                         Review
                     </router-link>
                 </div>
