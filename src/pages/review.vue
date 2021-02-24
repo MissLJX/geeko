@@ -1,354 +1,366 @@
 <template id="review">
-    <div class="review-body">
-        <div class="content">
-            <div class="">
-                <!-- <link-image href="#" :src="item.productImageUrl" :title="item.productName"/> -->
-                <a href="#" :title="item.productName">
-                    <img :alt="item.productName" :src="item.productImageUrl">
-                </a>
-            </div>
-
-            <div>
-                <div class="_name">{{item.productName}}</div>
-                <div class="_sizecolor">{{item.color}}/{{item.size}}</div>
-            </div>
-        </div>
-
-        <div id="review-star-area">
-            <!-- <h3>{{$t("label.howItem")}}</h3> -->
-            <star-list id="stars" :score="comment.score" @star="starClickHandle"/>
-        </div>
-
-        <div id="review-fit-area">
-            <!-- <h3>{{$t("label.howProduct")}}</h3> -->
-
-            <ul id="fit-select">
-                <li @click="fitClickHandle" v-for="fit in fits" :value="fit.value"
-                    :class="{active: fit.value === comment.sizingRecommendation}">{{fit.label}}
-                </li>
-            </ul>
-        </div>
-
-        <div id="review-measure-area">
-            <p>Your Measurements (Optional) </p>
-            <div>
-                <div>
-                    <div>
-                        <span class="_title">Height:</span>
-                        <input type="text" class="_input" v-model="comment.height">
-                        <span class="_size">cm/ in</span>
-                    </div>
-                    <div>
-                        <span class="_title">Bust:</span>
-                        <input class="_input" type="text" v-model="comment.bust">
-                        <span class="_size">cm/ in</span>
-                    </div>
-                    <div>
-                        <span class="_title">Waist:</span>
-                        <input class="_input" type="text" v-model="comment.waist">
-                        <span class="_size">cm/ in</span>
-                    </div>
+    <div id="review-container">
+        <div class="review-body">
+            <div class="content">
+                <div class="">
+                    <!-- <link-image href="#" :src="item.productImageUrl" :title="item.productName"/> -->
+                    <a href="#" :title="item.productName">
+                        <img :alt="item.productName" :src="item.productImageUrl">
+                    </a>
                 </div>
 
                 <div>
-                    <div>
-                        <span class="_title">Weight:</span>
-                        <input class="_input" type="text" v-model="comment.weight">
-                        <span class="_size">kg/lbs </span>
-                    </div>
-                    <div>
-                        <span class="_title">Hips:</span>
-                        <input class="_input" type="text" v-model="comment.hips">
-                        <span class="_size">cm/ in</span>
-                    </div>
+                    <div class="_name">{{item.productName}}</div>
+                    <div class="_sizecolor">{{item.color}}/{{item.size}}</div>
                 </div>
             </div>
-            
-        </div>
 
-        <div id="review-content">
-            <textarea placeholder="*What do you want to say ?"
-                      v-model="comment.content" maxlength="150"></textarea>
-            <div v-if="isempty" class="please-fill">{{$t("label.fillField")}}</div>
-            <div class="upload-container" id="imgboxid">
-                <ul v-if="uploadedImages && uploadedImages.length">
-                    <li v-for="(image,index) in uploadedImages" class="uploadImage" >
-                        <img :src="image"/>
-                        <span class="removeImg" @click="removeImg(index)">&times;</span>
+            <div id="review-star-area">
+                <!-- <h3>{{$t("label.howItem")}}</h3> -->
+                <star-list id="stars" :score="comment.score" @star="starClickHandle"/>
+            </div>
+
+            <div id="review-fit-area">
+                <!-- <h3>{{$t("label.howProduct")}}</h3> -->
+
+                <ul id="fit-select">
+                    <li @click="fitClickHandle" v-for="fit in fits" :value="fit.value"
+                        :class="{active: fit.value === comment.sizingRecommendation}">{{fit.label}}
                     </li>
                 </ul>
-                <div class="upload-img" id="uploadimg" v-show="uploadedImages.length<5">
-                    <form ref="imageLoader">
-                        <input type="file" name="imageFiles" multiple="multiple" @change="loadImg" accept="image/jpg,image/jpeg,image/png,image/gif">
-                    </form>
-                    <div class="addbtn">+</div>
-                    <div class="addnum">{{addnum}} / 5</div>
+            </div>
+
+            <div id="review-content">
+                <textarea placeholder="*What do you want to say ?"
+                        v-model="comment.content" maxlength="150"></textarea>
+                <div v-if="isempty" class="please-fill">{{$t("label.fillField")}}</div>
+                <div class="upload-container" id="imgboxid">
+                    <ul v-if="uploadedImages && uploadedImages.length">
+                        <li v-for="(image,index) in uploadedImages" class="uploadImage" >
+                            <img :src="image"/>
+                            <span class="removeImg" @click="removeImg(index)">&times;</span>
+                        </li>
+                    </ul>
+                    <div class="upload-img" id="uploadimg" v-show="uploadedImages.length<5">
+                        <form ref="imageLoader">
+                            <input type="file" name="imageFiles" multiple="multiple" @change="loadImg" accept="image/jpg,image/jpeg,image/png,image/gif">
+                        </form>
+                        <div class="addbtn">+</div>
+                        <div class="addnum">{{addnum}} / 5</div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="mybg">
-            <div v-if="sending" class="btn sending">{{$t("label.loading")}}</div>
-            <div class="btn black" @click="confirmHandle" v-else>{{$t("label.confirm")}}</div>
-        </div>
+        <div class="review-footer">
+            <div id="review-measure-area">
+                <p>Your Measurements (Optional) </p>
+                <div>
+                    <div>
+                        <div>
+                            <span class="_title">Height:</span>
+                            <input type="text" class="_input" v-model="comment.height">
+                            <span class="_size">cm/ in</span>
+                        </div>
+                        <div>
+                            <span class="_title">Bust:</span>
+                            <input class="_input" type="text" v-model="comment.bust">
+                            <span class="_size">cm/ in</span>
+                        </div>
+                        <div>
+                            <span class="_title">Waist:</span>
+                            <input class="_input" type="text" v-model="comment.waist">
+                            <span class="_size">cm/ in</span>
+                        </div>
+                    </div>
 
-        <div v-if="isconfirm">
-            <div class="mask"></div>
-            <comment-alert :data="commentAler" @hideAlert="backOrderPage"></comment-alert>
+                    <div>
+                        <div>
+                            <span class="_title">Weight:</span>
+                            <input class="_input" type="text" v-model="comment.weight">
+                            <span class="_size">kg/lbs </span>
+                        </div>
+                        <div>
+                            <span class="_title">Hips:</span>
+                            <input class="_input" type="text" v-model="comment.hips">
+                            <span class="_size">cm/ in</span>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="mybg">
+                <div v-if="sending" class="btn sending">{{$t("label.loading")}}</div>
+                <div class="btn black" @click="confirmHandle" v-else>{{$t("label.confirm")}}</div>
+            </div>
+
+            <div v-if="isconfirm">
+                <div class="mask"></div>
+                <comment-alert :data="commentAler" @hideAlert="backOrderPage"></comment-alert>
+            </div>
         </div>
     </div>
 </template>
 <style scoped lang="scss" type="text/scss">
-
-
-    .review-body {
-        padding: 10px 20px 0px 20px;
+    #review-container{
         margin-bottom: 82px;
-        h3 {
-            font-size: 14px;
-            // font-weight: bold;
-            padding-bottom: 5px;
-        }
-
-        // #review-product {
-        //     padding: 10px;
-        // }
-
-        #review-star-area {
-            // padding: 0 10px 10px 10px;
-            margin-top: 15px;
-            #stars {
-                margin-top: 5px;
+        .review-body {
+            padding: 10px 20px 0px 20px;
+            h3 {
+                font-size: 14px;
+                // font-weight: bold;
+                padding-bottom: 5px;
             }
 
-        }
+            // #review-product {
+            //     padding: 10px;
+            // }
 
-        #review-fit-area {
-            // padding: 10px;
-            padding-top: 15px;
-            padding-bottom: 7px;
-            // border-top: 1px solid #efefef;
-            overflow: hidden;
-        }
+            #review-star-area {
+                // padding: 0 10px 10px 10px;
+                margin-top: 15px;
+                #stars {
+                    margin-top: 5px;
+                }
 
-        #fit-select {
+            }
 
-            & > li {
-                font-size: 15px;
-                color: #9a9699;
-                cursor: pointer;
-                border: 1px solid #dddddd;
-                float: left;
-                padding: 5px 10px;
-                margin-right: 10px;
-                border-radius: 4px;
+            #review-fit-area {
+                // padding: 10px;
+                padding-top: 15px;
+                padding-bottom: 7px;
+                // border-top: 1px solid #efefef;
+                overflow: hidden;
+            }
 
-                // &::after {
-                //     display: block;
-                //     width: 15px;
-                //     height: 15px;
-                //     border: 1px solid #dcdcdc;
-                //     content: '';
-                //     position: absolute;
-                //     right: 0;
-                //     top: 10px;
-                //     border-radius: 50%;
-                // }
+            #fit-select {
 
-                &.active {
+                & > li {
+                    font-size: 15px;
+                    color: #9a9699;
+                    cursor: pointer;
+                    border: 1px solid #dddddd;
+                    float: left;
+                    padding: 5px 10px;
+                    margin-right: 10px;
+                    border-radius: 4px;
 
                     // &::after {
-                    //     border: 5px solid #e5004f;
+                    //     display: block;
+                    //     width: 15px;
+                    //     height: 15px;
+                    //     border: 1px solid #dcdcdc;
+                    //     content: '';
+                    //     position: absolute;
+                    //     right: 0;
+                    //     top: 10px;
+                    //     border-radius: 50%;
                     // }
 
-                    color: #ffffff;
-                    background-color: #111111;
-                }
-            }
-        }
+                    &.active {
 
-        #review-measure-area{
-            margin-top: 10px;
-            & > div{
-                display: flex;
-                ._title{
-                    font-size: 14px;
-                    color: #999999;
-                }
+                        // &::after {
+                        //     border: 5px solid #e5004f;
+                        // }
 
-                ._input{
-                    border:none;
-                    border-bottom:1px solid #dddddd;
-                    width:calc(50% - 25px);
-                    text-align: center;
-                }
-
-                ._size{
-                    font-size: 14px;
-                    color: #222222;
-                }
-
-                & > div{
-                    & > div{
-                        margin: 10px 0px;
+                        color: #ffffff;
+                        background-color: #111111;
                     }
                 }
             }
 
-            & > p{
-                font-size: 16px;
-                line-height: 18px;
-                color: #222222;
-                padding-bottom: 10px;
-            }
-        }
+            #review-content {
 
-        #review-content {
+                margin-top: 15px;
+                // padding: 10px;
 
-            margin-top: 20px;
-            // padding: 10px;
-
-            textarea {
-                width: 100%;
-                height: 100%;
-                resize: none;
-                padding: 5px 10px;
-                height: 110px;
-                border-color: #e6e6e6;
-            }
-
-            .please-fill{
-                color:red;
-            }
-
-            .btn {
-                width: 100%;
-                height: 40px;
-                line-height: 40px;
-                display: block;
-                margin: 15px auto;
-                font-weight: bold;
-                &.sending {
-                    cursor: default;
-                    opacity: 0.9;
+                textarea {
+                    width: 100%;
+                    height: 100%;
+                    resize: none;
+                    padding: 5px 10px;
+                    height: 110px;
+                    border-color: #e6e6e6;
                 }
-            }
 
-        }
-        .mask{
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            left: 0;
-            top:0;
-            background-color: rgba(0,0,0,0.4);
-            z-index: 200;
-        }
-        .upload-container{
-            overflow:hidden;
-            .upload-img{
-                float:left;
-                margin:5px;
-                width: fit-content;
-                /*background-image: url("https://s3-us-west-2.amazonaws.com/image.chic-fusion.com/promotion/1129/chicme-23.png");*/
-                background-size:100%;
-                position: relative;
-                border: 1px dashed #999;
-                input{
-                    display:inline-block;
+                .please-fill{
+                    color:red;
+                }
+
+                .btn {
+                    width: 100%;
+                    height: 40px;
+                    line-height: 40px;
+                    display: block;
+                    margin: 15px auto;
+                    font-weight: bold;
+                    &.sending {
+                        cursor: default;
+                        opacity: 0.9;
+                    }
+                }
+
+            }
+            
+            .upload-container{
+                overflow:hidden;
+                .upload-img{
+                    float:left;
+                    margin:5px;
+                    width: fit-content;
+                    /*background-image: url("https://s3-us-west-2.amazonaws.com/image.chic-fusion.com/promotion/1129/chicme-23.png");*/
+                    background-size:100%;
+                    position: relative;
+                    border: 1px dashed #999;
+                    input{
+                        display:inline-block;
+                        height:107.5px;
+                        width:88px;
+                        opacity: 0;
+                        position: relative;
+                        z-index: 99;
+                    }
+                    .addbtn{
+                        position: absolute;
+                        top: calc(50% - 25px);
+                        left: calc(50% - 8px);
+                        font-size: 34px;
+                        z-index: 0;
+                        color: #999;
+                    }
+                    .addnum{
+                        position: absolute;
+                        top: 70%;
+                        left: calc(50% - 10px);
+                        font-size: 12px;
+                        z-index: 0;
+                        color: #999;
+                    }
+                }
+                .uploadImage{
+                    position:relative;
                     height:107.5px;
                     width:88px;
-                    opacity: 0;
-                    position: relative;
-                    z-index: 99;
-                }
-                .addbtn{
-                    position: absolute;
-                    top: calc(50% - 25px);
-                    left: calc(50% - 8px);
-                    font-size: 34px;
-                    z-index: 0;
-                    color: #999;
-                }
-                .addnum{
-                    position: absolute;
-                    top: 70%;
-                    left: calc(50% - 10px);
-                    font-size: 12px;
-                    z-index: 0;
-                    color: #999;
+                    float:left;
+                    margin:5px;
+                    overflow: hidden;
+                    img{
+                        width:100%;
+                    }
+                    .removeImg{
+                        width:20px;
+                        line-height:20px;
+                        font-size: 21px;
+                        text-align: center;
+                        display: block;
+                        border-radius: 50%;
+                        background-color: #cccccc;
+                        color:#ffffff;
+                        position:absolute;
+                        top:6px;
+                        right:4px;
+                    }
                 }
             }
-            .uploadImage{
-                position:relative;
-                height:107.5px;
-                width:88px;
-                float:left;
-                margin:5px;
-                overflow: hidden;
-                img{
-                    width:100%;
+
+            .content{
+                display: flex;
+
+                & > div{
+                    img{
+                        width: 40px;
+                        height: 50px;
+                        margin-right: 12px;
+                    } 
                 }
-                .removeImg{
-                    width:20px;
-                    line-height:20px;
-                    font-size: 21px;
-                    text-align: center;
-                    display: block;
-                    border-radius: 50%;
-                    background-color: #cccccc;
-                    color:#ffffff;
-                    position:absolute;
-                    top:6px;
-                    right:4px;
+
+                ._name{
+                    font-size: 14px;
+                    color: #999999;
+                    margin-top: 5px;
+                    }
+
+                ._sizecolor{
+                    font-size: 14px;
+                    color: #222222;
+                    margin-top: 5px;
                 }
             }
         }
 
-        .mybg{
-            position: fixed;
-            width: 100%;
-            left: 0px;
-            bottom: 0px;
-            height: 72px;
-            background-color: #ffffff;
-            box-shadow: 0px 2px 20px 0px rgba(153, 153, 153, 0.5);
-            padding: 12px 20px;
+        .review-footer{
+            #review-measure-area{
+                margin-top: 18px;
+                padding: 0px 20px;
+                border-top: 8px solid #f7f7f7;
+                & > div{
+                    display: flex;
+                    ._title{
+                        font-size: 14px;
+                        color: #999999;
+                    }
 
-            .btn{
-                height: 48px;
-                background-color: #121314;
-                border-radius: 2px;
-                line-height: 48px;
+                    ._input{
+                        border:none;
+                        border-bottom:1px solid #dddddd;
+                        width:calc(50% - 25px);
+                        text-align: center;
+                    }
+
+                    ._size{
+                        font-size: 14px;
+                        color: #222222;
+                        font-family: SlatePro;
+                    }
+
+                    & > div{
+                        & > div{
+                            margin: 20px 0px;
+                        }
+                    }
+                }
+
+                & > p{
+                    font-size: 16px;
+                    line-height: 18px;
+                    color: #222222;
+                    // padding-bottom: 10px;
+                    font-family: SlatePro;
+                    margin-top: 15px;
+                }
+            }
+
+            .mybg{
+                position: fixed;
                 width: 100%;
-            }
-        }
+                left: 0px;
+                bottom: 0px;
+                height: 72px;
+                background-color: #ffffff;
+                box-shadow: 0px 2px 5px 0px rgba(153, 153, 153, 0.5);
+                padding: 12px 20px;
 
-        .content{
-            display: flex;
-
-            & > div{
-                img{
-                    width: 40px;
-                    height: 50px;
-                    margin-right: 12px;
-                } 
-            }
-
-            ._name{
-                font-size: 14px;
-                color: #999999;
-                margin-top: 5px;
+                .btn{
+                    height: 48px;
+                    background-color: #121314;
+                    border-radius: 2px;
+                    line-height: 48px;
+                    width: 100%;
                 }
+            }
 
-            ._sizecolor{
-                font-size: 14px;
-                color: #222222;
-                margin-top: 5px;
+            .mask{
+                width: 100%;
+                height: 100%;
+                position: fixed;
+                left: 0;
+                top:0;
+                background-color: rgba(0,0,0,0.4);
+                z-index: 200;
             }
         }
     }
-
 </style>
 
 <script type="text/ecmascript-6">

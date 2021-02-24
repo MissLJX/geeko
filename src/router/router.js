@@ -45,6 +45,7 @@ const routes = [
       {
         path: '',
         component: HomeAll,
+        name: 'home-all',
         meta: { keepAlive: true }
       },
       {
