@@ -329,7 +329,7 @@
                         this.lastSellerId = reply.date
                     }
                     return {
-                        icon: 'https://dgzfssf1la12s.cloudfront.net/icon/' + _ticketvo.headSculptureUrl,
+                        icon: 'https://image.geeko.ltd/icon/' + _ticketvo.headSculptureUrl,
                         message: reply.message,
                         imageUrls: reply.imageUrls,
                         position: reply.sender == 'buyers' ? 'right' : 'left',

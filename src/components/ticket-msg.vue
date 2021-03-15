@@ -1,7 +1,7 @@
 <template >
     <div v-if="reply.position == 'left'" class="ticket-msg st-table" :position="reply.position">
         <div class="st-cell ticket-icon">
-            <custum-icon url="https://dgzfssf1la12s.cloudfront.net/icon/support.jpg"/>
+            <custum-icon url="https://image.geeko.ltd/icon/support.jpg"/>
         </div>
         <div class="st-cell ticket-content">
             <custum-msg :position="reply.position">

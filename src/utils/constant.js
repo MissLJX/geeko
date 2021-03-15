@@ -17,8 +17,8 @@ export const ROUTER_PATH_ORDER = PROJECT + '/me/m/order'
 export const ROUTER_PATH_ME = PROJECT + '/me'
 
 //image
-export const BASE_IMAGE_PATH = 'https://dgzfssf1la12s.cloudfront.net'
-export const BASE_PRODUCT_IMAGE_SMALL = 'https://dgzfssf1la12s.cloudfront.net/small'
+export const BASE_IMAGE_PATH = 'https://image.geeko.ltd'
+export const BASE_PRODUCT_IMAGE_SMALL = 'https://image.geeko.ltd/small'
 
 
 //order status

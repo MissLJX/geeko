@@ -26,7 +26,7 @@ const mutations = {
     },
     [types.DETAIL_LOAD_LAST_REPLY](state, reply){
         if(reply && reply.imageUrls && reply.imageUrls.length > 0)
-            reply.imageUrls = reply.imageUrls.map(img => 'https://dgzfssf1la12s.cloudfront.net/ticket/'+img)
+            reply.imageUrls = reply.imageUrls.map(img => 'https://image.geeko.ltd/ticket/'+img)
         state.latestTicket = reply
     },
     [types.CANCEL_ORDER_REASONS](state,reasons){

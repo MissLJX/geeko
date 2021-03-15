@@ -17,7 +17,7 @@ const getters = {
         if (vo && vo.ticket && vo.ticket.ticketReplies && vo.ticket.ticketReplies.length > 0) {
             _.each(vo.ticket.ticketReplies, (reply) => {
                 reply.imageUrls && (reply.imageUrls = reply.imageUrls.map((url) => {
-                    return url.indexOf('https://') == 0 || url.indexOf('blob') >= 0 ? url : 'https://dgzfssf1la12s.cloudfront.net/ticket/' + url
+                    return url.indexOf('https://') == 0 || url.indexOf('blob') >= 0 ? url : 'https://image.geeko.ltd/ticket/' + url
                 }))
             })
         }

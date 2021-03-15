@@ -1,6 +1,6 @@
 <template>
     <div class="custum-icon"
-         :style="{ 'background-image': 'url(' + url + ') , url(https://dgzfssf1la12s.cloudfront.net/site/pc/icon35.png)' }">
+         :style="{ 'background-image': 'url(' + url + ') , url(https://image.geeko.ltd/site/pc/icon35.png)' }">
 
     </div>
 </template>

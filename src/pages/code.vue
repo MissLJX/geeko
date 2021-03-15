@@ -311,7 +311,7 @@
             display: block;
             width: 10px;
             height: 30px;
-            background: url(https://dgzfssf1la12s.cloudfront.net/site/ninimour/msite/me/icon01.png) center/100% no-repeat;
+            background: url(https://image.geeko.ltd/site/ninimour/msite/me/icon01.png) center/100% no-repeat;
             right: 10px;
             top: calc(50% - 15px);
         }
