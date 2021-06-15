@@ -41,7 +41,7 @@
             </div>
             <div class="st-type-message-container" :class="{down: typeDown}">
                 <div class="textarea">
-                    <textarea :placeholder="$t('message.typemsg')+'...'" v-model="chart.message"></textarea>
+                    <textarea :placeholder="$t('message.typemsg')+'...'" v-model="chart.message" :class="{'redBorder' : isMessageRequired}"></textarea>
                 </div>
                 <div class="sender">
                     <div class="st-table">
@@ -123,7 +123,8 @@
                 showalert:false,
                 isRequired:false,
                 lastSellerId:'',
-                showAddRater:true
+                showAddRater:true,
+                isMessageRequired:false
             };
         },
         computed: {
@@ -214,6 +215,13 @@
                     _this.isRequired = true;
                     return ''
                 }
+
+                if(_this.chart.message && !!_this.chart.message){
+                    this.isMessageRequired = false;
+                }else{
+                    this.isMessageRequired = true;
+                }
+
                 if (this.chart.message && this.chart.operaId) {
                     this.$store.dispatch('sendTicket', this.chart).then(() => {
                         _this.chart.message = ''
@@ -224,7 +232,7 @@
             sendImage(evt){
                 evt.preventDefault()
                 var files = evt.target.files;
-                var maxSize = 2097152;
+                var maxSize = 10485760;
                 if(files[0].size<maxSize){
                     var formData = new FormData(this.$refs.imageLoader);
                     formData.append('operaId', this.chart.operaId);
@@ -236,7 +244,7 @@
                         _this.initScroll()
                     })
                 }else{
-                    alert("A single image should not exceed 2M");
+                    alert("A single image should not exceed 10M");
                 }
             },
             initScroll(){
@@ -480,6 +488,6 @@
         z-index: 200;
     }
     .redBorder{
-        border: 1px solid #E64545;
+        border: 1px solid pink;
     }
 </style>

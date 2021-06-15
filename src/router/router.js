@@ -15,6 +15,11 @@ import HomeCanceled from '../pages/home-canceled.vue';
 import Contact from '../pages/contact.vue';
 import ContactCode from '../pages/contactcode.vue';
 import Detail from '../pages/detail.vue';
+
+import Detail2 from '../pages/detail2.vue'
+
+import Detail3 from '../pages/detail3.vue'
+
 import OrderCode from '../pages/code.vue';
 import Review from '../pages/review.vue';
 import ShippingPolicy from '../pages/shipping-policy.vue';
@@ -24,6 +29,8 @@ import Ticket from '../pages/ticket.vue';
 import OutsideReview from '../pages/outside-review.vue';
 
 import { ROUTER_PATH_ORDER } from '../utils/constant';
+
+import ReturnLogistics from '../pages/return-logistics.vue'
 
 
 import * as Constant from '../utils/constant';
@@ -45,7 +52,7 @@ const routes = [
       {
         path: '',
         component: HomeAll,
-        name: 'home-all',
+        name: 'special-home-all',
         meta: { keepAlive: true }
       },
       {
@@ -66,12 +73,12 @@ const routes = [
         name: 'home-unpaid',
         meta: { keepAlive: true }
       },
-      {
-          path: 'paid',
-          component: HomePaid,
-          name: 'home-paid',
-          meta: { keepAlive: true }
-      },
+      // {
+      //     path: 'paid',
+      //     component: HomePaid,
+      //     name: 'home-paid',
+      //     meta: { keepAlive: true }
+      // },
       {
         path: 'shipped',
         component: HomeShipped,
@@ -97,9 +104,10 @@ const routes = [
   {
     path: ROUTER_PATH_ORDER + '/detail/:orderId',
     name: 'detail',
-    component: Detail,
+    component: Detail3,
     meta: { keepAlive: false }
   },
+  // 未知  order-detail的替代品
   {
     path: ROUTER_PATH_ORDER + '/code/:code',
     name: 'code',
@@ -113,6 +121,12 @@ const routes = [
     meta: { keepAlive: false }
   },
   {
+      path: ROUTER_PATH_ORDER + '/logistics-detail',
+      name: 'logisticsDetail',
+      component: Tracking,
+      meta: { keepAlive: false }
+  },
+  {
       path: ROUTER_PATH_ORDER + '/packageTracking',
       name: 'packageTracking',
       component: packageTracking,
@@ -123,6 +137,7 @@ const routes = [
     name: 'review',
     component: Review
   },
+  // 客服沟通订单聊天页面  contactCode   ticket 三个一样的页面
   {
     path: ROUTER_PATH_ORDER + '/contact/:orderId',
     name: 'contact',
@@ -147,6 +162,11 @@ const routes = [
     path: ROUTER_PATH_ORDER + '/outsideReview:id',
     name: 'outsideReview',
     component: OutsideReview
+  },
+  {
+    path:ROUTER_PATH_ORDER + "/return-logistics/:orderId",
+    name:"returnLogistics",
+    component:ReturnLogistics
   }
 ];
 

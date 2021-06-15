@@ -3,12 +3,10 @@
 
 
 @font-face {
-  font-family: 'iconfont';  /* project id 384296 */
-  src: url('//at.alicdn.com/t/font_384296_vm55jhhnuao.eot');
-  src: url('//at.alicdn.com/t/font_384296_vm55jhhnuao.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_384296_vm55jhhnuao.woff') format('woff'),
-  url('//at.alicdn.com/t/font_384296_vm55jhhnuao.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_384296_vm55jhhnuao.svg#iconfont') format('svg');
+  font-family: 'iconfont';  /* Project id 384296 */
+  src: url('//at.alicdn.com/t/font_384296_vnxx9qw9ud.woff2?t=1620286802692') format('woff2'),
+       url('//at.alicdn.com/t/font_384296_vnxx9qw9ud.woff?t=1620286802692') format('woff'),
+       url('//at.alicdn.com/t/font_384296_vnxx9qw9ud.ttf?t=1620286802692') format('truetype');
 }
 
 .iconfont{
@@ -20,6 +18,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+@font-face {
+	font-family: 'SlatePro';
+	src: url('https://d2py3dbi6pvb43.cloudfront.net/fonts/SlatePro.ttf');
+}
+
+@font-face {
+	font-family: 'SlatePro-Medium';
+	src: url('https://d2py3dbi6pvb43.cloudfront.net/fonts/SlatePro-Medium.ttf');
+}
 
 //some basic css
 body {
@@ -63,6 +70,18 @@ body {
 
 .st-v-b{
   vertical-align: bottom;
+}
+
+.st-t-l{
+  text-align: left;
+}
+
+.st-t-r{
+  text-align: right;
+}
+
+.st-t-c{
+  text-align: center;
 }
 
 .st-ellipsis {
@@ -121,7 +140,6 @@ body {
 .st-order-home {
   & > .hd {
     width: 100%;
-    height: 50px;
     padding: 0 10px;
     margin: 10px 0;
     & > div {
@@ -301,29 +319,29 @@ body {
   }
 }
 
-.st-address {
-  color: #666;
-  i{
-    color: #9a9a9a;
-    margin-right: 10px;
-    &:last-child{
-      font-size: 18px;
-    }
-  }
-  font-style: normal;
-  border-bottom: 1px solid #e6e6e6;
-  & > div {
-    line-height: 20px;
-  }
-  & > div:first-child{
-    margin-bottom: 8px;
-    color: #222;
-  }
-  & > div:last-child{
-    padding-left: 28px;
-  }
-  padding: 14px 0;
-}
+// .st-address {
+//   color: #666;
+//   i{
+//     color: #9a9a9a;
+//     margin-right: 10px;
+//     &:last-child{
+//       font-size: 18px;
+//     }
+//   }
+//   font-style: normal;
+//   border-bottom: 1px solid #e6e6e6;
+//   & > div {
+//     line-height: 20px;
+//   }
+//   & > div:first-child{
+//     margin-bottom: 8px;
+//     color: #222;
+//   }
+//   & > div:last-child{
+//     padding-left: 28px;
+//   }
+//   padding: 14px 0;
+// }
 
 .st-order-body {
   padding-left: 10px;

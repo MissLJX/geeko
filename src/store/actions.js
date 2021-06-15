@@ -34,5 +34,13 @@ export default {
     },
     closeConfirm: function ({commit}) {
         commit(types.APP_CONFIRM_SHOW, {show: false, cfg: null})
+    },
+    generalUploadImage({commit},{formData}){
+        return new Promise((reslove,reject) => {
+            console.log("formData",formData);
+            api.generalUploadImage(formData).then((result) => {
+                reslove(result);
+            });
+        });
     }
 }

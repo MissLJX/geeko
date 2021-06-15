@@ -48,7 +48,7 @@
             }
         },
         methods: {
-            // listingHandle(){
+            listingHandle(){
             //     this.loading = true
             //     store.dispatch("getYouLikeProducts",{orderId:this.orderId,skip: this.skip}).then(({empty, finished}) => {
             //         if(finished) this.finished = finished
@@ -56,7 +56,7 @@
             //         this.loading = false
             //         store.dispatch("getYouLikeSkip")
             //     })
-            // }
+            }
         },
         components: {
             'product-list': ProductList

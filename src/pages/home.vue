@@ -3,24 +3,36 @@
         <div v-if="bbmessage" class="bbtip" v-html="bbmessage"></div>
         <div class="st-flex hd">
             <!--未付款订单-->
-            <p v-for="(item,key) in tabList" :key="item.value" :class="{'active': item.value === isActive}" :value="item.value" @click="changeHandle(item.value,key)">
-                {{item.label}}
-            </p>
+            <div v-swiper:mySwiper="swiperHomeOption">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide" v-for="(item,key) in tabList" :key="item.value" :class="{'active': item.value === isActive}" :value="item.value" @click="changeHandle(item.value,key)">
+                        {{item.label}}
+                    </div>
+                </div>
+            </div>
+            
             <!--<div class="st-cell">
                 <geeko-select @change="changeHandle" :items="tabList"/>
             </div>-->
         </div>
-        <keep-alive>
-            <router-view></router-view>
-        </keep-alive>
+        <div class="__bd">
+            <keep-alive>
+                <router-view></router-view>
+            </keep-alive>
+        </div>
     </div>
 </template>
 
 <style scoped lang="scss">
     .st-flex{
-        display: flex;
-        overflow-x: auto;
+        // display: flex;
+        // overflow-x: auto;
         cursor: pointer;
+        // position: fixed;
+        // top: -1px;
+        // left: 0;
+        // background-color: #ffffff;
+        // z-index: 2;
     }
     .st-flex p{
         line-height: 50px;
@@ -36,6 +48,22 @@
         padding: 10px;
 
     }
+
+    .swiper-wrapper{
+        text-align: center;
+        .swiper-slide{
+            height: 30px;
+        }
+    }
+
+    .st-order-home{
+        & > .hd{
+            margin: 0px;
+            padding: 10px 10px 3px 10px;
+            // box-shadow: 0px 0px 10px rgba(0,0,0,.2);
+        }
+    }
+    
 </style>
 
 <script type="text/ecmascript-6">
@@ -45,6 +73,10 @@
     export default {
         data() {
             var tab = this.$route.name;
+            if(!!tab && tab === 'special-home-all'){
+                // 选中头部导航
+                tab = "home-all";
+            }
             return {
                 isActive:tab,
                 tabList: [
@@ -59,11 +91,6 @@
                         selected: 'home-unpaid' === tab
                     },
                     {
-                        label: this.$t('label.paid'),
-                        value: 'home-paid',
-                        selected: 'home-paid' === tab
-                    },
-                    {
                         label: this.$t('label.processing'),
                         value: 'home-processing',
                         selected: 'home-processing' === tab
@@ -74,16 +101,20 @@
                         selected: 'home-shipped' === tab
                     },
                     {
-                        label: this.$t('label.confirmed'),
+                        // label: this.$t('label.confirmed'),
+                        label: "Review",
                         value: 'home-confirmed',
                         selected: 'home-confirmed' === tab
                     },
                     {
-                        label: this.$t('label.canceled'),
+                        label: "Returns",
                         value: 'home-canceled',
                         selected: 'home-canceled' === tab
                     }
-                ]
+                ],
+                swiperHomeOption:{
+                    slidesPerView: 4
+                }
             };
         },
 
@@ -91,6 +122,8 @@
             ...mapGetters([
                 'tab','bbmessage'
             ])
+        },
+        mounted(){
         },
         created() {
             this.changeList(this.$route.name);

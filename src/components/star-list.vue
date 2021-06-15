@@ -29,12 +29,16 @@
             score: {
                 type: Number,
                 default: 5
+            },
+            index:{
+                type:Number,
+                default:0
             }
         },
         methods: {
             clickHandle(evt){
-                evt.preventDefault()
-                this.$emit('star' , {star: evt.target.getAttribute('index')})
+                evt.preventDefault();
+                this.$emit('star' , {star: evt.target.getAttribute('index')},this.index);
             }
         }
     }

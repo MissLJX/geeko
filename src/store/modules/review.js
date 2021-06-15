@@ -13,13 +13,15 @@ const state = {
         score: 5,
         sizingRecommendation: '2'
     },
-    reviewSending: false
+    reviewSending: false,
+    comments:[]
 }
 
 
 const getters = {
     comment: state => state.comment,
-    reviewSending: state => state.reviewSending
+    reviewSending: state => state.reviewSending,
+    comments:state => state.comments
 }
 
 const mutations = {
@@ -42,9 +44,11 @@ const mutations = {
 
     [types.REVIEW_SENDING](state, sending){
         state.reviewSending = sending
+    },
+
+    [types.REVIEW_GET_COMMENTS](state,comments){
+        state.comments = comments;
     }
-
-
 }
 
 const actions = {
@@ -59,20 +63,27 @@ const actions = {
     sendComment({commit},  {reply }){
         commit(types.REVIEW_SENDING, true)
         return new Promise((resolve) => {
-            let send = api.sendComment
+            let send = api.sendComment;
             if(!!reply.get('id') && reply.get('id') !== null){
-                send = api.updateComment
+                send = api.updateComment;
             }
             send(reply).then((comment) => {
-                commit(types.REVIEW_SENDING, false)
-                resolve(comment)
+                commit(types.REVIEW_SENDING, false);
+                resolve(comment);
             }).catch((e) => {
                 console.error(e)
                 commit(types.REVIEW_SENDING, false)
             });
         });
     },
-
+    getComments({commit},{productIds}){
+        return new Promise((reslove,reject) => {
+            api.getCommentByProductIds(productIds,comments => {
+                commit(types.REVIEW_GET_COMMENTS,comments);
+                reslove(comments);
+            });
+        });
+    }
 }
 
 export default{

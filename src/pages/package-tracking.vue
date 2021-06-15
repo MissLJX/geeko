@@ -8,6 +8,7 @@
         <div class="tracking-content" v-if="packagetracking">
             <div class="st-table el-tracking-hd" v-if="packagetracking.slug || packagetracking.trackingNumber">
                 <div class="st-cell st-v-m --labels">
+                    <p v-if="getShipFromMsg" class="__title">{{getShipFromMsg}}</p>
                     <p v-if="packagetracking.slug">Logistics Company  <span>{{packagetracking.slug}}</span></p>
                     <p v-if="packagetracking.trackingNumber">Tracking Number  <span>{{packagetracking.trackingNumber}}</span></p>
                     <p v-if="packagetracking.logisticsSupplierWebsiteURL">{{$t('label.trackingDetailInfo')}}  <span><a style="text-decoration: underline" :href="packagetracking.logisticsSupplierWebsiteURL">{{packagetracking.logisticsSupplierWebsiteURL}}</a></span></p>
@@ -15,7 +16,17 @@
             </div>
 
             <div class="el-tracking-status">
-                <span class="--label" v-if="packagetracking.statusView">Current Status: {{packagetracking.statusView}}</span>
+                <div class="st-table">
+                    <div class="st-cell __icon st-v-m">
+                        <span class="iconfont __icon" v-if="$route.query.type === '1'">&#xe6a9;</span>
+                        <span class="iconfont __icon" v-else-if="$route.query.type === '6'">&#xe6a7;</span>
+                        <span class="iconfont __icon" v-else>&#xe6a5;</span>
+                    </div>
+                    <div class="st-cell st-v-m">
+                        <span class="--label" v-if="packagetracking.statusView">Current Status: {{packagetracking.statusView}}</span>
+                    </div>
+                </div>
+                
             </div>
 
 
@@ -33,7 +44,7 @@
     </div>
 </template>
 
-<style>
+<style lang="scss" scoped>
 
     .tracking-content{
         padding-left: 10px;
@@ -41,7 +52,7 @@
     .el-tracking-hd {
         width: 100%;
         padding: 10px 0;
-        border-bottom: 1px solid #e6e6e6;
+        // border-bottom: 1px solid #e6e6e6;
     }
 
     .el-tracking-hd .--icon i {
@@ -60,25 +71,16 @@
 
     .el-tracking-hd .--labels > p {
         line-height: 25px;
+
+        &.__title{
+            font-family: SlatePro-Medium;
+            font-size: 16px;
+            color: #222222;
+        }
     }
     .el-tracking-hd .--labels > p > span{
         color: #222;
     }
-    /*.el-tracking-status {
-        padding: 5px 15px;
-    }*/
-
-    .el-tracking-status .--icon {
-        font-size: 20px;
-        color: #1afa29;
-        margin-right: 5px;
-    }
-
-    .el-tracking-status .--label {
-        color: #4c5057;
-        font-weight: bold;
-    }
-
     .el-tracking-points {
         padding: 0 10px;
     }
@@ -94,8 +96,27 @@
         padding: 20px 10px 10px 15px;
     }
     .el-tracking-status{
-        background-color: #fff;
-        padding: 15px 0;
+        background-color: #f7f7f7;
+        padding: 10px 0;
+        padding-left: 10px;
+
+        .__icon{
+            & > span.iconfont{
+                font-size: 18px;
+                color:#222222;
+            }
+        }
+
+        .--label{
+            font-family: SlatePro-Medium;
+            font-size: 15px;
+            color: #222222;
+            padding-left: 5px;
+        }
+    }
+
+    .el-tracking-bd{
+        padding-top: 15px;
     }
 </style>
 
@@ -115,6 +136,9 @@
             destinPoints(){
                 return this.packagetracking.destinPoints ? this.packagetracking.destinPoints.reverse() : null;
             },
+            getShipFromMsg(){
+                return this.$route.query.shipmsg ? this.$route.query.shipmsg : "";
+            }
         },
         created(){
             this.$store.dispatch('loadPackageTracking',{type:this.$route.query.type,packageId:this.$route.query.packageid})

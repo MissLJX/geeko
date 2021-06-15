@@ -1,7 +1,7 @@
 <template id="list">
     <div class="st-list" ref="viewBox">
         <ul>
-            <slot name="li" :item="item" v-for="(item,key) in items">slot...</slot>
+            <slot name="li" :item="item" v-for="(item,key) in items" :index="key">slot...</slot>
         </ul>
         <div class="list-loading" v-show="loading">loading...</div>
     </div>
@@ -43,31 +43,31 @@
         methods: {
             bindScroll(evt){
                 evt.preventDefault()
-                /*let [scrollTop , documentHeight, windowHeight] = [
-                    document.body.scrollTop - document.documentElement.scrollTop >0 ?  document.body.scrollTop : document.documentElement.scrollTop,
-                    document.body.scrollHeight - document.documentElement.scrollHeight > 0 ? document.body.scrollHeight : document.documentElement.scrollHeight,
-                    document.body.clientHeight
-                ];
-                if (scrollTop + windowHeight >= documentHeight - 300) {
-                    if (!this.loading) {
-                        this.$emit('listing');
-                    }
-                }*/
-                // const scrollTop = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop);
-                // if(scrollTop + window.innerHeight >= document.body.offsetHeight-300) {
+                // let [scrollTop , documentHeight, windowHeight] = [
+                //     document.body.scrollTop - document.documentElement.scrollTop >0 ?  document.body.scrollTop : document.documentElement.scrollTop,
+                //     document.body.scrollHeight - document.documentElement.scrollHeight > 0 ? document.body.scrollHeight : document.documentElement.scrollHeight,
+                //     document.body.clientHeight
+                // ];
+                // if (scrollTop + windowHeight >= documentHeight - 300) {
                 //     if (!this.loading) {
                 //         this.$emit('listing');
                 //     }
                 // }
+                const scrollTop = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop);
+                if(scrollTop + window.innerHeight >= document.body.offsetHeight-300) {
+                    if (!this.loading) {
+                        this.$emit('listing');
+                    }
+                }
             },
         },
 
-        // mounted(){
-        //   document.addEventListener('scroll', this.bindScroll)
-        // },
-        // destroyed(){
-        //   document.removeEventListener('scroll', this.bindScroll)
-        // },
+        mounted(){
+          document.addEventListener('scroll', this.bindScroll)
+        },
+        destroyed(){
+          document.removeEventListener('scroll', this.bindScroll)
+        },
 
         watch:{
             currentListing(newCurrentListing){

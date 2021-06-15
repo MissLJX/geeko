@@ -1,7 +1,6 @@
 <template id="home-confirmed">
     <div>
-
-        <order-list :orders="confirmed" :loading="confirmedLoading" @listing="loadConfirmed(20)" :currentListing="currentListing"/>
+        <confirmed-order-list :orders="confirmed" :loading="confirmedLoading" @listing="loadConfirmed(20)" :currentListing="currentListing"/>
     </div>
 </template>
 
@@ -20,7 +19,8 @@
 <script type="text/ecmascript-6">
 
     import {mapGetters,mapActions} from 'vuex';
-    import OrderList from '../components/order-list.vue';
+
+    import ConfirmedOrderList from '../components/confirmed/confirmed-order-list.vue'
 
 
     export default {
@@ -42,7 +42,7 @@
             ])
         },
         components: {
-            'order-list': OrderList
+            ConfirmedOrderList
         },
         created(){
             this.loadConfirmed(20);

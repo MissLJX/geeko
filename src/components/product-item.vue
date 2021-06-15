@@ -1,11 +1,18 @@
 <template id="product-item">
-    <li class="st-product-item">
+    <!-- <li class="st-product-item ">
         <div class="content">
             <div class="">
                 <link-image href="#" :src="item.productImageUrl" :title="item.productName"/>
             </div>
         </div>
-    </li>
+    </li> -->
+    <div class="swiper-slide st-product-item">
+        <div class="content">
+            <div class="">
+                <link-image href="#" :src="item.productImageUrl" :title="item.productName"/>
+            </div>
+        </div>
+    </div>
 </template>
 
 
@@ -38,3 +45,34 @@
         }
     }
 </script>
+
+<style lang="scss" scoped>
+    /deep/{
+        .st-product-item {
+            height: 100%;
+            .content {
+                & > div {
+                    a{
+                        @media screen and (min-width: 300px) and (max-width: 321px){
+                            height: 71px;
+                        }
+
+                        @media screen and (min-width: 325px) and (max-width: 376px){
+                            height: 81px;
+                        }
+
+                        @media screen and (min-width: 380px) and (max-width: 415px){
+                            height: 101px;
+                        }
+                        img{
+                            width: 100%;
+                            height: 100%;
+                            border-radius: 2px;
+                        }
+                    }
+                    
+                }
+            }
+        }
+    }
+</style>

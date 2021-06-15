@@ -410,7 +410,7 @@
             sendImage(evt){
                 evt.preventDefault()
                 var files = evt.target.files;
-                var maxSize = 2097152;
+                var maxSize = 10485760;
                 if(files[0].size<maxSize){
                     var formData = new FormData(this.$refs.imageLoader);
                     formData.append('operaId', this.chart.operaId);
@@ -422,7 +422,7 @@
                         _this.initScroll()
                     })
                 }else{
-                    alert("A single image should not exceed 2M");
+                    alert("A single image should not exceed 10M");
                 }
             },
             rateDataHandle(rate_data){

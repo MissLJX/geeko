@@ -5,11 +5,14 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+
 module.exports = {
     entry: './src/main.js',
     output: {
         path: path.resolve(__dirname, './dist'),
-        publicPath: '/',
+        // publicPath: '/',
+        publicPath:"/resources/vue/order/js",
         filename: 'build.js'
     },
     module: {
@@ -19,7 +22,9 @@ module.exports = {
                 exclude: /node_modules/,
                 use: {
                     loader: 'babel-loader'
-                }
+                },
+                // C:\Work\product\geeko\node_modules\pdfjs-dist
+                include:[path.resolve(__dirname,'src'),path.resolve(__dirname,'test'),path.resolve(__dirname,'node_modules/pdfjs-dist/es5')]
             },
             {
                 test: /\.vue$/,
@@ -83,7 +88,7 @@ if (process.env.NODE_ENV === 'production') {
                 warnings: false
             }
         }),
-        new webpack.optimize.OccurrenceOrderPlugin(),
+        new webpack.optimize.OccurrenceOrderPlugin(true),
         new ExtractTextPlugin({ filename: 'app.css' })
     ]);
 }

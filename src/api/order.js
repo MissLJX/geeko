@@ -98,6 +98,7 @@ export default{
     updateComment(comment){
         return new Promise((resolve, reject) => {
             axios.form('/product-comment/update', comment).then((comment) => {
+                console.log("comment",comment);
                 resolve(comment);
             }).catch((e) => {
                 reject(e)
@@ -151,4 +152,24 @@ export default{
     addProducts(products){
         return axios.cpost('/v9/shopping-cart/add-products', products)
     },
+    // http://localhost:8080/wanna/comment/get-curr-customer-comments-by-product-ids/?productIds=adc23415-3edb-4cbe-8962-1fdee8a69022,BT857-daisysChic
+    getCommentByProductIds(productIds,callback){
+        return axios.get('/comment/get-curr-customer-comments-by-product-ids',{productIds}).then(comments => {
+            callback(comments);
+        }).catch((e) => {
+            console.log(e)
+        })
+    },
+    getLogisticsCompanies(){
+        return axios.get('/context/anon/get-logistics-companies');
+    },
+    addReturnLogistics(logistics){
+        return axios.cpost('/v9/order/add-return-logistics',JSON.stringify(logistics),{'Content-Type':"application/json"});
+    },
+    getReturnLogistics(orderId){
+        return axios.get("/v9/order/get-return-logistics",{orderId});
+    },
+    generalUploadImage(imageFile){
+        return axios.form('/context/upload',imageFile);
+    }
 }

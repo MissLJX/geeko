@@ -1,9 +1,12 @@
 <template id="order-li">
     <div class="bd">
         <div class="bd-product-list">
-            <span class="statusColor" :style="{backgroundColor : status_color}"></span>
+            <span class="_item">
+                Items
+            </span>
+            <!-- <span class="statusColor" :style="{backgroundColor : status_color}"></span>
             <span v-if="packageLen > 1">{{package.statusView}}</span>
-            <span v-if="packageLen === 1">{{orderStatusView}}</span>
+            <span v-if="packageLen === 1">{{orderStatusView}}</span> -->
             <a v-if="package.logisticsSupplierWebsiteURL" :href="package.logisticsSupplierWebsiteURL">{{$t("label.track")}} ></a>
             <a v-if="package.trackingId && !package.logisticsSupplierWebsiteURL" @click="checkPackageLogistics(package.status,package.trackingId)">{{$t("label.track")}} ></a>
         </div>
@@ -33,6 +36,12 @@
             height: 12px;
             border-radius: 50%;
             margin: 7px 4px 0 0;
+        }
+
+        ._item{
+            font-family: SlatePro-Medium;
+            font-size: 15px;
+            color: #222222;
         }
     }
 

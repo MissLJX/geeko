@@ -9,22 +9,29 @@
                     <p class="item-name">{{item.name}}</p>
                 </div>
                 <div style="margin: 10px 0px;" v-if="item.sku">
-                    <span>SKU: {{item.sku}}</span>
+                    <span>{{sizeColor(item)}}  &nbsp;&nbsp;&nbsp;x{{item.qty}}</span>
                 </div>
                 <div>
-                    <span>{{sizeColor(item)}}  x{{item.qty}}</span>
+                    <div class="repurchase" v-if="orderId && status === 4">
+                        <a @click="addProducts(item.variantId)">{{$t("label.repurchase")}}</a>
+                    </div>
+
+                    <div class="returns">
+                        <span class="iconfont">&#xe7be;</span><span> Final sales can't be returned.</span>
+                    </div>
                 </div>
 
             </div>
             <div class="st-cell">
                 <div class="st-p-price">{{price(item.price)}}</div>
-                <div v-if="orderId && status === 5">
+                <!-- <div v-if="orderId && status === 5">
                     <router-link class="btn reviewbtn"
                                  :to="{ name: 'review', params: { productId: item.productId , orderId: orderId , variantId:item.variantId}}">
                         Review
                     </router-link>
-                </div>
-                <div class="repurchase" v-if="orderId && status === 4">
+                </div> -->
+
+                <div class="st-p-repurchase" v-if="itemStatus === 2 && status === 4">
                     <a @click="addProducts(item.variantId)">{{$t("label.repurchase")}}</a>
                 </div>
             </div>
@@ -36,16 +43,39 @@
 </template>
 
 <style scoped lang="scss">
+    @font-face {
+        font-family: 'iconfont';  /* Project id 384296 */
+        src: url('//at.alicdn.com/t/font_384296_z5opxa817uc.woff2?t=1623383695751') format('woff2'),
+            url('//at.alicdn.com/t/font_384296_z5opxa817uc.woff?t=1623383695751') format('woff'),
+            url('//at.alicdn.com/t/font_384296_z5opxa817uc.ttf?t=1623383695751') format('truetype');
+    }
     .repurchase{
+        font-size: 13px;
+        color: #222222;
         a{
             text-decoration: underline;
             cursor: pointer;
         }
     }
+
+    .returns{
+        font-family: SlatePro;
+        font-size: 12px;
+        color: #999999;
+        display: none;
+
+        & > span{
+            vertical-align: middle;
+
+            &.iconfont{
+               font-size: 13px; 
+            }
+        }
+    }
     .st-p-price{
-        color: #222222;
+        font-family: SlatePro-Medium;
+	    font-size: 14px;
         line-height: 22px;
-        font-size: 15px;
         margin-bottom: 24px;
     }
     .reviewbtn{
@@ -59,6 +89,18 @@
     .st-product-item .content{
         width: 100%;
         table-layout:fixed;
+
+        .st-p-repurchase{
+            width: 100%;
+            height: 26px;
+            line-height: 26px;
+            background-color: #222222;
+            border-radius: 2px;
+            font-family: SlatePro;
+            font-size: 14px;
+            color: #ffffff;
+            text-align: center;
+        }
     }
     .st-product-item .content > div {
         vertical-align: top;
@@ -75,16 +117,16 @@
         &:last-child {
           width: 80px;
           text-align: right;
-            padding-top: 10px;
         }
     }
     .dsc{
         text-decoration: none;
         color: #222;
-        padding-top: 10px;
         text-transform: capitalize;
         .item-name{
             color: #999;
+            visibility: visible;
+            -webkit-box-orient: vertical;
             /*max-height: 64px;*/
         }
     }
@@ -129,7 +171,8 @@
         props: [
             'item',
             'orderId',
-            'status'
+            'status',
+            'itemStatus'
         ],
         components: {
             'link-image': LinkImage
@@ -139,7 +182,7 @@
             sizeColor: function (item) {
 
                 if (item.size && item.color)
-                    return item.color + ' ; ' + item.size;
+                    return item.color + '/' + item.size;
                 if (item.size)
                     return item.size;
                 if (item.color)

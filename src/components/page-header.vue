@@ -46,12 +46,13 @@
         }
 
         height: 50px;
-        border-bottom: 1px solid #dcdcdc;
+        // border-bottom: 1px solid #dcdcdc;
     }
 </style>
 
 <script type="text/ecmascript-6">
     export default{
+        name:"page-header",
         data: function(){
             return {
                 isLogin:window.__is_login__

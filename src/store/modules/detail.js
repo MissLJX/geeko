@@ -8,13 +8,17 @@ import * as constant from '../../utils/constant'
 const state = {
     order: null,
     latestTicket: null,
-    cancelReasons:null
+    cancelReasons:null,
+    logisticsCompanies:null,
+    returnLogistics:null
 }
 
 const getters = {
     order: state => state.order,
     latestTicket: state => state.latestTicket,
-    cancelReasons: state => state.cancelReasons
+    cancelReasons: state => state.cancelReasons,
+    logisticsCompanies: state => state.logisticsCompanies,
+    returnLogistics: state => state.returnLogistics
 }
 
 const mutations = {
@@ -31,6 +35,12 @@ const mutations = {
     },
     [types.CANCEL_ORDER_REASONS](state,reasons){
         state.cancelReasons = _.cloneDeep(reasons)
+    },
+    [types.LOGISTICS_COMPANIES](state,logisticsCompanies){
+        state.logisticsCompanies = logisticsCompanies;
+    },
+    [types.GET_RETURN_LOGISTICS](state,returnLogistics){
+        state.returnLogistics = returnLogistics;
     }
 }
 
@@ -71,6 +81,29 @@ const actions = {
         return api.getMessageByTypeCode('cancel-order-reasons').then((result) => {
             commit(types.CANCEL_ORDER_REASONS, result)
         })
+    },
+    getLogisticsCompanies({commit}){
+        return api.getLogisticsCompanies().then((result) => {
+            commit(types.LOGISTICS_COMPANIES,result);
+        });
+    },
+    addReturnLogistics({commit},uploadFiles){
+        return api.addReturnLogistics(uploadFiles).then((result) => {
+            console.log("result",result);
+        });
+    },
+    getReturnLogistics({commit},orderId){
+        return new Promise((reslove,reject) => {
+            api.getReturnLogistics(orderId).then((result) => {
+                if(!!result && result != null && result.length > 0 && result.length < 2){
+                    commit(types.GET_RETURN_LOGISTICS,result);
+                }else if(!!result && result != null && result.length > 1){
+                    result.splice(0,result.length - 1);
+                    commit(types.GET_RETURN_LOGISTICS,result);
+                }
+                reslove(result);
+            });
+        });
     }
 }
 

@@ -1,10 +1,9 @@
 <template>
     <div>
-
         <page-header>
             <span>Logistics Information</span>
             <span slot="oplabel">
-                <router-link :to="{ name: 'contact', params: { orderId: $route.params.orderId }}">
+                <router-link :to="{ name: 'contact', params: { orderId: (this.$route.params ? this.$route.params.orderId : null) || $route.query.orderid }}">
                     <i class="iconfont contactseller">&#xe716;</i>
                 </router-link>
             </span>
@@ -128,10 +127,13 @@
             trackName(){
                 this.changePackage = _.cloneDeep(this.tracking.packages[0])
             },
+            getToContactUrl(){
+                return (this.$route.params ? this.$route.params.orderId : null) || $route.query.orderid
+            }
         },
         beforeRouteEnter(to, from, next){
             store.dispatch('paging', true);
-            store.dispatch('loadTracking', {orderId: to.params.orderId}).then((tracking) => {
+            store.dispatch('loadTracking', {orderId: (to.params ? to.params.orderId : null) || to.query.orderid}).then((tracking) => {
                 next()
                 store.dispatch('paging', false)
             }).catch((e) => {

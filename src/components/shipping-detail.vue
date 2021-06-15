@@ -1,13 +1,21 @@
 <template>
     <address class="st-address">
-        <div><i class="iconfont">&#xe74f;</i><strong> {{address.name}}</strong><span>({{address.phoneNumber}})</span></div>
-        <div>
-            <i class="iconfont">&#xe74e;</i>{{addressLabel}},{{address.zipCode}}
+        <div class="_title">
+            <span>Delivery Details</span>
         </div>
-        <div>
-            {{address.city}}, {{stateCountry}}
+        <div class="_content">
+            <p class="c-six">Delivery Address</p>
+            <p>
+                <span class="f-medium">{{address.name}} </span>
+                <span class="c-six">({{address.phoneNumber}})</span>
+            </p>
+            <p class="c-six">{{addressLabel}} {{address.zipCode}} {{address.city}}/{{stateCountry}}</p>
         </div>
 
+        <div class="_shipping-method">
+            <p class="c-nine">Shpping Method</p>
+            <p class="f-medium">Standard Shipping</p>
+        </div>
     </address>
 </template>
 
@@ -56,3 +64,47 @@
         }
     }
 </script>
+
+<style lang="scss" scoped>
+    .st-address{
+        color: #222222;
+        font-style: normal;
+        padding-bottom: 12px;
+        border-bottom: 8px solid #f7f7f7;
+        border-top: 8px solid #f7f7f7;
+        font-size: 14px;
+        ._title{
+            height: 45px;
+            line-height: 45px;
+	        font-family: SlatePro-Medium;
+            color: #222222;
+            border-bottom: 1px solid #eeeeee;
+        }
+
+        ._content{
+            & > p{
+                padding: 5px 0px;
+            }
+        }
+
+        ._shipping-method{
+            margin-top: 20px;
+
+            & > p{
+                line-height: 25px;
+            }
+        }
+
+        .c-six{
+            color: #666666;
+        }
+
+        .c-nine{
+            color: #999999;
+        }
+
+        .f-medium{
+            font-family: SlatePro-Medium;
+        }
+    }
+</style>

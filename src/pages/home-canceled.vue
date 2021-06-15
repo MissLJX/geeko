@@ -20,7 +20,8 @@
 <script type="text/ecmascript-6">
 
     import {mapGetters,mapActions} from 'vuex';
-    import OrderList from '../components/order-list.vue';
+    // import OrderList from '../components/order-list.vue';
+    import ConfirmedOrderList from '../components/confirmed/confirmed-order-list.vue'
 
 
     export default {
@@ -42,7 +43,7 @@
             ])
         },
         components: {
-            'order-list': OrderList
+            'order-list': ConfirmedOrderList
         },
         created(){
             this.loadCanceled(20);
