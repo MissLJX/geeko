@@ -10,13 +10,13 @@
         </page-header>
 
             <ul v-if="tracking && tracking.packages" class="packageTab">
-                <li class="tab" @click="changeTab(key)" :class="{'active': key===isActive}" v-for="(package,key) in tracking.packages" :key="key">
-                    {{package.name}}{{trackName}}
+                <li class="tab" @click="changeTab(key)" :class="{'active': key===isActive}" v-for="(parcel,key) in tracking.packages" :key="key">
+                    {{parcel.name}}{{trackName}}
                 </li>
             </ul>
 
 
-        <package-track :orderId="tracking.orderId" class="tracking-content" :package="changePackage"></package-track>
+        <package-track :orderId="tracking.orderId" class="tracking-content" :parcel="changePackage"></package-track>
     </div>
 </template>
 

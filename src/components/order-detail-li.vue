@@ -7,11 +7,11 @@
             <!-- <span class="statusColor" :style="{backgroundColor : status_color}"></span>
             <span v-if="packageLen > 1">{{package.statusView}}</span>
             <span v-if="packageLen === 1">{{orderStatusView}}</span> -->
-            <a v-if="package.logisticsSupplierWebsiteURL" :href="package.logisticsSupplierWebsiteURL">{{$t("label.track")}} ></a>
-            <a v-if="package.trackingId && !package.logisticsSupplierWebsiteURL" @click="checkPackageLogistics(package.status,package.trackingId)">{{$t("label.track")}} ></a>
+            <a v-if="parcel.logisticsSupplierWebsiteURL" :href="parcel.logisticsSupplierWebsiteURL">{{$t("label.track")}} ></a>
+            <a v-if="parcel.trackingId && !parcel.logisticsSupplierWebsiteURL" @click="checkPackageLogistics(parcel.status,parcel.trackingId)">{{$t("label.track")}} ></a>
         </div>
         <ul class="st-order-items">
-            <product-item key="product.id"  :orderId="orderId" :status="orderStatus" v-for="product in package.products" :item="product"/>
+            <product-item key="product.id"  :orderId="orderId" :status="orderStatus" v-for="product in parcel.products" :item="product"/>
         </ul>
     </div>
 </template>
@@ -68,7 +68,7 @@
     import * as constant from '../utils/constant';
 
     export default {
-        props:['package','packageLen','orderStatus','orderStatusView','orderId'],
+        props:['parcel','packageLen','orderStatus','orderStatusView','orderId'],
         components: {
           'product-item': ProductItem,
         },
@@ -77,11 +77,11 @@
                 if(this.packageLen === 1){
                     return constant.STATUS_COLOR(this.orderStatus)
                 }else{
-                    if(this.package.status===0){
+                    if(this.parcel.status===0){
                         return '#d088e1'
-                    }else if(this.package.status===1){
+                    }else if(this.parcel.status===1){
                         return '#57b936'
-                    }else if(this.package.status===2){
+                    }else if(this.parcel.status===2){
                         return '#a4a4a7'
                     }
                 }

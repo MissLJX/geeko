@@ -1,7 +1,7 @@
 /**
  * Created by shao_ on 2017/6/20.
  */
-import 'babel-polyfill'
+ import "@babel/polyfill";
 import Vue from 'vue';
 
 import VueAwesomeSwiper from 'vue-awesome-swiper'
@@ -25,6 +25,8 @@ import 'swiper/swiper-bundle.css'
 Vue.use(VueAwesomeSwiper, /* { default options with global component } */)
 
 Vue.config.devtools = true;
+
+import "./css/style.scss"
 
 // 全局注册loadding组件
 Vue.component('lodding',Lodding);

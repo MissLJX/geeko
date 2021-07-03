@@ -20,6 +20,7 @@
     .el-tracking-point{
         // border-left: 1px dashed #cacaca;
         position: relative;
+        display: flex;
         // padding: 5px 10px 20px 0px;
 
         .--icon{

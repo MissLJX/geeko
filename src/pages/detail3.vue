@@ -1079,7 +1079,7 @@
         },
         getReturnLabel(){
             let _this = this;
-            // window.recordReturnLabel(_this.order.id);
+            window.recordReturnLabel(_this.order.id);
             return window.ctx + "/v9/order/report-return-label?orderId="+_this.order.id ;
         },
         confirmHandle(evt) {

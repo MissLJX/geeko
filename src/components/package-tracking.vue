@@ -2,24 +2,24 @@
     <div>
         <div class="bd">
             <ul class="st-order-items">
-                <li v-for="product in package.products">
+                <li v-for="product in parcel.products">
                     <img :src="product.imageURL">
                 </li>
             </ul>
         </div>
-        <div v-if="package.trackingId">
+        <div v-if="parcel.trackingId">
             <div class="st-table el-tracking-hd">
                 <div class="st-cell st-v-m --labels">
-                    <p v-if="package.shipFromMsg" style="color: #222;"><strong>{{package.shipFromMsg}}</strong></p>
-                    <p v-if="package.slug">{{$t('label.logisticsCompany')}}  <span>{{package.slug}}</span></p>
-                    <p v-if="package.trackingNumber">{{$t('label.tracknum')}}  <span>{{package.trackingNumber}}</span></p>
-                    <p v-if="package.logisticsSupplierWebsiteURL">{{$t('label.trackingDetailInfo')}}  <span><a style="text-decoration: underline" :href="package.logisticsSupplierWebsiteURL">{{package.logisticsSupplierWebsiteURL}}</a></span></p>
+                    <p v-if="parcel.shipFromMsg" style="color: #222;"><strong>{{parcel.shipFromMsg}}</strong></p>
+                    <p v-if="parcel.slug">{{$t('label.logisticsCompany')}}  <span>{{parcel.slug}}</span></p>
+                    <p v-if="parcel.trackingNumber">{{$t('label.tracknum')}}  <span>{{parcel.trackingNumber}}</span></p>
+                    <p v-if="parcel.logisticsSupplierWebsiteURL">{{$t('label.trackingDetailInfo')}}  <span><a style="text-decoration: underline" :href="parcel.logisticsSupplierWebsiteURL">{{parcel.logisticsSupplierWebsiteURL}}</a></span></p>
                 </div>
             </div>
             <div class="el-tracking-status">
-                <span class="--label" v-if="package.trackingStatusView">{{$t('label.currentStatus')}}: {{package.trackingStatusView}}</span>
+                <span class="--label" v-if="parcel.trackingStatusView">{{$t('label.currentStatus')}}: {{parcel.trackingStatusView}}</span>
             </div>
-            <div class="el-tracking-bd" v-if="package.originPoints || package.destinPoints">
+            <div class="el-tracking-bd" v-if="parcel.originPoints || parcel.destinPoints">
                 <div class="--bd">
                     <ul class="el-tracking-points">
                         <tracking-point :key="point.checkpointTime" v-for="(point, i) in originPoints" :trackingPoint="point"
@@ -42,17 +42,17 @@
         },
         computed: {
             originPoints(){
-                if(this.package && this.package.originPoints){
-                    return this.package.originPoints
+                if(this.parcel && this.parcel.originPoints){
+                    return this.parcel.originPoints
                 }
             },
             destinPoints(){
-                if(this.package && this.package.destinPoints){
-                    return this.package.destinPoints
+                if(this.parcel && this.parcel.destinPoints){
+                    return this.parcel.destinPoints
                 }
             }
         },
-        props:['package']
+        props:['parcel']
     }
 </script>
 

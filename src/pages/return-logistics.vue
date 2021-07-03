@@ -118,7 +118,7 @@
         </image-magnification>
 
         <transition name="uper">
-            <pdf 
+            <pdf
                 :url="pdfUrl"
                 v-if="pdfActiveShow"
                 :pdfActiveShow.sync="pdfActiveShow"
@@ -330,6 +330,7 @@
 <style lang="scss" scoped>
     .return-logistics{
         .return-notshow{
+            padding-bottom: 80px;
             ._bd{
                 border-top: 8px solid #f7f7f7;
                 .logistics-company{
@@ -494,8 +495,10 @@
                 position: fixed;
                 left: 0px;
                 right: 0px;
-                bottom: 30px;
+                bottom: 0px;
                 padding: 0px 13px;
+                padding-bottom: 20px;
+                background-color: #ffffff;
                 
                 & > div{
                     width: 100%;

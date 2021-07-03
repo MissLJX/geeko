@@ -3,41 +3,39 @@
  */
 
 import VueRouter from 'vue-router';
-
-import Home from '../pages/home.vue';
-import HomeAll from '../pages/home-all.vue';
-import HomeProcessing from '../pages/home-processing.vue';
-import HomeUnpaid from '../pages/home-unpaid.vue';
-import HomePaid from '../pages/home-paid.vue';
-import HomeConfirmed from '../pages/home-confirmed.vue';
-import HomeShipped from '../pages/home-shipped.vue';
-import HomeCanceled from '../pages/home-canceled.vue';
-import Contact from '../pages/contact.vue';
-import ContactCode from '../pages/contactcode.vue';
-import Detail from '../pages/detail.vue';
-
-import Detail2 from '../pages/detail2.vue'
-
-import Detail3 from '../pages/detail3.vue'
-
-import OrderCode from '../pages/code.vue';
-import Review from '../pages/review.vue';
-import ShippingPolicy from '../pages/shipping-policy.vue';
-import Tracking from '../pages/tracking.vue';
-import packageTracking from '../pages/package-tracking.vue';
-import Ticket from '../pages/ticket.vue';
-import OutsideReview from '../pages/outside-review.vue';
-
 import { ROUTER_PATH_ORDER } from '../utils/constant';
-
-import ReturnLogistics from '../pages/return-logistics.vue'
-
-
 import * as Constant from '../utils/constant';
 
 
-import Page404 from '../pages/404.vue';
-import Page500 from '../pages/500.vue';
+import Home from '../pages/home.vue';
+import HomeAll from '../pages/home-all.vue';
+import HomeUnpaid from '../pages/home-unpaid.vue';
+
+const HomeProcessing = () => import(/* webpackChunkName: "home-processing" */ '../pages/home-processing.vue');
+
+
+// import HomePaid from '../pages/home-paid.vue';
+
+const HomeConfirmed = () => import(/* webpackChunkName: "home-confirmed" */ '../pages/home-confirmed.vue')
+const HomeShipped = () => import(/* webpackChunkName: "home-shipped" */ '../pages/home-shipped.vue');
+const HomeCanceled = () => import(/* webpackChunkName: "home-canceled" */ '../pages/home-canceled.vue');
+const Contact = () => import(/* webpackChunkName: "contact" */ '../pages/contact.vue');
+const ContactCode = () => import(/* webpackChunkName: "contactcode" */ '../pages/contactcode.vue');
+
+const OrderCode = () => import(/* webpackChunkName: "code" */ '../pages/code.vue');
+const Review = () => import(/* webpackChunkName: "review" */ '../pages/review.vue');
+const ShippingPolicy = () => import(/* webpackChunkName: "shipping-policy" */ '../pages/shipping-policy.vue');
+const Tracking = () => import(/* webpackChunkName: "tracking" */ '../pages/tracking.vue');
+const packageTracking = () => import(/* webpackChunkName: "package-tracking" */ '../pages/package-tracking.vue');
+const Ticket = () => import(/* webpackChunkName: "ticket" */ '../pages/ticket.vue');
+const OutsideReview = () => import(/* webpackChunkName: "outside-review" */ '../pages/outside-review.vue');
+
+const ReturnLogistics = () => import(/* webpackChunkName: "return-logistics" */ '../pages/return-logistics.vue');
+
+
+
+const Page404 = () => import(/* webpackChunkName: "404" */ '../pages/404.vue');
+const Page500 = () => import(/* webpackChunkName: "500" */ '../pages/500.vue');
 
 const routes = [
   {
@@ -104,7 +102,7 @@ const routes = [
   {
     path: ROUTER_PATH_ORDER + '/detail/:orderId',
     name: 'detail',
-    component: Detail3,
+    component: () => import('../pages/detail3.vue'),
     meta: { keepAlive: false }
   },
   // 未知  order-detail的替代品

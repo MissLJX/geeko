@@ -47,11 +47,11 @@
 </script>
 
 <style lang="scss" scoped>
-    /deep/{
-        .st-product-item {
-            height: 100%;
-            .content {
-                & > div {
+    .st-product-item {
+        height: 100%;
+        .content {
+            & > div {
+                /deep/{
                     a{
                         @media screen and (min-width: 300px) and (max-width: 321px){
                             height: 71px;
@@ -70,8 +70,8 @@
                             border-radius: 2px;
                         }
                     }
-                    
                 }
+                
             }
         }
     }

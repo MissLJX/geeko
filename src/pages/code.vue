@@ -22,8 +22,8 @@
             </div>
             <div class="package-con">
                 <ul v-if="order && order.logistics && order.logistics.packages && order.logistics.packages.length > 1" class="packageTab">
-                    <li class="tab" @click="changeTab(key)" :class="{'active': key===isActive}" v-for="(package,key) in order.logistics.packages" :key="key">
-                        {{package.name}}
+                    <li class="tab" @click="changeTab(key)" :class="{'active': key===isActive}" v-for="(parcel,key) in order.logistics.packages" :key="key">
+                        {{parcel.name}}
                     </li>
                 </ul>
                 <div>

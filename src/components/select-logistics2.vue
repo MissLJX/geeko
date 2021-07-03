@@ -97,6 +97,7 @@
         background-color: #ffffff;
         width: 100%;
         height: 100%;
+        z-index: 2;
         .__header{
             padding-bottom: 10px;
         }
