@@ -179,7 +179,7 @@
                 </div>
 
                 <!-- unpaid status:0  Shipped status:3   Confirm status:5  :class="l-container-padding-0"-->
-                <div class="l-container" v-if="order.status === 0 || order.status === 3 || order.status === 5" :class="strutBottomPadding">
+                <div class="l-container" v-if="order.status === 0 || order.status === 3 || order.status === 5">
                     <router-link :to="{ name: 'review', params: { productId:  getProductIdsComment, orderId: order.id}}" class="l-btn" v-if="order.status === 5">
                         To Review
                     </router-link>
@@ -254,7 +254,7 @@
         <you-likes class="el-me-like-area"  :orderId="order.id"/>
 
         <!-- 为了让当底部有按钮时会遮挡一些内容 -->
-        <div class="strut-bottom-padding" :class="strutBottomPadding"></div>
+        <div class="strut-bottom-padding" :class="strutBottomPaddingNumber"></div>
 
         <div v-if="isCancelOrder">
             <div class="mask"></div>
@@ -556,10 +556,6 @@
             }
         }
 
-        .p-b-0{
-            padding: 0;
-        }
-
         .l-time-out{
             .order-unpid{
                 .timeLeft{
@@ -846,7 +842,7 @@
         changePackage:{},
         isCancelOrder:false,
         selectedResaon:'',
-        isMounted:false
+        strutBottomPaddingNumber:""
       }
     },
     components: {
@@ -875,7 +871,7 @@
         this.changePackage = _.cloneDeep(this.order.logistics.packages[0])
     },
     mounted(){
-        this.isMounted = true;
+        this.strutBottomPaddingNumber = this.strutBottomPadding();
     },
     computed: {
         ...mapGetters([
@@ -1048,21 +1044,21 @@
             let value = _.groupBy(sortValue,logistics => logistics.statusView);
             return value;
         },
-        strutBottomPadding(){
-            if(this.isMounted){
-                // 1 29 69 99
-                let height = this.$refs.footerFixed.offsetHeight;
-                // 只有按钮没有时间时：69
-                if(height > 30 && height < 70){
-                    return 'p-b-69';
-                // 有按钮也有时间时：99
-                }else if(height > 70 && height < 100){
-                    return 'p-b-99';
-                }else{
-                    return 'p-b-0';
-                }
-            }
-        }
+        // strutBottomPadding(){
+        //     if(this.isMounted){
+        //         // 1 29 69 99
+        //         let height = this.$refs.footerFixed.offsetHeight;
+        //         // 只有按钮没有时间时：69
+        //         if(height > 30 && height < 70){
+        //             return 'p-b-69';
+        //         // 有按钮也有时间时：99
+        //         }else if(height > 70 && height < 100){
+        //             return 'p-b-99';
+        //         }else{
+        //             return 'p-b-0';
+        //         }
+        //     }
+        // }
     },
     methods: {
         cancelHandle() {
@@ -1079,7 +1075,7 @@
         },
         getReturnLabel(){
             let _this = this;
-            window.recordReturnLabel(_this.order.id);
+            window.recordReturnLabel ? window.recordReturnLabel(_this.order.id) : "";
             return window.ctx + "/v9/order/report-return-label?orderId="+_this.order.id ;
         },
         confirmHandle(evt) {
@@ -1114,6 +1110,19 @@
         checkoutUrl(id){
             if(id){
                 return window.ctx + '/checkout/' +id
+            }
+        },
+        strutBottomPadding(){
+            // 1 29 69 99
+            let height = this.$refs.footerFixed.offsetHeight;
+            // 只有按钮没有时间时：69
+            if(height > 30 && height < 70){
+                return 'p-b-69';
+            // 有按钮也有时间时：99
+            }else if(height > 70 && height < 100){
+                return 'p-b-99';
+            }else{
+                return 'p-b-0';
             }
         }
     },
