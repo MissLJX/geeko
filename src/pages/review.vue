@@ -1,11 +1,22 @@
 <template id="review">
-    <div id="review-container">
-        <page-header>
-            <span>Review</span>
-        </page-header>
+    <div id="review-container" v-if="isInit">
+        <div class="fixed-header">
+            <page-header>
+                <span>Review</span>
+            </page-header>
 
+            <div class="profress-container">
+                <div class="__hd">Points {{pointNum}}/100</div>
+                <div class="__content">
+                    <span :style="{width:processNum+'%'}"></span>
+                </div>
+                <div class="__fd">
+                    Please check the rules page for text and picture points rules
+                </div>
+            </div>
+        </div>
 
-        <div v-for="(item,index) in disposeComments" :key="index">
+        <div v-for="(item,index) in disposeComments" :key="index" style="margin-top:124px;">
             <div class="review-body">
                 <div class="content">
                     <div class="_flex">
@@ -22,27 +33,16 @@
                 </div>
 
                 <div class="review-star-area">
-                    <!-- <h3>{{$t("label.howItem")}}</h3> -->
                     <star-list class="stars" :score="item.score" @star="starClickHandle" :index="index"/>
-                </div>
-
-                <div class="review-fit-area">
-                    <!-- <h3>{{$t("label.howProduct")}}</h3> -->
-
-                    <ul class="fit-select">
-                        <li @click="fitClickHandle(index,$event)" v-for="fit in item.fits" :value="fit.value"
-                            :class="{active: fit.value === item.sizingRecommendation}">{{fit.label}}
-                        </li>
-                    </ul>
                 </div>
                 
                 <div class="review-content">
-                    <textarea placeholder="*What do you want to say ?"
+                    <textarea placeholder="Earn 10 points for comments over 20 characters… * "
                             v-model="item.content" maxlength="150"></textarea>
                     <!-- <div v-if="isempty" class="please-fill">{{$t("label.fillField")}}</div> -->
                     <div class="upload-container imgboxid">
                         <ul v-if="item.uploadedImages && item.uploadedImages.length">
-                            <li v-for="(image,index2) in item.uploadedImages" class="uploadImage" >
+                            <li v-for="(image,index2) in item.uploadedImages" class="uploadImage">
                                 <img :src="image"/>
                                 <span class="removeImg" @click="removeImg(index,index2)">&times;</span>
                             </li>
@@ -55,6 +55,26 @@
                             <div class="addnum">{{item.uploadedImages.length}} / 5</div>
                         </div>
                     </div>
+                </div>
+
+                <div style="font-size: 12px;color: #999999;line-height:18px;">Earn more 20 points for comments with pictures…* </div>
+
+                <div class="review-fit-area">
+                    <div class="__title">Overall Fit</div>
+
+                    <ul class="fit-select">
+                        <li 
+                            v-for="fit in item.fits"
+                            :key="index+fit.value"
+                        >
+                            <span 
+                                :class="{active: fit.value === item.sizingRecommendation}" 
+                                @click="fitClickHandle(index,$event)" 
+                                :value="fit.value"
+                            ></span>
+                            <span>{{fit.label}}</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
 
@@ -123,17 +143,17 @@
 
     export default {
         name: 'review',
-        beforeRouteEnter(to, from, next){
+        created:function(){
             store.dispatch('paging', true);
-            store.dispatch('loadOrder', {id: to.params.orderId}).then(function () {
-                store.dispatch('getComments', {productIds: to.params.productId}).then((comment) => {
-                    next()
+            var _this = this;
+            store.dispatch('loadOrder', {id: this.$route.params.orderId}).then(function (data) {
+                let productIds =  _this.getProductIdsComment(data.orderItems);
+                store.dispatch('getComments', {productIds: productIds}).then((comment) => {
+                    _this.disposeComments = disposeComments(_this.comments,_this.order.orderItems,productIds);
                     store.dispatch('paging', false);
+                    _this.isInit = true;
                 });
             });
-        },
-        mounted:function(){
-            this.disposeComments = disposeComments(this.comments,this.order.orderItems,this.$route.params.productId);
         },
         data(){
             return {
@@ -150,7 +170,10 @@
                 files:[],
                 addnum:0,
                 newfiles:[],
-                disposeComments:[]
+                disposeComments:[],
+                isInit:false,
+                pointNum:0,
+                processNum:20
             }
         },
         computed: {
@@ -299,6 +322,18 @@
                 this.disposeComments[index].uploadedImages.splice(index2, 1)
                 this.disposeComments[index].files.splice(index2, 1);
                 this.$forceUpdate();
+            },
+            getProductIdsComment(){
+                return this.order.orderItems && this.order.orderItems.reduce((preValue,item) => {
+                    if(this.order.orderItems.length < 2){
+                        return preValue  + item.productId;
+                    }
+                    
+                    if(this.order.orderItems[this.order.orderItems.length - 1].productId === item.productId){
+                        return preValue  + item.productId;
+                    }
+                    return preValue  + item.productId + ",";
+                },"")
             }
         },
         watcher: {
@@ -318,7 +353,6 @@
             padding: 10px 20px 0px 20px;
             h3 {
                 font-size: 14px;
-                // font-weight: bold;
                 padding-bottom: 5px;
             }
 
@@ -331,11 +365,16 @@
             }
 
             .review-fit-area {
-                // padding: 10px;
                 padding-top: 15px;
                 padding-bottom: 7px;
-                // border-top: 1px solid #efefef;
                 overflow: hidden;
+
+                .__title{
+                    font-family: 'AcuminPro-Bold';
+                    font-size: 14px;
+                    color: #222222;
+                    margin-bottom: 5px;
+                }
             }
 
             .fit-select {
@@ -343,17 +382,54 @@
                 & > li {
                     font-size: 15px;
                     color: #9a9699;
-                    cursor: pointer;
-                    border: 1px solid #dddddd;
                     float: left;
-                    padding: 5px 10px;
-                    margin-right: 10px;
-                    border-radius: 4px;
+                    margin-left: 10px;
 
-                    &.active {
-                        color: #ffffff;
-                        background-color: #111111;
+                    & > span{
+                        vertical-align: middle;
+                        &:first-child{
+                            display: inline-block;
+                            width: 18px;
+                            height: 18px;
+                            border: 1px solid #eaeaea;
+                            border-radius: 50%;
+                            position: relative;
+
+                            &.active::after{
+                                content: '\e65b';
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                display: inline-block;
+                                color: #222222;
+                                font-family: "iconfont";
+                                font-size: 16px;
+                            }
+                        }
+
+                        &:last-child{
+                            font-size: 14px;
+	                        color: #222222;
+                            margin-left: 5px;
+                        }
                     }
+
+                    // &.active {
+                    //     color: #ffffff;
+                    //     background-color: #111111;
+                    // }
+
+                    &:first-child{
+                        margin-left: 0px;
+                    }
+                }
+
+
+
+                &::after{
+                    content:"";
+                    display: block;
+                    clear: both;
                 }
             }
 
@@ -366,8 +442,10 @@
                     height: 100%;
                     resize: none;
                     padding: 5px 10px;
-                    height: 110px;
-                    border-color: #e6e6e6;
+                    padding-top: 10px;
+                    height: 100px;
+	                background-color: #f8f8f8;
+                    border: none;
                 }
 
                 .please-fill{
@@ -400,8 +478,8 @@
                     border: 1px dashed #999;
                     input{
                         display:inline-block;
-                        height:107.5px;
-                        width:88px;
+                        height:70px;
+                        width:70px;
                         opacity: 0;
                         position: relative;
                         z-index: 99;
@@ -425,8 +503,8 @@
                 }
                 .uploadImage{
                     position:relative;
-                    height:107.5px;
-                    width:88px;
+                    height:70px;
+                    width:70px;
                     float:left;
                     margin:5px;
                     overflow: hidden;
@@ -477,8 +555,8 @@
 
                 ._flex{
                     & > a{
-                        width: 40px;
-                        height: 50px;
+                        width: 56px;
+	                    height: 70px;
                         display: inline-block;
                         margin-right: 12px;
 
@@ -560,6 +638,50 @@
                 background-color: rgba(0,0,0,0.4);
                 z-index: 200;
             }
+        }
+
+        .profress-container{
+            padding: 0px 28px;
+            .__hd{
+                font-size: 12px;
+                color: #222222;
+                text-align: center;
+            }
+
+            .__content{
+                height: 6px;
+                background-color: #f4f4f4;
+                border-radius: 4px;
+                margin: 10px 0px;
+                position: relative;
+
+                & > span{
+                    display: inline-block;
+                    height: 100%;
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 20%;
+                    background-color: #e64545;
+	                border-radius: 4px;
+                }
+            }
+
+            .__fd{
+                font-size: 12px;
+                color: #666666;
+                text-align: center;
+            }
+        }
+
+        .fixed-header{
+            position: fixed;
+            background-color: #ffffff;
+            top: 0;
+            left: 0;
+            right: 0;
+            border-bottom: solid 1px #e6e6e6;
+            padding-bottom: 16px;
         }
     }
 </style>

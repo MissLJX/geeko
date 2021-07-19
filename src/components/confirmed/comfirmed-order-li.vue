@@ -19,7 +19,7 @@
         <div class="pd">
         </div>
         <div class="fd">
-            <router-link :class="[orderItemCount > 1 ? 'b-btn' : 'w-btn']" :to="{ name: 'review', params: { productId:  getProductIdsComment, orderId: order.id}}" v-if="order.status === 5">
+            <router-link :class="[orderItemCount > 1 ? 'b-btn' : 'w-btn']" :to="{ name: 'review', params: {orderId: order.id}}" v-if="order.status === 5">
                 {{orderItemCount > 1 ? 'To Review' : 'Reviewed'}}
             </router-link>
             <div v-if="index === 0 && order.status === 5" class="_message">Review to get 100 Ponits (100 Ponits=$1USD) </div>
@@ -65,18 +65,6 @@
         computed:{
             orderItemCount(){
                 return this.order.orderItems.length;
-            },
-            getProductIdsComment(){
-                return this.order.orderItems && this.order.orderItems.reduce((preValue,item) => {
-                    if(this.order.orderItems.length < 2){
-                        return preValue  + item.productId;
-                    }
-                    
-                    if(this.order.orderItems[this.order.orderItems.length - 1].productId === item.productId){
-                        return preValue  + item.productId;
-                    }
-                    return preValue  + item.productId + ",";
-                },"")
             }
         },
         methods:{

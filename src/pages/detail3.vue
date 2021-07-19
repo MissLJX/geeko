@@ -180,7 +180,7 @@
 
                 <!-- unpaid status:0  Shipped status:3   Confirm status:5  :class="l-container-padding-0"-->
                 <div class="l-container" v-if="order.status === 0 || order.status === 3 || order.status === 5">
-                    <router-link :to="{ name: 'review', params: { productId:  getProductIdsComment, orderId: order.id}}" class="l-btn" v-if="order.status === 5">
+                    <router-link :to="{ name: 'review', params: { orderId: order.id}}" class="l-btn" v-if="order.status === 5">
                         To Review
                     </router-link>
 
@@ -1019,18 +1019,6 @@
         },
         disposeTime(){
             return utils.dateFormat(this.order.orderTime);
-        },
-        getProductIdsComment(){
-            return this.order.orderItems && this.order.orderItems.reduce((preValue,item) => {
-                if(this.order.orderItems.length < 2){
-                    return preValue  + item.productId;
-                }
-                
-                if(this.order.orderItems[this.order.orderItems.length - 1].productId === item.productId){
-                    return preValue  + item.productId;
-                }
-                return preValue  + item.productId + ",";
-            },"")
         },
         logisticsPackageShow(){
             return !!(this.order && this.order.logistics && this.order.logistics.packages && this.order.logistics.packages.length > 1);

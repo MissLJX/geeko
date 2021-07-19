@@ -131,7 +131,7 @@ const routes = [
       meta: { keepAlive: false }
   },
   {
-    path: ROUTER_PATH_ORDER + '/review/:productId/:orderId',
+    path: ROUTER_PATH_ORDER + '/review/:orderId',
     name: 'review',
     component: Review
   },

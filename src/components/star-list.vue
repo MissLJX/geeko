@@ -1,25 +1,55 @@
 <template>
-    <ol class="star-list">
-        <li :class="{active: i <= score}" v-for="i in 5" :index="i" @click="clickHandle"></li>
-    </ol>
+    <div class="star-list-container">
+        <span class="font_1">Rating</span>
+        <ol class="star-list">
+            <li class="iconfont" :class="{active: i <= score}" v-for="i in 5" :index="i" @click="clickHandle" :key="i"></li>
+        </ol>
+        <span class="font_2">Very Satisfied</span>
+    </div>
 </template>
 
-<style scoped>
-    .star-list > li {
-        display: inline-block;
-        margin-left: 4px;
-        width: 25px;
-        height: 22px;
-        background: url(https://image.geeko.ltd/site/icon/icon-153.png) center/100% no-repeat;
-        cursor: pointer;
-    }
+<style lang="scss" scoped>
+    .star-list-container{
+        display: flex;
+        align-items: center;
+        .star-list{
+            margin-left: 15px;
+            & > li{
+                display: inline-block;
+                width: 18px;
+                height: 18px;
+                margin-left: 4px;
 
-    .star-list > li:first-child {
-        margin-left: 0;
-    }
+                &::after{
+                    content: "\e76b";
+                    color: #e64545;
+                }
 
-    .star-list > li.active {
-        background-image: url(https://image.geeko.ltd/site/icon/icon-158.png);
+                &:first-child{
+                    margin-left: 0px;
+                }
+            }
+
+            & > li.active{
+                &::after{
+                    content: "\e768";
+                    color: #e64545;
+                }
+            }
+        }
+
+        .font_1{
+            font-family: 'AcuminPro-Bold';
+            font-size: 14px;
+            color: #222222;
+        }
+
+        .font_2{
+            font-family: 'AcuminPro-Bold';
+            font-size: 12px;
+            color: #e64545;
+            margin-left: 15px;
+        }
     }
 </style>
 
