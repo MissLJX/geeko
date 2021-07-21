@@ -4,7 +4,7 @@
         <ol class="star-list">
             <li class="iconfont" :class="{active: i <= score}" v-for="i in 5" :index="i" @click="clickHandle" :key="i"></li>
         </ol>
-        <span class="font_2">Very Satisfied</span>
+        <span class="font_2">{{font}}</span>
     </div>
 </template>
 
@@ -65,10 +65,27 @@
                 default:0
             }
         },
+        data(){
+            return {
+                font:"Very Satisfied"
+            }
+        },
         methods: {
             clickHandle(evt){
                 evt.preventDefault();
-                this.$emit('star' , {star: evt.target.getAttribute('index')},this.index);
+                let index = evt.target.getAttribute('index');
+                if(index > 4){
+                    this.font = "Very Satisfied";
+                }else if(index > 3){
+                    this.font = "Satisfied";
+                }else if(index > 2){
+                    this.font = "Normal";
+                }else if(index > 1){
+                    this.font = "Bad";
+                }else{
+                    this.font = "Poor";
+                }
+                this.$emit('star' , {star: index},this.index);
             }
         }
     }

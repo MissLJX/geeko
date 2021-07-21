@@ -6,9 +6,13 @@
             </page-header>
 
             <div class="profress-container">
-                <div class="__hd">Points {{pointNum}}/100</div>
+                <div class="__hd">
+                    <span>Points</span>
+                    <span class="special-color">{{getPointsSum}}</span>
+                    <span>/{{pointsSum}}</span>
+                </div>
                 <div class="__content">
-                    <span :style="{width:processNum+'%'}"></span>
+                    <span :style="{width:getProcessCount+'%'}"></span>
                 </div>
                 <div class="__fd">
                     Please check the rules page for text and picture points rules
@@ -16,7 +20,7 @@
             </div>
         </div>
 
-        <div v-for="(item,index) in disposeComments" :key="index" style="margin-top:124px;">
+        <div v-for="(item,index) in disposeComments" :key="index" :style="{'margin-top':index == 1? '124px;' : ''}">
             <div class="review-body">
                 <div class="content">
                     <div class="_flex">
@@ -42,7 +46,7 @@
                     <!-- <div v-if="isempty" class="please-fill">{{$t("label.fillField")}}</div> -->
                     <div class="upload-container imgboxid">
                         <ul v-if="item.uploadedImages && item.uploadedImages.length">
-                            <li v-for="(image,index2) in item.uploadedImages" class="uploadImage">
+                            <li v-for="(image,index2) in item.uploadedImages" class="uploadImage" :key="index+index2+image">
                                 <img :src="image"/>
                                 <span class="removeImg" @click="removeImg(index,index2)">&times;</span>
                             </li>
@@ -150,6 +154,7 @@
                 let productIds =  _this.getProductIdsComment(data.orderItems);
                 store.dispatch('getComments', {productIds: productIds}).then((comment) => {
                     _this.disposeComments = disposeComments(_this.comments,_this.order.orderItems,productIds);
+                    _this.pointsSum = _this.order.orderItems && _this.order.orderItems.length > 0 ? ((_this.order.orderItems.length) * 35) : 0;
                     store.dispatch('paging', false);
                     _this.isInit = true;
                 });
@@ -172,8 +177,8 @@
                 newfiles:[],
                 disposeComments:[],
                 isInit:false,
-                pointNum:0,
-                processNum:20
+                pointsNum:0,
+                pointsSum:0,
             }
         },
         computed: {
@@ -209,6 +214,33 @@
                 },0);
 
                 return total > this.disposeComments.length * 3 ? true : false;
+            },
+            getPointsSum(){
+                return this.disposeComments.reduce((initValue,item) => {
+                    if(item.content && item.content.length >= 20){
+                        initValue += 10;
+                        console.log("item.content",item.content);
+                    }
+
+                    if(item.images && item.images.length > 0){
+                        initValue += 20;
+                        console.log("item.images",item.images);
+                    }
+                    
+                    if(item.height && item.height != null &&
+                        item.weight && item.weight != null &&
+                        item.bust && item.bust != null &&
+                        item.hips && item.hips != null &&
+                        item.waist && item.waist != null){
+                            initValue += 5;
+                            console.log("item.height",item.height);
+                    }
+                    return initValue;
+                },0);
+            },
+            getProcessCount(){
+                let num = Math.floor((this.getPointsSum / this.pointsSum) * 100);
+                return num;
             }
         },
         components: {
@@ -311,7 +343,6 @@
                     this.addnum = this.addnum + 1;
                     var src = window.navigator.userAgent.indexOf("Chrome") >= 1 || window.navigator.userAgent.indexOf("Safari") >= 1 ? window.webkitURL.createObjectURL(file) : window.URL.createObjectURL(file);
                     this.disposeComments[index].uploadedImages.push(src);
-                    this.$forceUpdate();
                 })
                 if (this.disposeComments[index].uploadedImages.length > 5) {
                     this.disposeComments[index].uploadedImages.splice(5, this.disposeComments[index].uploadedImages.length - 5);
@@ -321,7 +352,6 @@
             removeImg(index,index2) {
                 this.disposeComments[index].uploadedImages.splice(index2, 1)
                 this.disposeComments[index].files.splice(index2, 1);
-                this.$forceUpdate();
             },
             getProductIdsComment(){
                 return this.order.orderItems && this.order.orderItems.reduce((preValue,item) => {
@@ -646,6 +676,10 @@
                 font-size: 12px;
                 color: #222222;
                 text-align: center;
+
+                & .special-color{
+                    color: #e64545;
+                }
             }
 
             .__content{
@@ -661,9 +695,10 @@
                     position: absolute;
                     left: 0;
                     top: 0;
-                    width: 20%;
+                    width: 0%;
                     background-color: #e64545;
 	                border-radius: 4px;
+                    transition:width 1.2s ease;
                 }
             }
 
@@ -682,6 +717,7 @@
             right: 0;
             border-bottom: solid 1px #e6e6e6;
             padding-bottom: 16px;
+            z-index:100;
         }
     }
 </style>
