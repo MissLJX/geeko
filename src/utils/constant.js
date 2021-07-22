@@ -113,28 +113,67 @@ export const STATUS_COLOR = function (value) {
 
 
 export const disposeComments = (comments,orderItem,productIds) => {
-    let newComments = [];
-    productIds = productIds.split(",");
-    for(var i = 0;i<productIds.length;i++){
-        for(var j = 0;j<productIds.length;j++){
-            if(productIds[i] === orderItem[j].productId){
-                comments[j]['productImageUrl'] = orderItem[j].productImageUrl;
-                comments[j]['productName'] = orderItem[j].productName;;
-                comments[j]['color'] = orderItem[j].color;;
-                comments[j]['size'] = orderItem[j].size;
-                comments[j]['variantId'] = orderItem[j].variantId;
-                comments[j]['uploadedImages'] = [];
-                comments[j]['fits'] = [
-                    {label: "Small", value: '3'},
-                    {label: "True to size", value: '2'},
-                    {label: "Large", value: '1'}
-                ],
-                comments[j]['files'] = [];
-                comments[j]['newfiles'] = [];
-                newComments.push(comments[j]);
-            }
-        }
+    if(comments && comments.length <= 0){
+       return orderItem.map(item => {
+            item['content'] = "";
+            item['score'] = 5;
+            item['uploadedImages'] = [];
+            item['images'] = [];
+            item['sizingRecommendation'] = "3";
+            item['fits'] = [
+                {label: "Small", value: '3'},
+                {label: "True to size", value: '2'},
+                {label: "Large", value: '1'}
+            ],
+            item['files'] = [];
+            item['newfiles'] = [];
+            return {...item}
+        });
     }
+    let newComments = [];
+    // productIds = productIds.split(",");
+    // for(var i = 0;i<productIds.length;i++){
+    //     for(var j = 0;j<productIds.length;j++){
+    //         if(productIds[i] === orderItem[j].productId){
+    //             comments[j]['productImageUrl'] = orderItem[j].productImageUrl;
+    //             comments[j]['productName'] = orderItem[j].productName;;
+    //             comments[j]['color'] = orderItem[j].color;;
+    //             comments[j]['size'] = orderItem[j].size;
+    //             comments[j]['variantId'] = orderItem[j].variantId;
+    //             comments[j]['uploadedImages'] = [];
+    //             comments[j]['fits'] = [
+    //                 {label: "Small", value: '3'},
+    //                 {label: "True to size", value: '2'},
+    //                 {label: "Large", value: '1'}
+    //             ],
+    //             comments[j]['files'] = [];
+    //             comments[j]['newfiles'] = [];
+    //             newComments.push(comments[j]);
+    //         }
+    //     }
+    // }
+
+
+    for(let j=0, len= orderItem.length; j< len; j++){
+        comments[j]['productImageUrl'] = orderItem[j].productImageUrl;
+        comments[j]['productName'] = orderItem[j].productName;;
+        comments[j]['color'] = orderItem[j].color;;
+        comments[j]['size'] = orderItem[j].size;
+        comments[j]['variantId'] = orderItem[j].variantId;
+        comments[j]['uploadedImages'] = [];
+        comments[j]['fits'] = [
+            {label: "Small", value: '3'},
+            {label: "True to size", value: '2'},
+            {label: "Large", value: '1'}
+        ],
+        comments[j]['files'] = [];
+        comments[j]['newfiles'] = [];
+        newComments.push(comments[j]);
+    }
+
+
+
+
     return newComments;
 }   
 

@@ -160,6 +160,19 @@ export default{
             console.log(e)
         })
     },
+    getCommentByOrderId(orderId,callback){
+        return axios.get("/product-comment/get-product-comments-by-order-id",{orderId}).then(comments => {
+            callback(comments);
+        }).catch((e) => {
+            console.log("e",e);
+        });
+    },
+    setndProductCommentSave(comments){
+        return axios.cpost('/product-comment/save',comments);
+    },
+    getCommentRulesPoints(){
+        return axios.get("/context/anon/get-product-comment-config");
+    },
     getLogisticsCompanies(){
         return axios.get('/context/anon/get-logistics-companies');
     },

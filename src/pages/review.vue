@@ -20,7 +20,9 @@
             </div>
         </div>
 
-        <div v-for="(item,index) in disposeComments" :key="index" :style="{'margin-top':index == 1? '124px;' : ''}">
+        <div style="height:124px;"></div>
+
+        <div v-for="(item,index) in disposeComments" :key="index+item.productId">
             <div class="review-body">
                 <div class="content">
                     <div class="_flex">
@@ -41,27 +43,27 @@
                 </div>
                 
                 <div class="review-content">
-                    <textarea placeholder="Earn 10 points for comments over 20 characters… * "
+                    <textarea :placeholder="'Earn ' + commentPoint.commentScore + ' points for comments over '+ commentPoint.limitWords +' characters… *' "
                             v-model="item.content" maxlength="150"></textarea>
                     <!-- <div v-if="isempty" class="please-fill">{{$t("label.fillField")}}</div> -->
                     <div class="upload-container imgboxid">
-                        <ul v-if="item.uploadedImages && item.uploadedImages.length">
-                            <li v-for="(image,index2) in item.uploadedImages" class="uploadImage" :key="index+index2+image">
-                                <img :src="image"/>
+                        <ul v-if="item.images && item.images.length">
+                            <li v-for="(image,index2) in item.images" class="uploadImage" :key="index+index2+image">
+                                <img :src="'https://image.geeko.ltd'+image"/>
                                 <span class="removeImg" @click="removeImg(index,index2)">&times;</span>
                             </li>
                         </ul>
-                        <div class="upload-img uploadimg" v-show="item.uploadedImages.length<5">
+                        <div class="upload-img uploadimg" v-show="item.images.length<5">
                             <form ref="imageLoader">
                                 <input type="file" name="imageFiles" multiple="multiple" @change="loadImg(index,$event)" accept="image/jpg,image/jpeg,image/png,image/gif">
                             </form>
-                            <div class="addbtn">+</div>
-                            <div class="addnum">{{item.uploadedImages.length}} / 5</div>
+                            <div class="addbtn iconfont">&#xe68c;</div>
+                            <div class="addnum">{{item.images.length}} / 5</div>
                         </div>
                     </div>
                 </div>
 
-                <div style="font-size: 12px;color: #999999;line-height:18px;">Earn more 20 points for comments with pictures…* </div>
+                <div style="font-size: 12px;color: #999999;line-height:18px;margin-top:4px;">Earn more {{commentPoint.uploadImageScore}} points for comments with pictures…* </div>
 
                 <div class="review-fit-area">
                     <div class="__title">Overall Fit</div>
@@ -81,49 +83,49 @@
                     </ul>
                 </div>
             </div>
+        </div>
 
-            <div id="review-measure-area">
-                <p>Your Measurements (Optional) </p>
+        <div id="review-measure-area">
+            <p class="__font1">My Size Information (Optional) </p>
+            <p class="__font2">Earn more 5 points for fill your all sizes</p>
+            <div>
                 <div>
                     <div>
-                        <div>
-                            <span class="_title">Height:</span>
-                            <input type="text" class="_input" v-model="item.height">
-                            <span class="_size">cm/ in</span>
-                        </div>
-                        <div>
-                            <span class="_title">Bust:</span>
-                            <input class="_input" type="text" v-model="item.bust">
-                            <span class="_size">cm/ in</span>
-                        </div>
-                        <div>
-                            <span class="_title">Waist:</span>
-                            <input class="_input" type="text" v-model="item.waist">
-                            <span class="_size">cm/ in</span>
-                        </div>
+                        <span class="_title">Height:</span>
+                        <input type="text" class="_input" v-model="mySizeInformation.height">
+                        <span class="_size">cm/ in</span>
                     </div>
-
                     <div>
-                        <div>
-                            <span class="_title">Weight:</span>
-                            <input class="_input" type="text" v-model="item.weight">
-                            <span class="_size">kg/lbs </span>
-                        </div>
-                        <div>
-                            <span class="_title">Hips:</span>
-                            <input class="_input" type="text" v-model="item.hips">
-                            <span class="_size">cm/ in</span>
-                        </div>
+                        <span class="_title">Bust:</span>
+                        <input class="_input" type="text" v-model="mySizeInformation.bust">
+                        <span class="_size">cm/ in</span>
+                    </div>
+                    <div>
+                        <span class="_title">Waist:</span>
+                        <input class="_input" type="text" v-model="mySizeInformation.waist">
+                        <span class="_size">cm/ in</span>
                     </div>
                 </div>
-                
+
+                <div>
+                    <div>
+                        <span class="_title">Weight:</span>
+                        <input class="_input" type="text" v-model="mySizeInformation.weight">
+                        <span class="_size">kg/lbs </span>
+                    </div>
+                    <div>
+                        <span class="_title">Hips:</span>
+                        <input class="_input" type="text" v-model="mySizeInformation.hips">
+                        <span class="_size">cm/ in</span>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="review-footer">
             <div class="mybg">
                 <div v-if="sending" class="btn sending black">{{$t("label.loading")}}</div>
-                <div class="btn black" @click="confirmHandle" v-else>{{$t("label.confirm")}}</div>
+                <div class="btn black" @click="confirmHandle" v-else>SUBMIT</div>
             </div>
 
             <div v-if="isconfirm">
@@ -131,6 +133,8 @@
                 <comment-alert :data="commentAler" @hideAlert="backOrderPage"></comment-alert>
             </div>
         </div>
+
+        <lodding v-if="uploadImageLoddingShow || submitImageLoddingShow"></lodding>
     </div>
 </template>
 
@@ -144,22 +148,38 @@
     import HtmlImageCompress from 'html-image-compress'
     import { disposeComments } from '../utils/constant.js'
     import PageHeader from '../components/page-header.vue'
+    import { mapGetters } from 'vuex';
 
     export default {
         name: 'review',
         created:function(){
             store.dispatch('paging', true);
-            var _this = this;
+            let _this = this;
             store.dispatch('loadOrder', {id: this.$route.params.orderId}).then(function (data) {
-                let productIds =  _this.getProductIdsComment(data.orderItems);
-                store.dispatch('getComments', {productIds: productIds}).then((comment) => {
-                    _this.disposeComments = disposeComments(_this.comments,_this.order.orderItems,productIds);
-                    _this.pointsSum = _this.order.orderItems && _this.order.orderItems.length > 0 ? ((_this.order.orderItems.length) * 35) : 0;
-                    store.dispatch('paging', false);
-                    _this.isInit = true;
+                store.dispatch('getCommentByOrderId', {orderId:_this.$route.params.orderId}).then((comment) => {
+                    store.dispatch('getCommentRulesPoints').then((point) => {
+                        
+                        // _this.$nextTick(() => {
+                            _this.disposeComments = disposeComments(_this.comments,_this.order.orderItems,_this.getProductIdsComment());
+                        // });
+                        _this.pointsSum = _this.order.orderItems && _this.order.orderItems.length > 0 ? ((_this.order.orderItems.length) * (_this.getRulesPointsSum)) : 0;
+                        store.dispatch('paging', false);
+                        _this.isInit = true;
+                    });
                 });
             });
         },
+        // beforeRouteEnter(to, from, next){
+        //     store.dispatch('paging', true);
+        //     store.dispatch('loadOrder', {id: to.params.orderId}).then(function () {
+        //         store.dispatch('getCommentByOrderId', {orderId: to.params.orderId}).then(() => {
+        //             _this.disposeComments = disposeComments(_this.comments,_this.order.orderItems,_this.getProductIdsComment());
+        //             _this.pointsSum = _this.order.orderItems && _this.order.orderItems.length > 0 ? ((_this.order.orderItems.length) * 35) : 0;
+        //             next()
+        //             store.dispatch('paging', false);
+        //         });
+        //     });
+        // },
         data(){
             return {
                 fits: [
@@ -176,20 +196,35 @@
                 addnum:0,
                 newfiles:[],
                 disposeComments:[],
-                isInit:false,
                 pointsNum:0,
                 pointsSum:0,
+                isInit:false,
+                uploadImageLoddingShow:false,
+                submitImageLoddingShow:false
             }
         },
         computed: {
+            ...mapGetters([
+                'commentPoint','comments'
+            ]),
             order(){
                 return this.$store.getters.order
             },
-            comment(){
-                return this.$store.getters.comment
-            },
             comments(){
-                return this.$store.getters.comments;
+                return this.$store.getters.comments.comments;
+            },
+            mySizeInformation(){
+                let mySizeInformation = this.$store.getters.comments.mySizeInformation ;
+                if(!!!mySizeInformation){
+                    let obj = {};
+                    obj['bust'] = "";
+                    obj['height'] = "";
+                    obj['hips'] = "";
+                    obj['waist'] = "";
+                    obj['weight'] = "";
+                    mySizeInformation = obj;
+                }
+                return mySizeInformation;
             },
             item(){
                 let order = this.order, item, productId = this.$route.params.productId;
@@ -219,12 +254,10 @@
                 return this.disposeComments.reduce((initValue,item) => {
                     if(item.content && item.content.length >= 20){
                         initValue += 10;
-                        console.log("item.content",item.content);
                     }
 
                     if(item.images && item.images.length > 0){
                         initValue += 20;
-                        console.log("item.images",item.images);
                     }
                     
                     if(item.height && item.height != null &&
@@ -233,7 +266,6 @@
                         item.hips && item.hips != null &&
                         item.waist && item.waist != null){
                             initValue += 5;
-                            console.log("item.height",item.height);
                     }
                     return initValue;
                 },0);
@@ -241,6 +273,12 @@
             getProcessCount(){
                 let num = Math.floor((this.getPointsSum / this.pointsSum) * 100);
                 return num;
+            },
+            getRulesPointsSum(){
+                if(this.commentPoint){
+                    return parseInt(this.commentPoint.commentScore) + parseInt(this.commentPoint.sizeInfoScore) + parseInt(this.commentPoint.uploadImageScore);
+                }
+                return 0;
             }
         },
         components: {
@@ -259,99 +297,99 @@
                 this.disposeComments[index].sizingRecommendation = fitNum;
             },
             confirmHandle(evt){
-                var _this = this;
-                _this.isempty=false;
-                let arr = [];
+                let _this = this;
+                _this.isempty=false; 
+                _this.submitImageLoddingShow = true;
+                let comments = [];
                 _this.disposeComments.forEach((item,index) => {
-                    console.log("item",item);
-                    var files = item.files;
-                    let promises = files.map(file => new HtmlImageCompress(file, {quality:.7, imageType:file.type}));
-                    console.log("promises",promises);
+                    let obj = {};
 
-                    Promise.all(promises).then(results => {
-                        let _files = results.map(result => result.file);
-                        var formData = new FormData();
-                        formData.append('content', item.content);
-
-                        // 区分是添加评论还是修改评论
-                        if(!!item.id && item.id != null){
-                            formData.append('id', item.id);
-                        }else{  
-                            formData.append('variantId', item.variantId);
-                        }
-
-
-                        // formData.append('productId', _this.$route.params.productId);
-                        formData.append('score', item.score);
-                        formData.append('sizingRecommendation',item.sizingRecommendation);
-
-                        if(!!_this.$route.params.orderId){
-                            formData.append('orderId',_this.$route.params.orderId);
-                        }
-
-                        _files.forEach((file,index) => {
-                            formData.append("imageFiles",  new File([file], files[index].name));
-                        });
-
-                        if(item.height && item.height != null){
-                            formData.append('height', item.height);
-                        }
-                        if(item.weight && item.weight != null){
-                            formData.append('weight', item.weight);
-                        }
-                        if(item.bust && item.bust != null){
-                            formData.append('bust', item.bust);
-                        }
-                        if(item.hips && item.hips != null){
-                            formData.append('hips', item.hips);
-                        }
-                        if(item.waist && item.waist != null){
-                            formData.append('waist', item.waist);
-                        }
-
-                        if(!!!item.productId)
-                            item.productId = _this.$route.params.productId
-                        
-
-                        console.log("formData",formData);
-                        arr.push(new Promise((reslove,reject) => {
-                            _this.$store.dispatch('sendComment', {reply:formData});
-                        }));
-                        
-                    });
-                });
-
-                Promise.all(arr).then((result => {
-                    if(this.getStarCount){
-                        this.issatisfy=false;
-                        this.alertMess=_this.$t("message.shareCoupon")
-                    }else{
-                        this.issatisfy=true;
-                        this.alertMess='Thank you for your comments.'
+                    if(!!item.id && item.id != null){
+                        obj['id'] = item.id;
                     }
-                    this.isconfirm=true;
-                }));
+
+                    if(!!item.productId && item.productId != null){
+                        obj['productId'] = item.productId;
+                    }
+
+                    if(!!_this.$route.params.orderId){
+                        obj['orderId'] = _this.$route.params.orderId;
+                    }
+
+                    if(!!item.variantId && item.variantId != null){
+                        obj['varaintId'] = item.variantId;
+                    }
+
+                    if(!!item.content && item.content != null){
+                        obj['content'] = item.content;
+                    }
+
+                    if(!!item.score && item.score != null){
+                        obj['score'] = item.score;
+                    }
+
+                    if(!!item.sizingRecommendation && item.sizingRecommendation != null){
+                        obj['sizingRecommendation'] = item.sizingRecommendation;
+                    }
+
+                    if(item.images && item.images.length > 0){
+                        obj['images'] = item.images;
+                    }
+
+                    comments.push(obj);
+                })
+
+                let finishComment = {};
+                finishComment['comments'] = comments;
+                finishComment['mySizeInformation'] = _this.mySizeInformation;
+
+                _this.$store.dispatch('setndProductCommentSave',finishComment).then(result => {
+                    console.log("result",result);
+                    _this.submitImageLoddingShow = false;
+                });
             },
             backOrderPage(){
                 this.$router.go(-1);
             },
             loadImg(index,event) {
-                this.disposeComments[index].newfiles = [...event.target.files];
-                this.disposeComments[index].files = this.disposeComments[index].files.concat(this.disposeComments[index].newfiles);
-                var files = this.disposeComments[index].newfiles;
-                _.each(files, (file) => {
-                    this.addnum = this.addnum + 1;
-                    var src = window.navigator.userAgent.indexOf("Chrome") >= 1 || window.navigator.userAgent.indexOf("Safari") >= 1 ? window.webkitURL.createObjectURL(file) : window.URL.createObjectURL(file);
-                    this.disposeComments[index].uploadedImages.push(src);
-                })
-                if (this.disposeComments[index].uploadedImages.length > 5) {
-                    this.disposeComments[index].uploadedImages.splice(5, this.disposeComments[index].uploadedImages.length - 5);
+                let _this = this;
+                _this.uploadImageLoddingShow = true;
+                let comment = this.disposeComments[index];
+                let newFiles = [...event.target.files];
+                let files = comment.files.concat(newFiles);
+
+                let promises = files.map(file => new HtmlImageCompress(file,{quality:.7, imageType:file.type}));
+
+                Promise.all(promises).then(result => {
+                    let formData = new FormData();
+                    formData.append("type","comment");
+
+                    let _files = result.map(result => result.file);
+
+                    _files.forEach((file,index) => {
+                        formData.append("files",new File([file],files[index].name));
+                    });
+
+                    _this.$store.dispatch('generalUploadImage',{formData}).then(result => {
+                        console.log("comment",result);
+                        if(!!result && result.length > 0){
+                            result.forEach((item) => {
+                                comment.images.push(item.url);
+                            });
+                            _this.uploadImageLoddingShow = false;
+                        }
+                    });
+                });
+
+                if (comment.images.length > 5) {
+                    comment.images.splice(5, this.disposeComments[index].images.length - 5);
                     this.disposeComments[index].files.splice(5, this.disposeComments[index].files.length - 5)
                 }
             },
             removeImg(index,index2) {
-                this.disposeComments[index].uploadedImages.splice(index2, 1)
-                this.disposeComments[index].files.splice(index2, 1);
+                let comment = this.disposeComments[index];
+                comment.images.splice(index2, 1)
+                comment.files.splice(index2, 1);
             },
             getProductIdsComment(){
                 return this.order.orderItems && this.order.orderItems.reduce((preValue,item) => {
@@ -421,7 +459,7 @@
                             display: inline-block;
                             width: 18px;
                             height: 18px;
-                            border: 1px solid #eaeaea;
+                            border: 1px solid #cacaca;
                             border-radius: 50%;
                             position: relative;
 
@@ -516,16 +554,17 @@
                     }
                     .addbtn{
                         position: absolute;
-                        top: calc(50% - 25px);
-                        left: calc(50% - 8px);
-                        font-size: 34px;
+                        font-size: 23px;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
                         z-index: 0;
-                        color: #999;
+                        color: #cccccc;
                     }
                     .addnum{
                         position: absolute;
                         top: 70%;
-                        left: calc(50% - 10px);
+                        left: calc(50% - 13px);
                         font-size: 12px;
                         z-index: 0;
                         color: #999;
@@ -625,17 +664,26 @@
 
                 & > div{
                     & > div{
-                        margin: 20px 0px;
+                        // margin: 20px 0px;
+                        height: 40px;
+                        line-height: 40px;
                     }
                 }
             }
 
-            & > p{
-                font-size: 16px;
+            & > .__font1{
+                font-size: 14px;
                 line-height: 18px;
                 color: #222222;
-                font-family: SlatePro;
+                font-family: 'AcuminPro-Bold';
                 margin-top: 15px;
+            }
+
+            & > .__font2{
+                font-size: 12px;
+                line-height: 18px;
+                color: #999999;
+                margin-top: 6px;
             }
         }
 

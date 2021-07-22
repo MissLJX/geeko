@@ -65,6 +65,21 @@
                 default:0
             }
         },
+        computed:{
+            getValue(){
+                if(this.score > 4){
+                this.font = "Very Satisfied";
+                }else if(this.score > 3){
+                    this.font = "Satisfied";
+                }else if(this.score > 2){
+                    this.font = "Normal";
+                }else if(this.score > 1){
+                    this.font = "Bad";
+                }else{
+                    this.font = "Poor";
+                }
+            }
+        },
         data(){
             return {
                 font:"Very Satisfied"

@@ -62,8 +62,10 @@
             'product-list': ProductList
         },
         created(){
+            this.loading = true
             store.dispatch("getYouLikeProducts",{orderId:this.orderId,skip: 0}).then(() => {
                 // store.dispatch("getYouLikeSkip")
+                this.loading = false;
             })
         },
     }

@@ -30,7 +30,7 @@ const packageTracking = () => import(/* webpackChunkName: "package-tracking" */ 
 const Ticket = () => import(/* webpackChunkName: "ticket" */ '../pages/ticket.vue');
 const OutsideReview = () => import(/* webpackChunkName: "outside-review" */ '../pages/outside-review.vue');
 
-const ReturnLogistics = () => import(/* webpackChunkName: "return-logistics" */ '../pages/return-logistics.vue');
+// const ReturnLogistics = () => import(/* webpackChunkName: "return-logistics" */ '../pages/return-logistics.vue');
 
 
 
@@ -45,31 +45,31 @@ const routes = [
   {
     path: ROUTER_PATH_ORDER,
     component: Home,
-    meta: { keepAlive: true },
+    meta: { keepAlive: true , headerShow :true },
     children: [
       {
         path: '',
         component: HomeAll,
         name: 'special-home-all',
-        meta: { keepAlive: true }
+        meta: { keepAlive: true , headerShow :true }
       },
       {
         path: 'all',
         component: HomeAll,
         name: 'home-all',
-        meta: { keepAlive: true }
+        meta: { keepAlive: true , headerShow :true }
       },
       {
         path: 'processing',
         component: HomeProcessing,
         name: 'home-processing',
-        meta: { keepAlive: true }
+        meta: { keepAlive: true , headerShow :true }
       },
       {
         path: 'unpaid',
         component: HomeUnpaid,
         name: 'home-unpaid',
-        meta: { keepAlive: true }
+        meta: { keepAlive: true , headerShow :true }
       },
       // {
       //     path: 'paid',
@@ -81,21 +81,21 @@ const routes = [
         path: 'shipped',
         component: HomeShipped,
         name: 'home-shipped',
-        meta: { keepAlive: true }
+        meta: { keepAlive: true , headerShow :true }
       },
 
       {
         path: 'confirmed',
         component: HomeConfirmed,
         name: 'home-confirmed',
-        meta: { keepAlive: true }
+        meta: { keepAlive: true , headerShow :true }
       },
 
       {
         path: 'canceled',
         component: HomeCanceled,
         name: 'home-canceled',
-        meta: { keepAlive: true }
+        meta: { keepAlive: true , headerShow :true }
       }
     ]
   },
@@ -161,11 +161,11 @@ const routes = [
     name: 'outsideReview',
     component: OutsideReview
   },
-  {
-    path:ROUTER_PATH_ORDER + "/return-logistics/:orderId",
-    name:"returnLogistics",
-    component:ReturnLogistics
-  }
+  // {
+  //   path:ROUTER_PATH_ORDER + "/return-logistics/:orderId",
+  //   name:"returnLogistics",
+  //   component:ReturnLogistics
+  // }
 ];
 
 

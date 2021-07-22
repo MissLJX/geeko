@@ -5,6 +5,14 @@
                 <span :class="{processing: paging}"></span>
             </div>
         </div>
+
+        <template v-if="$route.meta.headerShow">
+            <page-header>
+                <span>My Order</span>
+            </page-header>
+        </template>
+        
+
         <div class="st-main">
             <keep-alive>
                 <router-view v-if="$route.meta.keepAlive"></router-view>
@@ -65,6 +73,7 @@
 
     import Confirm from './components/modal-confirm.vue'
     import store from './store'
+    import PageHeader from './components/page-header.vue'
 
 
     export default {
@@ -81,7 +90,7 @@
         },
         components:{
             'modal-confirm':Confirm,
-
+            'page-header':PageHeader
         }
     }
 </script>

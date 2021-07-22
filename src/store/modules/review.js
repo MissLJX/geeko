@@ -14,14 +14,16 @@ const state = {
         sizingRecommendation: '2'
     },
     reviewSending: false,
-    comments:[]
+    comments:{},
+    commentPoint:{}
 }
 
 
 const getters = {
     comment: state => state.comment,
     reviewSending: state => state.reviewSending,
-    comments:state => state.comments
+    comments:state => state.comments,
+    commentPoint:state => state.commentPoint,
 }
 
 const mutations = {
@@ -48,6 +50,9 @@ const mutations = {
 
     [types.REVIEW_GET_COMMENTS](state,comments){
         state.comments = comments;
+    },
+    [types.REVIEW_GET_COMMENT_RULES_POINT](state,points){
+        state.commentPoint = points;
     }
 }
 
@@ -76,11 +81,27 @@ const actions = {
             });
         });
     },
-    getComments({commit},{productIds}){
+    getCommentByOrderId({commit},{orderId}){
         return new Promise((reslove,reject) => {
-            api.getCommentByProductIds(productIds,comments => {
+            api.getCommentByOrderId(orderId,comments => {
                 commit(types.REVIEW_GET_COMMENTS,comments);
                 reslove(comments);
+            })
+        });
+    },
+    getCommentRulesPoints({commit}){
+        return new Promise((reslove,reject) => {
+            api.getCommentRulesPoints().then((points) => {
+                commit(types.REVIEW_GET_COMMENT_RULES_POINT,points);
+                reslove(points);
+            });
+        });
+    },
+    setndProductCommentSave({commit},comments){
+        return new Promise((reslove,reject) => {
+            api.setndProductCommentSave(comments).then((result) => {
+                console.log("result",result);
+                reslove();
             });
         });
     }

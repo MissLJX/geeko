@@ -115,10 +115,20 @@ body {
   background-color: #222 !important;
   color: #fff;
 }
+
+#vue-header{
+  width: 100%;
+  left: 0;
+  position: relative;
+}
+
 //progress
 #progress {
   height: 1px;
   width: 100%;
+  position: fixed;
+  left: 0px;
+  top: 0px;
   span {
     width: 0;
     display: block;
