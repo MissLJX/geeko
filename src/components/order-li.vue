@@ -404,13 +404,14 @@
                         title: _this.$t('message.confirmReceipt'),
                         message: _this.$t('message.confirmReceiptTip'),
                         yes: function () {
-                            _this.$store.dispatch('confirmOrder',orderId)
-                                .then(() => {
-                                    _this.$store.dispatch('updateStatusInOrders', {
-                                        id: _this.order.id,
-                                        status: constant.STATUS_CONFIRMED
-                                    });
+
+                            api.confirmOrder(orderId, function(){
+                                _this.$store.dispatch('updateStatusInOrders', {
+                                    id: orderId,
+                                    status: constant.DISPLAY_STATUS_REVIEW
                                 });
+                            })
+
                             _this.$store.dispatch('closeConfirm');
                         },
                         no: function () {

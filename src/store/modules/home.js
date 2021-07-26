@@ -167,7 +167,8 @@ const mutations = {
   },
   [types.HOME_ORDERS_STATUS_UPDATE](state, { id, status }) {
     var order;
-    state.all && (order = state.all.find(o => o.id === id)) && (order.order.status = status);
+    state.all && (order = state.all.find(o => o.id === id)) && (order.status = status);
+    state.shipped && (order = state.shipped.find(o => o.id === id)) && (order.status = status);
   },
   [types.HOME_GET_M1135](state, result){
     const message = result ? result.message : '';

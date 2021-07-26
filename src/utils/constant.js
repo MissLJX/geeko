@@ -21,6 +21,18 @@ export const BASE_IMAGE_PATH = 'https://image.geeko.ltd'
 export const BASE_PRODUCT_IMAGE_SMALL = 'https://image.geeko.ltd/small'
 
 
+
+//display stauts
+export const DISPLAY_STATUS_UPAID = 0
+export const DISPLAY_STATUS_PAID = 1
+export const DISPLAY_STATUS_PROCESSING = 2
+export const DISPLAY_STATUS_SHIPPED = 3
+export const DISPLAY_STATUS_CANCELED = 4
+export const DISPLAY_STATUS_REVIEW = 5
+
+
+
+
 //order status
 export const STATUS_PENDING = 1
 export const STATUS_REVIEWING = 2
@@ -116,10 +128,10 @@ export const disposeComments = (comments,orderItem,productIds) => {
     if(comments && comments.length <= 0){
        return orderItem.map(item => {
             item['content'] = "";
-            item['score'] = 5;
+            item['score'] = 0;
             item['uploadedImages'] = [];
             item['images'] = [];
-            item['sizingRecommendation'] = "3";
+            item['sizingRecommendation'] = "";
             item['fits'] = [
                 {label: "Small", value: '3'},
                 {label: "True to size", value: '2'},
@@ -131,45 +143,59 @@ export const disposeComments = (comments,orderItem,productIds) => {
         });
     }
     let newComments = [];
-    // productIds = productIds.split(",");
-    // for(var i = 0;i<productIds.length;i++){
-    //     for(var j = 0;j<productIds.length;j++){
-    //         if(productIds[i] === orderItem[j].productId){
-    //             comments[j]['productImageUrl'] = orderItem[j].productImageUrl;
-    //             comments[j]['productName'] = orderItem[j].productName;;
-    //             comments[j]['color'] = orderItem[j].color;;
-    //             comments[j]['size'] = orderItem[j].size;
-    //             comments[j]['variantId'] = orderItem[j].variantId;
-    //             comments[j]['uploadedImages'] = [];
-    //             comments[j]['fits'] = [
-    //                 {label: "Small", value: '3'},
-    //                 {label: "True to size", value: '2'},
-    //                 {label: "Large", value: '1'}
-    //             ],
-    //             comments[j]['files'] = [];
-    //             comments[j]['newfiles'] = [];
-    //             newComments.push(comments[j]);
-    //         }
-    //     }
-    // }
-
-
-    for(let j=0, len= orderItem.length; j< len; j++){
-        comments[j]['productImageUrl'] = orderItem[j].productImageUrl;
-        comments[j]['productName'] = orderItem[j].productName;;
-        comments[j]['color'] = orderItem[j].color;;
-        comments[j]['size'] = orderItem[j].size;
-        comments[j]['variantId'] = orderItem[j].variantId;
-        comments[j]['uploadedImages'] = [];
-        comments[j]['fits'] = [
-            {label: "Small", value: '3'},
-            {label: "True to size", value: '2'},
-            {label: "Large", value: '1'}
-        ],
-        comments[j]['files'] = [];
-        comments[j]['newfiles'] = [];
-        newComments.push(comments[j]);
+    productIds = productIds.split(",");
+    for(var i = 0;i<productIds.length;i++){
+        for(var j = 0;j<productIds.length;j++){
+            if(productIds[i] === orderItem[j].productId){
+                if(!comments[j]){
+                    comments[j] = {};
+                    comments[j]['content'] = "";
+                    comments[j]['score'] = 0;
+                    comments[j]['images'] = [];
+                    comments[j]['sizingRecommendation'] = "";
+                    comments[j]['productId'] = orderItem[j].productId;;
+                }
+                comments[j]['productImageUrl'] = orderItem[j].productImageUrl;
+                comments[j]['productName'] = orderItem[j].productName;;
+                comments[j]['color'] = orderItem[j].color;;
+                comments[j]['size'] = orderItem[j].size;
+                comments[j]['variantId'] = orderItem[j].variantId;
+                comments[j]['uploadedImages'] = [];
+                comments[j]['fits'] = [
+                    {label: "Small", value: '3'},
+                    {label: "True to size", value: '2'},
+                    {label: "Large", value: '1'}
+                ],
+                comments[j]['files'] = [];
+                comments[j]['newfiles'] = [];
+                if(!comments[j].images){
+                    comments[j]['images'] = [];
+                }
+                newComments.push(comments[j]);
+            }
+        }
     }
+
+    // console.log("orderItem",orderItem);
+    // for(let j=0, len= orderItem.length; j< len; j++){
+    //     comments[j]['productImageUrl'] = orderItem[j].productImageUrl;
+    //     comments[j]['productName'] = orderItem[j].productName;;
+    //     comments[j]['color'] = orderItem[j].color;;
+    //     comments[j]['size'] = orderItem[j].size;
+    //     comments[j]['variantId'] = orderItem[j].variantId;
+    //     comments[j]['uploadedImages'] = [];
+    //     if(!comments[j]['images']){
+    //         comments[j]['images'] = [];
+    //     }
+    //     comments[j]['fits'] = [
+    //         {label: "Small", value: '3'},
+    //         {label: "True to size", value: '2'},
+    //         {label: "Large", value: '1'}
+    //     ],
+    //     comments[j]['files'] = [];
+    //     comments[j]['newfiles'] = [];
+    //     newComments.push(comments[j]);
+    // }
 
 
 

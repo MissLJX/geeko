@@ -73,10 +73,14 @@ module.exports = {
         // contentBase: './dist',
         proxy: {
             '/api': {
-                target: 'http://localhost:8080/wanna/',
-                // target: 'https://www.chicme.xyz/',
-                pathRewrite: { '^/api': '' },
-                secure: false
+                target: 'https://www.chicme.com',
+				pathRewrite: { '^/api': '' },
+				cookieDomainRewrite: 'localhost',
+				cookiePathRewrite: {
+					'/wanna': '/',
+				},
+				secure: true,
+				changeOrigin: true
             }
         }
     },

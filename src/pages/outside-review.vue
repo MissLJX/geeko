@@ -229,6 +229,7 @@
             },
             hideAlert(){
                 this.isconfirm=false;
+                this.$router.push({name :"home-confirmed"});
             }
         },
 

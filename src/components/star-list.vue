@@ -4,7 +4,7 @@
         <ol class="star-list">
             <li class="iconfont" :class="{active: i <= score}" v-for="i in 5" :index="i" @click="clickHandle" :key="i"></li>
         </ol>
-        <span class="font_2">{{font}}</span>
+        <span class="font_2">{{getValue}}</span>
     </div>
 </template>
 
@@ -65,19 +65,28 @@
                 default:0
             }
         },
+        data(){
+            return {
+                starIndex:0
+            }
+        },
         computed:{
             getValue(){
-                if(this.score > 4){
+                this.starIndex = this.score
+                if(this.starIndex > 4){
                 this.font = "Very Satisfied";
-                }else if(this.score > 3){
+                }else if(this.starIndex > 3){
                     this.font = "Satisfied";
-                }else if(this.score > 2){
+                }else if(this.starIndex > 2){
                     this.font = "Normal";
-                }else if(this.score > 1){
+                }else if(this.starIndex > 1){
                     this.font = "Bad";
-                }else{
+                }else if(this.starIndex == 1){
                     this.font = "Poor";
+                }else{
+                    this.font = "";
                 }
+                return this.font;
             }
         },
         data(){
@@ -89,17 +98,18 @@
             clickHandle(evt){
                 evt.preventDefault();
                 let index = evt.target.getAttribute('index');
-                if(index > 4){
-                    this.font = "Very Satisfied";
-                }else if(index > 3){
-                    this.font = "Satisfied";
-                }else if(index > 2){
-                    this.font = "Normal";
-                }else if(index > 1){
-                    this.font = "Bad";
-                }else{
-                    this.font = "Poor";
-                }
+                this.starIndex = index;
+                // if(index > 4){
+                //     this.font = "Very Satisfied";
+                // }else if(index > 3){
+                //     this.font = "Satisfied";
+                // }else if(index > 2){
+                //     this.font = "Normal";
+                // }else if(index > 1){
+                //     this.font = "Bad";
+                // }else{
+                //     this.font = "Poor";
+                // }
                 this.$emit('star' , {star: index},this.index);
             }
         }

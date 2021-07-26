@@ -183,7 +183,6 @@
                     <router-link :to="{ name: 'review', params: { orderId: order.id}}" class="l-btn" v-if="order.status === 5">
                         To Review
                     </router-link>
-
                     
                     <a class="paybtn" :href="checkoutUrl(order.id)" v-if="getPayUrl && getBtnText && getBtnText2 && order.status === 0 && orderoffset >= 0">{{getBtnText2}}</a>
 
@@ -842,7 +841,7 @@
         changePackage:{},
         isCancelOrder:false,
         selectedResaon:'',
-        strutBottomPaddingNumber:""
+        strutBottomPaddingNumber:"",
       }
     },
     components: {

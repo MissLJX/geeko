@@ -100,7 +100,7 @@ const actions = {
     setndProductCommentSave({commit},comments){
         return new Promise((reslove,reject) => {
             api.setndProductCommentSave(comments).then((result) => {
-                console.log("result",result);
+                // console.log("result",result);
                 reslove();
             });
         });
