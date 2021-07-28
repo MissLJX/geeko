@@ -45,7 +45,7 @@
                 
                 <div class="review-content">
                     <textarea :placeholder="'Earn ' + commentPoint.commentScore + ' points for comments over '+ commentPoint.limitWords +' characters… *' "
-                            v-model="item.content" maxlength="150"></textarea>
+                            v-model="item.content" maxlength="150" @focus="recordClick"></textarea>
                     <!-- <div v-if="isempty" class="please-fill">{{$t("label.fillField")}}</div> -->
                     <div class="upload-container imgboxid">
                         <ul v-if="item.images && item.images.length">
@@ -217,7 +217,8 @@
                 uploadImageLoddingShow:false,
                 submitImageLoddingShow:false,
                 isInquiryShow:false,
-                recordSizeChangeSum:0
+                recordSizeChangeSum:0,
+                mySizeInformation:{}
             }
         },
         computed: {
@@ -230,16 +231,16 @@
             comments(){
                 return this.$store.getters.comments.comments;
             },
-            mySizeInformation(){
+            mySizeInformationItem(){
                 let mySizeInformation = this.$store.getters.comments.mySizeInformation ;
                 if(!!!mySizeInformation){
-                    let obj = {};
-                    obj['bust'] = "";
-                    obj['height'] = "";
-                    obj['hips'] = "";
-                    obj['waist'] = "";
-                    obj['weight'] = "";
-                    mySizeInformation = obj;
+                    let myObj = {};
+                    myObj['bust'] = "";
+                    myObj['height'] = "";
+                    myObj['hips'] = "";
+                    myObj['waist'] = "";
+                    myObj['weight'] = "";
+                    mySizeInformation = myObj;
                 }
                 return mySizeInformation;
             },
@@ -269,7 +270,8 @@
             },
             getPointsSum(){
                  let content = this.disposeComments.reduce((initValue,item) => {
-                    if(item.content && item.content.length >= 20){
+                     let content = _.trim(item.content);
+                    if(content && content.length >= 20){
                         initValue += 10;
                     }
 
@@ -291,13 +293,15 @@
                 return 0;
             },
             getSizeSum(){
+                this.mySizeInformation = this.mySizeInformationItem;
                 let item = this.mySizeInformation;
                 this.recordSizeChangeSum++;
                 let initValue =  0;
-                if(item.height && item.height != null &&
-                    item.weight && item.weight != null &&
-                    item.bust && item.bust != null &&
-                    item.hips && item.hips != null &&
+
+                if(item.height && item.height != null ||
+                    item.weight && item.weight != null ||
+                    item.bust && item.bust != null ||
+                    item.hips && item.hips != null ||
                     item.waist && item.waist != null){
                         initValue += 5;
                 }
@@ -325,6 +329,14 @@
             },
             confirmHandle(evt){
                 let _this = this;
+                if(window.GeekoSensors){
+                    window.GeekoSensors.Track('ELClick', {
+                        clicks: 'Save Review',
+                        orderId:_this.order.id
+                    })
+                }
+
+                
                 _this.isempty=false; 
                 _this.submitImageLoddingShow = true;
                 let comments = [];
@@ -351,22 +363,20 @@
                     let content = _.trim(item.content);
                     if(!!content && content != null){
                         obj['content'] = content;
+                        if(!!item.score && item.score > 0){
+                            obj['score'] = item.score;
+                        }
                         flag = true;
-                    }
-
-                    if(!!item.score && item.score > 0){
-                        obj['score'] = item.score;
-                        flag = true;
+                    }else{
+                        return;
                     }
 
                     if(!!item.sizingRecommendation && item.sizingRecommendation != null){
                         obj['sizingRecommendation'] = item.sizingRecommendation;
-                        flag = true;
                     }
 
                     if(item.images && item.images.length > 0){
                         obj['images'] = item.images;
-                        flag = true;
                     }
 
                     comments.push(obj);
@@ -379,8 +389,12 @@
                 }
                 let finishComment = {};
                 finishComment['comments'] = comments;
-                finishComment['mySizeInformation'] = _this.mySizeInformation;
 
+                let mySizeSubmit = _this.checkValid(_this.mySizeInformation);
+                if(mySizeSubmit){
+                    finishComment['mySizeInformation'] = _this.mySizeInformation;
+                }
+                
                 _this.$store.dispatch('setndProductCommentSave',finishComment).then(result => {
                     // console.log("result",result);
                     _this.submitImageLoddingShow = false;
@@ -393,6 +407,9 @@
                     }
                     _this.isconfirm=true;
                 });
+            },
+            checkValid(obj){
+                return Object.keys(obj).some(key => !!obj[key])
             },
             backOrderPage(){
                 this.$router.go(-1);
@@ -454,6 +471,14 @@
                     this.$router.go(-1);
                 }else{
                     this.isInquiryShow = true;
+                }
+            },
+            recordClick(){
+                if(window.GeekoSensors){
+                    window.GeekoSensors.Track('ELClick', {
+                        clicks: 'Review Content Input',
+                        orderId:this.order.id
+                    })
                 }
             }
         },

@@ -73,14 +73,14 @@ module.exports = {
         // contentBase: './dist',
         proxy: {
             '/api': {
-                target: 'https://www.chicme.com',
+                target: 'http://localhost:8080/wanna',
 				pathRewrite: { '^/api': '' },
-				cookieDomainRewrite: 'localhost',
-				cookiePathRewrite: {
-					'/wanna': '/',
-				},
-				secure: true,
-				changeOrigin: true
+				// cookieDomainRewrite: 'localhost',
+				// cookiePathRewrite: {
+				// 	'/wanna': '/',
+				// },
+				// secure: true,
+				// changeOrigin: true
             }
         }
     },

@@ -128,7 +128,7 @@
                 </div>
             </div>
 
-            <shipping-detail :address="order.shippingDetail"/>
+            <shipping-detail :address="order.shippingDetail" :shipping="order.shippingMethodName"/>
 
             <div class="payment-method" v-if="order.payMethodName != null && showdetail">
                 <div class="__title">
@@ -180,9 +180,9 @@
 
                 <!-- unpaid status:0  Shipped status:3   Confirm status:5  :class="l-container-padding-0"-->
                 <div class="l-container" v-if="order.status === 0 || order.status === 3 || order.status === 5">
-                    <router-link :to="{ name: 'review', params: { orderId: order.id}}" class="l-btn" v-if="order.status === 5">
+                    <a @click="toReviews(order.id)" class="l-btn" v-if="order.status === 5">
                         To Review
-                    </router-link>
+                    </a>
                     
                     <a class="paybtn" :href="checkoutUrl(order.id)" v-if="getPayUrl && getBtnText && getBtnText2 && order.status === 0 && orderoffset >= 0">{{getBtnText2}}</a>
 
@@ -856,9 +856,11 @@
       store.dispatch('clearTicket');
       store.dispatch('paging', true);
       store.dispatch('loadOrder', { id: to.params.orderId })
-        .then(() => {
-
+        .then((order) => {
           next((vm) => {
+            if(!order){
+                window.location.href = "/me/m/order/all";
+            }
             vm.$store.dispatch('detailTicket', vm.$route.params.orderId);
           });
           store.dispatch('paging', false);
@@ -1111,6 +1113,16 @@
             }else{
                 return 'p-b-0';
             }
+        },
+        toReviews(orderId){
+            if(window.GeekoSensors){
+                window.GeekoSensors.Track('ELClick', {
+                    clicks: 'Order Review',
+                    orderId:orderId
+                })
+            }
+
+            this.$router.push({ name: 'review', params: { orderId: orderId}});
         }
     },
     watcher: {

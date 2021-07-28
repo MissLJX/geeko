@@ -12,9 +12,9 @@
             <p class="c-six">{{addressLabel}} {{address.zipCode}} {{address.city}}/{{stateCountry}}</p>
         </div>
 
-        <div class="_shipping-method">
+        <div class="_shipping-method" v-if="shipping">
             <p class="c-nine">Shpping Method</p>
-            <p class="f-medium">Standard Shipping</p>
+            <p class="f-medium">{{shipping}}</p>
         </div>
     </address>
 </template>
@@ -22,7 +22,7 @@
 <script type="text/ecmascript-6">
     export default{
         props: [
-            'address'
+            'address','shipping'
         ],
         computed: {
             state(){

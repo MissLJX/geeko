@@ -42,7 +42,7 @@
         </div>
 
         <div class="bd">
-            <router-link :to="{ name: 'detail', params: { orderId: order.id }}">
+            <a @click="toOrderClickDetail(order.id)" style="cursor: pointer;">
                 <!-- <ul class="st-order-items">
                     <product-item :key="item.productId+order.id" :status="order.status" :orderId="order.id" v-for="item in order.orderItems" :item="item"/>
                 </ul> -->
@@ -69,7 +69,7 @@
                     </div>
                 </div>
                 
-            </router-link>
+            </a>
         </div>
 
         <div class="pd">
@@ -471,6 +471,15 @@
                     default:
                         return null
                 }
+            },
+            toOrderClickDetail(orderId){
+                if(window.GeekoSensors){
+                    window.GeekoSensors.Track('EventEnter', {
+                        clicks: 'order',
+                        orderId:orderId
+                    })
+                }
+                this.$router.push({ name: 'detail', params: { orderId: orderId }});
             }
         },
         computed:{

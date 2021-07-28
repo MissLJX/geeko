@@ -11,17 +11,17 @@
         </div>
 
         <div class="bd">
-            <router-link :to="{ name: 'detail', params: { orderId: order.id }}">
+            <a @click="toOrderDetail(order.id)" style="cursor: pointer;">
                 <confirmed-order-li-item :key="item.productId" v-for="item in order.orderItems" :item="item"></confirmed-order-li-item>
-            </router-link>
+            </a>
         </div>
 
         <div class="pd">
         </div>
         <div class="fd">
-            <router-link :class="[orderItemCount > 1 ? 'b-btn' : 'w-btn']" :to="{ name: 'review', params: {orderId: order.id}}" v-if="order.status === 5">
+            <a :class="[orderItemCount > 1 ? 'b-btn' : 'w-btn']" @click="toReviewPage(order.id)" v-if="order.status === 5">
                 {{orderItemCount > 1 ? 'To Review' : 'Reviewed'}}
-            </router-link>
+            </a>
             <div v-if="index === 0 && order.status === 5" class="_message">Review to get 100 Ponits (100 Ponits=$1USD) </div>
 
             <!--根据订单号重新加入购物车-->
@@ -95,6 +95,24 @@
                     })
                 }
             },
+            toOrderDetail(orderId){
+                if(window.GeekoSensors){
+                    window.GeekoSensors.Track('EventEnter', {
+                        clicks: 'order',
+                        orderId:orderId
+                    })
+                }
+                this.$router.push({ name: 'detail', params: { orderId: orderId }});
+            },
+            toReviewPage(orderId){
+                if(window.GeekoSensors){
+                    window.GeekoSensors.Track('EventEnter', {
+                        clicks: 'review',
+                        orderId:orderId
+                    })
+                }
+                this.$router.push({ name: 'review', params: {orderId: orderId}});
+            }
         }
     }
 </script>

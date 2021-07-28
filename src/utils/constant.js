@@ -128,7 +128,7 @@ export const disposeComments = (comments,orderItem,productIds) => {
     if(comments && comments.length <= 0){
        return orderItem.map(item => {
             item['content'] = "";
-            item['score'] = 0;
+            item['score'] = 5;
             item['uploadedImages'] = [];
             item['images'] = [];
             item['sizingRecommendation'] = "";
@@ -150,7 +150,7 @@ export const disposeComments = (comments,orderItem,productIds) => {
                 if(!comments[j]){
                     comments[j] = {};
                     comments[j]['content'] = "";
-                    comments[j]['score'] = 0;
+                    comments[j]['score'] = 5;
                     comments[j]['images'] = [];
                     comments[j]['sizingRecommendation'] = "";
                     comments[j]['productId'] = orderItem[j].productId;;
