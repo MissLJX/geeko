@@ -93,17 +93,17 @@
                 <div>
                     <div>
                         <span class="_title">Height:</span>
-                        <input type="text" class="_input" v-model="mySizeInformation.height">
+                        <input type="text" class="_input" v-model="mySizeInformation.height" @input="mySizeInformationChange = true;">
                         <span class="_size">cm/ in</span>
                     </div>
                     <div>
                         <span class="_title">Bust:</span>
-                        <input class="_input" type="text" v-model="mySizeInformation.bust">
+                        <input class="_input" type="text" v-model="mySizeInformation.bust" @input="mySizeInformationChange = true;">
                         <span class="_size">cm/ in</span>
                     </div>
                     <div>
                         <span class="_title">Waist:</span>
-                        <input class="_input" type="text" v-model="mySizeInformation.waist">
+                        <input class="_input" type="text" v-model="mySizeInformation.waist" @input="mySizeInformationChange = true;">
                         <span class="_size">cm/ in</span>
                     </div>
                 </div>
@@ -111,12 +111,12 @@
                 <div>
                     <div>
                         <span class="_title">Weight:</span>
-                        <input class="_input" type="text" v-model="mySizeInformation.weight">
+                        <input class="_input" type="text" v-model="mySizeInformation.weight" @input="mySizeInformationChange = true;">
                         <span class="_size">kg/lbs </span>
                     </div>
                     <div>
                         <span class="_title">Hips:</span>
-                        <input class="_input" type="text" v-model="mySizeInformation.hips">
+                        <input class="_input" type="text" v-model="mySizeInformation.hips" @input="mySizeInformationChange = true;">
                         <span class="_size">cm/ in</span>
                     </div>
                 </div>
@@ -218,7 +218,8 @@
                 submitImageLoddingShow:false,
                 isInquiryShow:false,
                 recordSizeChangeSum:0,
-                mySizeInformation:{}
+                mySizeInformation:{},
+                mySizeInformationChange:false
             }
         },
         computed: {
@@ -356,6 +357,10 @@
                         obj['orderId'] = _this.$route.params.orderId;
                     }
 
+                    if(!!item.varaintId && item.varaintId != null){
+                        obj['varaintId'] = item.varaintId;
+                    }
+
                     if(!!item.variantId && item.variantId != null){
                         obj['varaintId'] = item.variantId;
                     }
@@ -391,7 +396,8 @@
                 finishComment['comments'] = comments;
 
                 let mySizeSubmit = _this.checkValid(_this.mySizeInformation);
-                if(mySizeSubmit){
+
+                if(this.mySizeInformationChange && mySizeSubmit){
                     finishComment['mySizeInformation'] = _this.mySizeInformation;
                 }
                 
@@ -457,13 +463,13 @@
             getProductIdsComment(){
                 return this.order.orderItems && this.order.orderItems.reduce((preValue,item) => {
                     if(this.order.orderItems.length < 2){
-                        return preValue  + item.productId;
+                        return preValue  + item.variantId;
                     }
                     
-                    if(this.order.orderItems[this.order.orderItems.length - 1].productId === item.productId){
-                        return preValue  + item.productId;
+                    if(this.order.orderItems[this.order.orderItems.length - 1].variantId === item.variantId){
+                        return preValue  + item.variantId;
                     }
-                    return preValue  + item.productId + ",";
+                    return preValue  + item.variantId + ",";
                 },"")
             },
             closeHandle(){
