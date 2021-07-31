@@ -196,6 +196,14 @@
         //         });
         //     });
         // },
+        mounted(){
+            if(window.GeekoSensors){
+                window.GeekoSensors.Track('EventEnter', {
+                    page: 'review', //进入留评页
+                    orderId:this.order.id
+                })
+            }
+        },
         data(){
             return {
                 fits: [

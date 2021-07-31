@@ -872,6 +872,12 @@
         this.changePackage = _.cloneDeep(this.order.logistics.packages[0])
     },
     mounted(){
+        if(window.GeekoSensors){
+            window.GeekoSensors.Track('EventEnter', {
+                page: 'order',
+                orderId:this.order.id
+            })
+        }
         this.strutBottomPaddingNumber = this.strutBottomPadding();
     },
     computed: {

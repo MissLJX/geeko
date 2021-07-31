@@ -150,7 +150,6 @@ export const disposeComments = (comments,orderItem,variantIds) => {
     for(var i = 0;i<commentLength;i++){
         for(var j = 0;j<orderItem.length;j++){
             if(comments[i].varaintId === orderItem[j].variantId){
-                console.log("comments[j]",comments[i]);
                 // if(!comments[i]){
                 //     comments[i] = {};
                 //     comments[j]['content'] = "";
@@ -183,7 +182,6 @@ export const disposeComments = (comments,orderItem,variantIds) => {
     
     const items = orderItem.filter(item => !(comments||[]).some(comment => comment.varaintId === item.variantId));
     items.forEach(item => {
-        console.log("111");
         let comment = {};
         comment['content'] = "";
         comment['score'] = 5;
