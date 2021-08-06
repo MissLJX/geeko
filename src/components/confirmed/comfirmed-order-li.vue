@@ -96,21 +96,9 @@
                 }
             },
             toOrderDetail(orderId){
-                if(window.GeekoSensors){
-                    window.GeekoSensors.Track('EventEnter', {
-                        clicks: 'order',
-                        orderId:orderId
-                    })
-                }
                 this.$router.push({ name: 'detail', params: { orderId: orderId }});
             },
             toReviewPage(orderId){
-                if(window.GeekoSensors){
-                    window.GeekoSensors.Track('EventEnter', {
-                        clicks: 'review',
-                        orderId:orderId
-                    })
-                }
                 this.$router.push({ name: 'review', params: {orderId: orderId}});
             }
         }

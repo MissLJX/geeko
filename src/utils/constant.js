@@ -124,7 +124,7 @@ export const STATUS_COLOR = function (value) {
 }
 
 
-export const disposeComments = (comments,orderItem,productIds) => {
+export const disposeComments = (comments,orderItem,variantIds) => {
     if(comments && comments.length <= 0){
        return orderItem.map(item => {
             item['content'] = "";
@@ -143,38 +143,110 @@ export const disposeComments = (comments,orderItem,productIds) => {
         });
     }
     let newComments = [];
-    productIds = productIds.split(",");
-    for(var i = 0;i<productIds.length;i++){
-        for(var j = 0;j<productIds.length;j++){
-            if(productIds[i] === orderItem[j].productId){
-                if(!comments[j]){
-                    comments[j] = {};
-                    comments[j]['content'] = "";
-                    comments[j]['score'] = 5;
-                    comments[j]['images'] = [];
-                    comments[j]['sizingRecommendation'] = "";
-                    comments[j]['productId'] = orderItem[j].productId;;
-                }
-                comments[j]['productImageUrl'] = orderItem[j].productImageUrl;
-                comments[j]['productName'] = orderItem[j].productName;;
-                comments[j]['color'] = orderItem[j].color;;
-                comments[j]['size'] = orderItem[j].size;
-                comments[j]['variantId'] = orderItem[j].variantId;
-                comments[j]['uploadedImages'] = [];
-                comments[j]['fits'] = [
+    let commentLength = comments.length;
+    let commentsVaraintId = [];
+    variantIds = variantIds.split(",");
+
+    for(var i = 0;i<commentLength;i++){
+        for(var j = 0;j<orderItem.length;j++){
+            if(comments[i].varaintId === orderItem[j].variantId){
+                // if(!comments[i]){
+                //     comments[i] = {};
+                //     comments[j]['content'] = "";
+                //     comments[j]['score'] = 5;
+                //     comments[j]['images'] = [];
+                //     comments[j]['sizingRecommendation'] = "";
+                //     comments[j]['productId'] = orderItem[j].productId;
+                // }
+                comments[i]['productImageUrl'] = orderItem[j].productImageUrl;
+                comments[i]['productName'] = orderItem[j].productName;;
+                comments[i]['color'] = orderItem[j].color;;
+                comments[i]['size'] = orderItem[j].size;
+                comments[i]['uploadedImages'] = [];
+                comments[i]['fits'] = [
                     {label: "Small", value: '3'},
                     {label: "True to size", value: '2'},
                     {label: "Large", value: '1'}
                 ],
-                comments[j]['files'] = [];
-                comments[j]['newfiles'] = [];
-                if(!comments[j].images){
-                    comments[j]['images'] = [];
+                comments[i]['files'] = [];
+                comments[i]['newfiles'] = [];
+                if(!comments[i].images){
+                    comments[i]['images'] = [];
                 }
-                newComments.push(comments[j]);
+
+                newComments.push(comments[i]);
+                commentsVaraintId.push(comments[i].varaintId);
             }
         }
     }
+    
+    const items = orderItem.filter(item => !(comments||[]).some(comment => comment.varaintId === item.variantId));
+    items.forEach(item => {
+        let comment = {};
+        comment['content'] = "";
+        comment['score'] = 5;
+        comment['images'] = [];
+        comment['sizingRecommendation'] = "";
+        comment['productId'] = item.productId;
+        comment['productImageUrl'] = item.productImageUrl;
+        comment['productName'] = item.productName;;
+        comment['color'] = item.color;;
+        comment['varaintId'] = item.variantId;
+        comment['size'] = item.size;
+        comment['uploadedImages'] = [];
+        comment['fits'] = [
+            {label: "Small", value: '3'},
+            {label: "True to size", value: '2'},
+            {label: "Large", value: '1'}
+        ],
+        comment['files'] = [];
+        comment['newfiles'] = [];
+        comment['images'] = [];
+        newComments.push(comment);
+    });
+
+    
+
+    // let newCommentList = [];
+    // orderItem.forEach(item => {
+    //     console.log("item",item);
+    //     commentsVaraintId.forEach(item2 => {
+    //         console.log("item2",item2);
+    //         if(item.variantId !== item2){
+    //             console.log("111");
+    //             let comment = {};
+    //             comment['content'] = "";
+    //             comment['score'] = 5;
+    //             comment['images'] = [];
+    //             comment['sizingRecommendation'] = "";
+    //             comment['productId'] = item.productId;
+    //             comment['productImageUrl'] = item.productImageUrl;
+    //             comment['productName'] = item.productName;;
+    //             comment['color'] = item.color;;
+    //             comment['varaintId'] = item.variantId;
+    //             comment['size'] = item.size;
+    //             comment['uploadedImages'] = [];
+    //             comment['fits'] = [
+    //                 {label: "Small", value: '3'},
+    //                 {label: "True to size", value: '2'},
+    //                 {label: "Large", value: '1'}
+    //             ],
+    //             comment['files'] = [];
+    //             comment['newfiles'] = [];
+    //             comment['images'] = [];
+    //             newCommentList.push(comment);
+    //         }
+    //     });
+    // });
+
+    // commentsVaraintId.forEach(item2 => {
+    //     orderItem.forEach();
+    // });
+
+    // console.log("newCommentList",newCommentList);
+    // let product = _.uniqBy(newCommentList,'varaintId');
+    // console.log("product",product)
+
 
     // console.log("orderItem",orderItem);
     // for(let j=0, len= orderItem.length; j< len; j++){

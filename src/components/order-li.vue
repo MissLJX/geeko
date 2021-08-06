@@ -473,12 +473,6 @@
                 }
             },
             toOrderClickDetail(orderId){
-                if(window.GeekoSensors){
-                    window.GeekoSensors.Track('EventEnter', {
-                        clicks: 'order',
-                        orderId:orderId
-                    })
-                }
                 this.$router.push({ name: 'detail', params: { orderId: orderId }});
             }
         },
