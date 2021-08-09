@@ -71,18 +71,32 @@ module.exports = {
         inline: true,
         progress: true,
         // contentBase: './dist',
+        // proxy: {
+        //     '/api': {
+        //         target: 'http://localhost:8080/wanna',
+		// 		pathRewrite: { '^/api': '' },
+		// 		// cookieDomainRewrite: 'localhost',
+		// 		// cookiePathRewrite: {
+		// 		// 	'/wanna': '/',
+		// 		// },
+		// 		// secure: true,
+		// 		// changeOrigin: true
+        //     }
+        // },
         proxy: {
-            '/api': {
-                target: 'http://localhost:8080/wanna',
+			'/api': {
+				// target: 'https://www.chicme.xyz',
+				target: 'http://localhost:8080/wanna',
 				pathRewrite: { '^/api': '' },
-				// cookieDomainRewrite: 'localhost',
-				// cookiePathRewrite: {
-				// 	'/wanna': '/',
-				// },
-				// secure: true,
-				// changeOrigin: true
-            }
-        }
+				cookieDomainRewrite: 'localhost',
+				cookiePathRewrite: {
+					'/wanna': '/',
+				},
+				secure: true,
+				changeOrigin: true
+			}
+		},
+		host: '0.0.0.0'
     },
     devtool: 'eval-source-map'
 }

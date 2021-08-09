@@ -30,7 +30,9 @@
         </transition>
 
         <div v-if="modalconfirmshow" class="mask"></div>
+        <!-- <div class="Testfixed">
 
+        </div> -->
     </div>
 </template>
 
@@ -38,7 +40,21 @@
 <style scoped>
     .st-container{
         background-color: #fff;
+        padding-bottom: 51px;
     }
+
+    /* .Testfixed{
+        background-color: red;
+        height: 51px;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        border-top: solid 1px #eeeeee;
+        display: flex;
+        padding-top: 7px;
+        z-index: 10;
+    } */
 
     .mask{
         width: 100%;

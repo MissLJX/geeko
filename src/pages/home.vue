@@ -77,7 +77,6 @@
                 // 选中头部导航
                 tab = "home-all";
             }
-            console.log("tab",tab);
             return {
                 isActive:tab,
                 tabList: [

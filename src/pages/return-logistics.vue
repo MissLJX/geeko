@@ -495,7 +495,7 @@
                 position: fixed;
                 left: 0px;
                 right: 0px;
-                bottom: 0px;
+                bottom: 51px;
                 padding: 0px 13px;
                 padding-bottom: 20px;
                 background-color: #ffffff;

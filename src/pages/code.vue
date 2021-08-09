@@ -110,7 +110,7 @@
         width: 100%;
         text-align: right;
         position: fixed;
-        bottom: 0;
+        bottom: 51px;
         margin-left: -10px;
         border-top: 1px solid #e6e6e6;
         padding-right: 10px;
@@ -351,7 +351,7 @@
         position: fixed;
         z-index: 30;
         background-color: #fff;
-        bottom: 0;
+        bottom: 51px;
         padding: 0 12px 15px 10px;
         .flex-con{
             display: flex;

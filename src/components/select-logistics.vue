@@ -213,7 +213,7 @@
             .content{
                 position: absolute;
                 top: 0px;
-                bottom: 0;
+                bottom: 51px;
                 width: 100%;
                 z-index: 100;
                 background-color: #FFF;

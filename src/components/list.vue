@@ -4,6 +4,7 @@
             <slot name="li" :item="item" v-for="(item,key) in items" :index="key">slot...</slot>
         </ul>
         <div class="list-loading" v-show="loading">loading...</div>
+        <!-- <div class="el-no-more" v-show="finished && scrollable">No more data.</div> -->
     </div>
 </template>
 
@@ -22,6 +23,12 @@
         font-size: 12px;
         margin: 15px 0;
     }
+
+    .el-no-more {
+        padding: 10px 0;
+        text-align: center;
+        color: #666;
+    }
 </style>
 
 <script>
@@ -38,7 +45,15 @@
             currentListing:{
                 type: Boolean,
                 default: true
-            }
+            },
+            // scrollable: {
+            //     type: Boolean,
+            //     default: true
+            // },
+            // finished: {
+            //     type: Boolean,
+            //     default: true
+            // },
         },
         methods: {
             bindScroll(evt){

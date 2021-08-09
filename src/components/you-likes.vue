@@ -6,6 +6,10 @@
         <div class="bd">
             <product-list :products="products" :loading="loading" :finished="finished" @listing="listingHandle"/>
         </div>
+
+        <div v-if="finished" style="text-align:center;">
+            no more data.
+        </div>
     </div>
 </template>
 
@@ -63,8 +67,11 @@
         },
         created(){
             this.loading = true
-            store.dispatch("getYouLikeProducts",{orderId:this.orderId,skip: 0}).then(() => {
+            store.dispatch("getYouLikeProducts",{orderId:this.orderId,skip: 0}).then((products) => {
                 // store.dispatch("getYouLikeSkip")
+                if(products && products.length <= 0){
+                    this.finished = true;
+                }
                 this.loading = false;
             })
         },
