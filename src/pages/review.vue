@@ -412,14 +412,15 @@
                 _this.$store.dispatch('setndProductCommentSave',finishComment).then(result => {
                     // console.log("result",result);
                     _this.submitImageLoddingShow = false;
-                    if(_this.getStarCount){
-                        _this.issatisfy=false;
-                        _this.alertMess=_this.$t("message.shareCoupon")
-                    }else{
-                        _this.issatisfy=true;
-                        _this.alertMess='Thank you for your comments.'
-                    }
-                    _this.isconfirm=true;
+                    // if(_this.getStarCount){
+                    //     _this.issatisfy=false;
+                    //     _this.alertMess=_this.$t("message.shareCoupon")
+                    // }else{
+                    //     _this.issatisfy=true;
+                    //     _this.alertMess='Thank you for your comments.'
+                    // }
+                    // _this.isconfirm=true;
+                    _this.$router.go(-1);
                 });
             },
             checkValid(obj){
