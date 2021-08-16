@@ -34,6 +34,12 @@
                 <div class="st-p-repurchase" v-if="itemStatus === 2 && status === 4">
                     <a @click="addProducts(item.variantId)">{{$t("label.repurchase")}}</a>
                 </div>
+
+                <div class="to-returns" v-if="status === 5">
+                    <router-link :to="{ name: 'contact', params: { orderId: orderId }}">
+                        Return
+                    </router-link>
+                </div>
             </div>
         </div>
         <transition name="fade">
@@ -97,9 +103,26 @@
             background-color: #222222;
             border-radius: 2px;
             font-family: SlatePro;
-            font-size: 14px;
+            font-size: 13px;
             color: #ffffff;
             text-align: center;
+        }
+
+        .to-returns{
+            width: 100%;
+            height: 26px;
+            line-height: 26px;
+            background-color: #ffffff;
+            border-radius: 2px;
+	        border: solid 1px #cacaca;
+            font-size: 12px;
+	        color: #222222;
+            text-align: center;
+
+            & a{
+                text-decoration: none;
+                color: #222222;
+            }
         }
     }
     .st-product-item .content > div {
