@@ -91,6 +91,11 @@
                         selected: 'home-unpaid' === tab
                     },
                     {
+                        label: this.$t('label.paid'),
+                        value: 'home-paid',
+                        selected: 'home-paid' === tab
+                    },
+                    {
                         label: this.$t('label.processing'),
                         value: 'home-processing',
                         selected: 'home-processing' === tab
@@ -145,7 +150,7 @@
             changeList(tab) {
                 this.changeTab({ tab: tab })
                     .then((newTab) => {
-                        this.$router.push({ name: newTab });
+                        this.$router.replace({ name: newTab });
                     });
             }
         },

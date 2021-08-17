@@ -14,7 +14,7 @@ import HomeUnpaid from '../pages/home-unpaid.vue';
 const HomeProcessing = () => import(/* webpackChunkName: "home-processing" */ '../pages/home-processing.vue');
 
 
-// import HomePaid from '../pages/home-paid.vue';
+const HomePaid = () => import(/* webpackChunkName: "home-paid" */ '../pages/home-paid.vue');
 
 const HomeConfirmed = () => import(/* webpackChunkName: "home-confirmed" */ '../pages/home-confirmed.vue')
 const HomeShipped = () => import(/* webpackChunkName: "home-shipped" */ '../pages/home-shipped.vue');
@@ -71,12 +71,12 @@ const routes = [
         name: 'home-unpaid',
         meta: { keepAlive: true , headerShow :true }
       },
-      // {
-      //     path: 'paid',
-      //     component: HomePaid,
-      //     name: 'home-paid',
-      //     meta: { keepAlive: true }
-      // },
+      {
+          path: 'paid',
+          component: HomePaid,
+          name: 'home-paid',
+          meta: { keepAlive: true , headerShow :true  }
+      },
       {
         path: 'shipped',
         component: HomeShipped,

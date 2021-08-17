@@ -16,9 +16,9 @@
                         <a @click="addProducts(item.variantId)">{{$t("label.repurchase")}}</a>
                     </div>
 
-                    <div class="returns">
+                    <!-- <div class="returns">
                         <span class="iconfont">&#xe7be;</span><span> Final sales can't be returned.</span>
-                    </div>
+                    </div> -->
                 </div>
 
             </div>

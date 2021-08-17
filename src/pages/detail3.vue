@@ -148,7 +148,7 @@
             >
             </order-total-detail>
             
-            <div class="fd_fixed" ref="footerFixed">
+            <div class="fd_fixed" ref="footerFixed" :class="{'no-border-top' : order.status === 1}">
                 <!--未付款订单-->
                 <div class="l-time-out" v-if="order.status === 0">
                     <!-- 未付款订单  Unpaid  status:0 -->
@@ -566,6 +566,11 @@
             }
         }
     }
+
+    .no-border-top{
+        border-top: none;
+    }
+
     .orderstatus{
         line-height: 40px;
         display: inline-block;
