@@ -30,7 +30,7 @@ const packageTracking = () => import(/* webpackChunkName: "package-tracking" */ 
 const Ticket = () => import(/* webpackChunkName: "ticket" */ '../pages/ticket.vue');
 const OutsideReview = () => import(/* webpackChunkName: "outside-review" */ '../pages/outside-review.vue');
 
-// const ReturnLogistics = () => import(/* webpackChunkName: "return-logistics" */ '../pages/return-logistics.vue');
+const ReturnLogistics = () => import(/* webpackChunkName: "return-logistics" */ '../pages/return-logistics.vue');
 
 
 
@@ -161,11 +161,11 @@ const routes = [
     name: 'outsideReview',
     component: OutsideReview
   },
-  // {
-  //   path:ROUTER_PATH_ORDER + "/return-logistics/:orderId",
-  //   name:"returnLogistics",
-  //   component:ReturnLogistics
-  // }
+  {
+    path:ROUTER_PATH_ORDER + "/return-logistics/:orderId",
+    name:"returnLogistics",
+    component:ReturnLogistics
+  }
 ];
 
 

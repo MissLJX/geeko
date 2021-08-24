@@ -27,8 +27,13 @@ const month_names = [
 ]
 
 
-export const price = (money) => (money ? (money.unit + money.amount) : '')
-
+export const price = (money) => {
+	if(money){
+		return money.currency === 'EUR'? (money.amount + money.unit) : (money.unit + money.amount)
+	}else{
+		return ''
+	}
+}
 
 export const enDate = (date) => {
     return month_names[date.getMonth()] + ' ' + date.getDate() + ',' + date.getFullYear()
@@ -109,9 +114,12 @@ export const imageutil = {
     }
 }
 
-
-export const unitprice = function (money) {
-    return money && (money.unit + money.amount) || '';
+export const unitprice = (money) => {
+	if(money){
+		return money.currency === 'EUR'? (money.amount + money.unit) : (money.unit + money.amount)
+	}else{
+		return ''
+	}
 }
 
 export const producturl = function (product) {

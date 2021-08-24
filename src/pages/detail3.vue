@@ -1076,7 +1076,7 @@
         getReturnLabel(){
             let _this = this;
             window.recordReturnLabel ? window.recordReturnLabel(_this.order.id) : "";
-            return window.ctx + "/v9/order/report-return-label?orderId="+_this.order.id ;
+            return constant.PROJECT + "/v9/order/report-return-label?orderId="+_this.order.id ;
         },
         confirmHandle(evt) {
             let _this = this;
@@ -1109,7 +1109,7 @@
         },
         checkoutUrl(id){
             if(id){
-                return window.ctx + '/checkout/' +id
+                return constant.PROJECT + '/checkout/' +id
             }
         },
         strutBottomPadding(){
