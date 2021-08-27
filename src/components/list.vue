@@ -11,7 +11,7 @@
 <style scoped lang="scss">
     .st-list{
         text-decoration: none;
-        padding: 0 5px;
+        // padding: 0 5px;
     }
     ul:after{
        display: block;

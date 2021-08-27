@@ -1,5 +1,5 @@
 <template>
-    <div class="el-you-likes">
+    <div class="el-you-likes global-border-top-8">
         <div class="hd">
             OFTEN BOUGHT WITH
         </div>

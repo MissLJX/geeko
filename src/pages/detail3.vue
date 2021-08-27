@@ -9,15 +9,6 @@
             </span>
         </page-header>
         <div v-if="order" class="st-order-body">
-            <div class="st-order-title" :class="{'b-none' : order.status === 2 || order.status === 5}">
-                <span v-if="order.status === 4">Order {{order.statusView}}</span>
-                <span v-if="order.status === 0">Waiting for Payment</span>
-                <span v-if="order.status === 2">Processing</span>
-                <span v-if="order.status === 5">Order Confirmed</span>
-                <span v-if="order.status === 1">Waiting for Delivery</span>
-                <span v-if="order.status === 3">Order Shipped</span>
-            </div>
-
             <div class="s-pd-right" v-if="order.status === 2">
                 <div class="process-module">
                     <div class="st-table">
@@ -49,49 +40,38 @@
             </div>
 
             <div class="st-order-bgline">
-                <div class="orderheader st-table">
-                    <div class="st-row">
+                <div class="orderheader">
+                    <div class="st-table st-fullwidth" style="border-bottom:1px solid #e6e6e6;">
                         <div class="st-cell st-v-m special-color">{{$t('label.orderNo')}}.</div>
-                        <div class="st-cell st-v-m t-right">{{order.id}}</div>
+                        <div class="st-cell st-v-m t-right">
+                            <span>{{order.id}}</span>
+                            <span 
+                                class="iconfont"
+                                v-clipboard:copy="order.id"
+                                v-clipboard:success="onCopy"
+                                v-clipboard:error="onError"
+                            >&#xe776;</span>
+                        </div>
                     </div>
                     <!-- <div class="st-row" v-if="showdetail"> -->
-                    <div class="st-row">
-                        <div class="st-cell st-v-m special-color">Date:</div>
+                    <div class="st-table st-fullwidth">
+                        <div class="st-cell st-v-m special-color">Payment Date:</div>
                         <div class="st-cell st-v-m t-right">{{disposeTime}}</div>
                     </div>
 
-                    <div class="st-row" v-if="!logisticsPackageShow && changePackage.slug != null && (order.status === 3 || order.status === 5)">
+                    <div class="st-table st-fullwidth" v-if="!logisticsPackageShow && changePackage.slug != null && (order.status === 3 || order.status === 5)">
                         <div class="st-cell st-v-m special-color">Logistics Company</div>
                         <div class="st-cell st-v-m t-right">{{changePackage.slug}}</div>
                     </div>
 
-                    <div class="st-row"  v-if="!logisticsPackageShow && changePackage.trackingNumber != null && (order.status === 3 || order.status === 5)">
+                    <div class="st-table st-fullwidth"  v-if="!logisticsPackageShow && changePackage.trackingNumber != null && (order.status === 3 || order.status === 5)">
                         <div class="st-cell st-v-m special-color">Tracking Number</div>
                         <div class="st-cell st-v-m t-right">{{changePackage.trackingNumber}}</div>
                     </div>
                 </div>
             </div>
 
-            <!-- <div class="paydetail" v-if="showdetail">
-                <p v-if="order.paymentTime">
-                    <span>{{$t("label.paymentTime")}}</span>
-                    <span class="detail-info">{{payDate}}</span>
-                </p>
-                <p v-if="order.paymentMethod">
-                    <span>{{$t("label.paymentMethod")}}</span>
-                    <span class="detail-info">{{payMethod}}</span>
-                </p>
-            </div> -->
-            <div class="package-con">
-                <!-- <ul v-if="order && order.logistics && order.logistics.packages && order.logistics.packages.length > 1" class="packageTab">
-                    <li class="tab" @click="changeTab(key)" :class="{'active': key===isActive}" v-for="(package,key) in order.logistics.packages" :key="key">
-                        {{package.name}}
-                    </li>
-                </ul>
-                <div>
-                    <order-detail-li :orderId="order.id" :package="changePackage" :packageLen="order.logistics.packages.length" :orderStatusView="order.statusView" :orderStatus="order.status" />
-                </div> -->
-
+            <div class="package-con global-border-top-8">
                 <div>
                     <order-detail-li 
                         :orderId="order.id" 
@@ -101,11 +81,10 @@
                         :logistics-package-show="logisticsPackageShow"
                     />
                 </div>
-
             </div>
 
             <div class="fd">
-                <!-- <span v-if="order.isCanCanceled" class="btn" @click="isCancelOrder=true">{{$t('label.cancelOrder')}}</span> -->
+                <span v-if="order.isCanCanceled" class="btn" @click="dialogBoxCancleOrderISSHow = true;">{{$t('label.cancelOrder')}}</span>
                 <!-- <router-link v-if="order.trackingId" class="btn" :to="{ name: 'tracking', params: { orderId: order.id }}">
                     {{$t('label.track')}}
                 </router-link> -->
@@ -128,17 +107,13 @@
                 </div>
             </div>
 
-            <shipping-detail :address="order.shippingDetail" :shipping="order.shippingMethodName"/>
-
-            <div class="payment-method" v-if="order.payMethodName != null && showdetail">
-                <div class="__title">
-                    Payment Method
-                </div>
-                <div class="__content">
-                    <img src="https://s3-us-west-2.amazonaws.com/image.chic-fusion.com/chicme/20210518/paypal.png" alt="PayPal" v-if="order.payMethodName === 'Paypal'">
-                    <span>{{order.payMethodName}}</span>
-                </div>
-            </div>
+            <shipping-detail 
+                :address="order.shippingDetail" 
+                :shipping="order.shippingMethodName"
+                :pay-method-name="order.payMethodName"
+                :order-status="order.status"
+                :showdetail="showdetail"
+            />
 
             <order-total-detail 
                 :payment-item-total="paymentItemTotal"
@@ -147,35 +122,10 @@
                 :shipping-insurance-price="shippingInsurancePrice"
             >
             </order-total-detail>
-            
-            <div class="fd_fixed" ref="footerFixed" :class="{'no-border-top' : order.status === 1}">
+            <div class="fd_fixed" ref="footerFixed" :class="{'no-border-top' : strutBottomPaddingNumber === 'p-b-0'}">
                 <!--未付款订单-->
                 <div class="l-time-out" v-if="order.status === 0">
-                    <!-- 未付款订单  Unpaid  status:0 -->
-                    <div v-if="getPayUrl && order.status === 0" class="order-unpid">
-                        <div class="timeLeft" v-if="orderoffset >= 1000 && getBtnText==='Imprimir boleto' && order.status == 0 && getPayUrl">
-                            <count-down :timeLeft="orderoffset">
-                                <span class="iconfont icon" slot="icon">&#xe6c3;</span>
-                                <span class="label" slot="font">Presente de cupão expirs</span>
-                            </count-down>
-                        </div>
-                        <div class="timeLeft" v-if="orderoffset >= 1000 && (getBtnText==='Generar Ticket' || getBtnText==='Gerar Ticket') && order.status == 0 && getPayUrl">
-                            <count-down :timeLeft="orderoffset">
-                                <span class="iconfont icon" slot="icon">&#xe6c3;</span>
-                                <span class="label" slot="font">Tiempo restante para realizar el pago</span>
-                            </count-down>
-                        </div>
-                    </div>
-
-                    <!--未付款订单-->
-                    <div class="order-unpid" v-if="!order.mercadopagoPayURL && !order.boletoPayCodeURL && order.status === 0 && orderoffset >= 0">
-                        <div class="timeLeft"  v-if="orderoffset >= 1000 && order.status === 0">
-                            <count-down :timeLeft="orderoffset">
-                                <span class="iconfont icon" slot="icon">&#xe6c3;</span>
-                                <span class="label" slot="font">{{$t("label.remaining")}}:</span>
-                            </count-down>
-                        </div>
-                    </div>
+                    
                 </div>
 
                 <!-- unpaid status:0  Shipped status:3   Confirm status:5  :class="l-container-padding-0"-->
@@ -188,14 +138,38 @@
 
                     <a :href="getPayUrl" v-if="getPayUrl && order.status === 0" class="btn" target="_blank">
                         {{getBtnText}}
+                        <!-- 未付款订单  Unpaid  status:0 -->
+                        <div v-if="getPayUrl && order.status === 0" class="order-unpid">
+                            <div class="timeLeft" v-if="orderoffset >= 1000 && getBtnText==='Imprimir boleto' && order.status == 0 && getPayUrl">
+                                <count-down :timeLeft="orderoffset">
+                                    <span class="iconfont icon" slot="icon">&#xe6c3;</span>
+                                    <span class="label" slot="font">Presente de cupão expirs</span>
+                                </count-down>
+                            </div>
+                            <div class="timeLeft" v-if="orderoffset >= 1000 && (getBtnText==='Generar Ticket' || getBtnText==='Gerar Ticket') && order.status == 0 && getPayUrl">
+                                <count-down :timeLeft="orderoffset">
+                                    <span class="iconfont icon" slot="icon">&#xe6c3;</span>
+                                    <span class="label" slot="font">Tiempo restante para realizar el pago</span>
+                                </count-down>
+                            </div>
+                        </div>
                     </a>
 
                     <!--未付款订单-->
                     <a v-if="!order.mercadopagoPayURL && !order.boletoPayCodeURL && order.status === 0 && orderoffset >= 0" class="btn black" :href="checkoutUrl(order.id)">
                         {{$t("label.paynow")}}
+                        <!--未付款订单-->
+                        <div class="order-unpid" v-if="!order.mercadopagoPayURL && !order.boletoPayCodeURL && order.status === 0 && orderoffset >= 0">
+                            <div class="timeLeft"  v-if="orderoffset >= 1000 && order.status === 0">
+                                <count-down :timeLeft="orderoffset" @getCountDown="getCountDown">
+                                    <span class="iconfont icon" slot="icon">&#xe6c3;</span>
+                                    <span class="label" slot="font">{{$t("label.remaining")}}:</span>
+                                </count-down>
+                            </div>
+                        </div>
                     </a>
 
-                    <a class="cancel-btn" v-if="order.isCanCanceled" @click="isCancelOrder=true">Cancel Order</a>
+                    <!-- <a class="cancel-btn" v-if="order.isCanCanceled" @click="dialogBoxCancleOrderISSHow = true;">Cancel Order</a> -->
 
                     <a class="btn" v-if="order.status === 3" @click="confirmHandle" :class="{'w-100' : logisticsPackageShow}">Order Confirm</a>
 
@@ -255,22 +229,39 @@
         <!-- 为了让当底部有按钮时会遮挡一些内容 -->
         <div class="strut-bottom-padding" :class="strutBottomPaddingNumber"></div>
 
-        <div v-if="isCancelOrder">
-            <div class="mask"></div>
-            <div class="cancel-window">
-                <div class="flex-con">
-                    <p style="font-weight: bold">Select a reason</p>
-                    <p style="color:#999;cursor:pointer;" @click="isCancelOrder=false">Cancel</p>
+        <transition name="cancel">
+            <div class="cancel-window" v-if="isCancelOrder">
+                <div>
+                    <div class="flex-con">
+                        <p class="_font">Select a reason</p>
+                        <p class="iconfont" style="cursor:pointer;" @click="isCancelOrder=false">&#xe69a;</p>
+                    </div>
+                    <ul class="reason-select" v-if="cancelReasons">
+                        <li v-for="(reason,index) in cancelReasons" @click="selectedResaon=reason.value" :key="reason+index">
+                            <label :for="reason.value">{{reason.label}}</label>
+                            <!-- <input type="radio" v-if="reason.value===selectedResaon"> -->
+                            <input type="radio" :class="reason.value===selectedResaon ? 'active' : ''">
+                        </li>
+                    </ul>
+                    <div class="cancel-btn" :class="{'active':selectedResaon!==''}" @click="cancelHandle">Submit</div>
                 </div>
-                <ul class="reason-select">
-                    <li v-if="cancelReasons" v-for="reason in cancelReasons" @click="selectedResaon=reason.value">
-                        <label :for="reason.value">{{reason.value}}.{{reason.label}}</label>
-                        <input type="radio" v-if="reason.value===selectedResaon">
-                    </li>
-                </ul>
-                <div class="cancel-btn" :class="{'active':selectedResaon!==''}" @click="cancelHandle">Submit</div>
             </div>
-        </div>
+        </transition>
+
+        <div class="mask" v-if="isCancelOrder"></div>
+        
+        <dialog-box v-if="dialogBoxCancleOrderISSHow">
+            <p class="title" slot="title">
+                Are you sure you want to cancel payment? If your order is not paid in 
+                <span class="time">{{countDownTime}}</span> 
+                , it will be canceled.
+            </p>
+
+            <template slot="btn">
+                <button class="_black" @click="blackClick">Confirm Cancel</button>
+                <button class="_white" @click="whiteClick">Continue To Pay</button>
+            </template>
+        </dialog-box>
     </div>
 </template>
 
@@ -326,16 +317,11 @@
     .st-order-body{
         border-top: 8px solid #f6f6f6;
         .st-order-bgline{
-            padding: 0px 10px 10px 0px;
-            border-bottom: 8px solid #f7f7f7;
-
             .orderheader{
-                padding-top: 5px;
                 width: 100%;
 
-                .st-row{
-                    height: 30px;
-                    line-height: 30px;
+                .st-table{
+                    padding:10px;
                 }
 
                 .t-right{
@@ -343,14 +329,18 @@
                 }
 
                 .st-v-m{
-                    font-family: SlatePro-Medium;
 	                font-size: 14px;
                     color: #222222;
+
+                    .iconfont{
+                        cursor: pointer;
+                    }
                 }
 
                 .special-color{
                     font-family: SlatePro;
                     color: #666666;
+                    font-size: 14px;
                 }
             }
         }
@@ -366,12 +356,9 @@
             border-bottom: 1px solid #eeeeee;;
         }
 
-        .b-none{
-            border-bottom: none;
-        }
-
         .package-con{
             // border-bottom: 8px solid #f6f6f6;
+            padding: 0px 10px;
         }
 
         .s-pd-right{
@@ -457,8 +444,8 @@
         border-top: 1px solid #e6e6e6;
         background-color: #fff;
         z-index: 20;
-        box-shadow: 0px 2px 20px 0px 
-		    rgba(153, 153, 153, 0.5);
+        // box-shadow: 0px 2px 20px 0px 
+		//     rgba(153, 153, 153, 0.5);
 
         // padding: 5px 10px;
         .paybtn{
@@ -475,7 +462,8 @@
 	        font-size: 15px;
         }
         .btn{
-            width: 120px;
+            // width: 120px;
+            padding: 0px 15px;
             line-height: 36px;
             background-color: #222;
             color: #fff;
@@ -486,10 +474,11 @@
                 display: block;
                 width: 100%;
             }
+
             .timeLeft{
                 position: absolute;
-                width: 192px;
-                height: 50px;
+                // width: 192px;
+                // height: 50px;
                 line-height: 25px;
                 top: -59px;
                 left: -65px;
@@ -527,7 +516,6 @@
 
             a{
                 text-decoration: none;
-                width: calc(50% - 10px);
                 height: 40px;
                 line-height: 40px;
                 float: right;
@@ -552,17 +540,6 @@
 
             .w-100{
                 width: 100%;
-            }
-        }
-
-        .l-time-out{
-            .order-unpid{
-                .timeLeft{
-                    text-align: center;
-                    height: 30px;
-                    line-height: 30px;
-                    color: #f9a646;
-                }
             }
         }
     }
@@ -762,34 +739,68 @@
         background-color: #fff;
         bottom: 51px;
         padding: 0 12px 15px 10px;
+        box-shadow: 0px -1px 8px 0px 
+		rgba(0, 0, 0, 0.2);
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
         .flex-con{
-            display: flex;
-            justify-content: space-between;
             line-height: 40px;
-            border-bottom: 1px solid #f9f9f9
+            position: relative;
+            // border-bottom: 1px solid #f9f9f9;
+            text-align: center;
+            margin-top: 10px;
+
+            ._font{
+                font-family: 'AcuminPro-Bold';
+                font-size: 16px;
+                color: #222222;
+            }
+
+            .iconfont{
+                color: rgb(153, 153, 153);
+                cursor: pointer;
+                position: absolute;
+                right: 0;
+                top: 0;
+                color: #222222;
+                font-size: 18px;
+            }
         }
+
         .reason-select{
             margin-bottom: 30px;
             li{
                 display: flex;
                 justify-content: space-between;
-                line-height: 45px;
-                border-bottom: 1px solid #f9f9f9;
+                line-height: 35px;
                 cursor: pointer;
                 input{
                     display: inline-block;
-                    width: 18px;
-                    height: 18px;
-                    background-color: #222;
+                    width: 16px;
+                    height: 16px;
+                    // background-color: #222;
                     -webkit-appearance: none;
                     border-radius: 50%;
+                    border: 1px solid #222222;
                     color: #fff;
                     text-align: center;
                     line-height: 18px;
                     margin-top: 15px;
-                    &:after{
-                        content: '\E638';
-                        font-family: iconfont;
+
+                    &.active{
+                        &:after{
+                            content: '\E638';
+                            font-family: iconfont;
+                            background: #222222;
+                            font-size: 12px;
+                            border-radius: 50%;
+                            display: inline-block;
+                            width: 16px;
+                            height: 16px;
+                            position: relative;
+                            top: -2px;
+                            left: -1px;
+                        }
                     }
                 }
             }
@@ -818,6 +829,18 @@
         height: 99px;
         line-height: 99px;;
     }
+
+    // .uper-enter-active, .uper-leave-to{
+    //     top:0 !important;
+    // }
+
+    .cancel-enter-active , .cancel-leave-active{
+        transition: bottom .5s !important;
+    }
+
+    .cancel-leave-active , .cancel-enter{
+        bottom:0 !important;
+    }
 </style>
 
 <script type="text/ecmascript-6">
@@ -835,7 +858,10 @@
   
   import OrderTotalDetail from '../components/order-total-detail.vue'
 
+  import DialogBox from "../components/dialog-box.vue"
+
   import _ from 'lodash'
+  import fecha from "fecha"
 
 
   export default {
@@ -847,6 +873,8 @@
         isCancelOrder:false,
         selectedResaon:'',
         strutBottomPaddingNumber:"",
+        countDownTime:"",
+        dialogBoxCancleOrderISSHow:false
       }
     },
     components: {
@@ -855,7 +883,8 @@
         'page-header': PageHeader,
         'count-down': CountDown2,
         'you-likes': YouLikes,
-        'order-total-detail':OrderTotalDetail
+        'order-total-detail':OrderTotalDetail,
+        "dialog-box":DialogBox
     },
     beforeRouteEnter(to, from, next) {
       store.dispatch('clearTicket');
@@ -1030,7 +1059,8 @@
             }
         },
         disposeTime(){
-            return utils.dateFormat(this.order.orderTime);
+            return fecha.format(this.order.orderTime,"DD/MM/YYYY HH:mm:ss");
+            // return utils.dateFormat();
         },
         logisticsPackageShow(){
             return !!(this.order && this.order.logistics && this.order.logistics.packages && this.order.logistics.packages.length > 1);
@@ -1043,22 +1073,7 @@
             );
             let value = _.groupBy(sortValue,logistics => logistics.statusView);
             return value;
-        },
-        // strutBottomPadding(){
-        //     if(this.isMounted){
-        //         // 1 29 69 99
-        //         let height = this.$refs.footerFixed.offsetHeight;
-        //         // 只有按钮没有时间时：69
-        //         if(height > 30 && height < 70){
-        //             return 'p-b-69';
-        //         // 有按钮也有时间时：99
-        //         }else if(height > 70 && height < 100){
-        //             return 'p-b-99';
-        //         }else{
-        //             return 'p-b-0';
-        //         }
-        //     }
-        // }
+        }
     },
     methods: {
         cancelHandle() {
@@ -1083,21 +1098,24 @@
             this.$store.dispatch('confirmShow', {
                 show: true,
                 cfg: {
-                title: _this.$t('message.confirmReceipt'),
-                message: _this.$t('message.confirmReceiptTip'),
-                yes: function () {
-                    _this.$store.dispatch('confirmOrder', _this.order.id)
-                    .then(() => {
-                        _this.$store.dispatch('updateStatusInOrders', {
-                        id: _this.order.id,
-                        status: constant.STATUS_CONFIRMED
+                    btnFont:{
+                        yes:"Confirm",
+                        no:"Cancel"
+                    },
+                    message: _this.$t('message.confirmReceiptTip'),
+                    yes: function () {
+                        _this.$store.dispatch('confirmOrder', _this.order.id)
+                        .then(() => {
+                            _this.$store.dispatch('updateStatusInOrders', {
+                            id: _this.order.id,
+                            status: constant.STATUS_CONFIRMED
+                            });
                         });
-                    });
-                    _this.$store.dispatch('closeConfirm');
-                },
-                no: function () {
-                    _this.$store.dispatch('closeConfirm');
-                }
+                        _this.$store.dispatch('closeConfirm');
+                    },
+                    no: function () {
+                        _this.$store.dispatch('closeConfirm');
+                    }
                 }
             });
         },
@@ -1134,6 +1152,22 @@
             }
 
             this.$router.push({ name: 'review', params: { orderId: orderId}});
+        },
+        onCopy: function (e) {
+            // alert('You just copied: ' + e.text)
+        },
+        onError: function (e) {
+            // alert('Failed to copy texts')
+        },
+        getCountDown(time){
+            this.countDownTime = time;
+        },
+        blackClick(){
+            this.dialogBoxCancleOrderISSHow = false;
+            this.isCancelOrder = true;
+        },
+        whiteClick(){
+            this.dialogBoxCancleOrderISSHow = false;
         }
     },
     watcher: {

@@ -1,15 +1,11 @@
 <template>
     <div class="st-confirm">
-        <div class="hd">
-            <h3>{{cfg.title || 'Geeko Online' }}</h3>
-            <span class="close"></span>
-        </div>
         <div class="bd">
             <p>{{cfg.message}}</p>
         </div>
         <div class="fd">
-            <span class="btn no" @click="cfg.no">{{$t("label.no")}}</span>
-            <span class="btn" @click="cfg.yes">{{$t("label.yes")}}</span>
+            <button class="btn" @click="cfg.yes">{{cfg.btnFont.yes}}</button>
+            <button class="btn no" @click="cfg.no">{{cfg.btnFont.no}}</button>
         </div>
     </div>
 </template>
@@ -17,7 +13,7 @@
 <style>
     .st-confirm {
         position: fixed;
-        width: 80%;
+        width: 85%;
         max-width: 320px;
         top: 50%;
         left: 50%;
@@ -25,41 +21,44 @@
         background-color: #fff;
         box-shadow: #dcdcdc 1px 1px 2px;
         z-index: 201;
-    }
-
-    .st-confirm > .hd{
-        height: 40px;
-        background-color: #efefef;
+        border-radius: 4px;
+        padding: 25px;
     }
 
     .st-confirm > .hd > h3{
         font-size: 16px;
         font-weight: 600;
         line-height: 40px;
-        border-bottom: 1px solid #efefef;
         padding: 0 10px;
     }
 
-    .st-confirm > .bd{
-        padding: 20px 10px;
+    .st-confirm > .bd p{
+        font-family: 'SlatePro-Medium';
+        font-size: 14px;
+        line-height: 17px;
+        color: #222222;
+        text-align: center;
     }
 
     .st-confirm > .fd{
-        border-top: 1px solid #efefef;
-        padding: 10px;
-        text-align: right;
+        margin-top: 20px;
     }
 
     .st-confirm > .fd > .btn{
-        padding: 5px 10px;
-        margin-left: 10px;
-
+        height: 32px;
+        background-color: #222222;
+        line-height: 32px;
+        color: #ffffff;
+        width: 100%;
+        border: none;
+        cursor: pointer;
     }
 
     .st-confirm > .fd > .btn.no{
-        border:1px solid #dcdcdc;
-        background-color: #fff;
-        color: #000;
+        margin-top: 10px;
+        border: solid 1px #222222;
+        color: #222222;
+        background-color: #ffffff;
     }
 </style>
 

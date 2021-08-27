@@ -3,7 +3,7 @@
         <page-header>
             <span>Return Logistics</span>
         </page-header>
-        <div class="return-notshow" v-if="returnLogisticsShow">
+        <div class="return-notshow" v-if="!returnLogisticsShow">
             <div class="_bd">
                 <div class="logistics-company">
                     <div class="__title">*Logistics Company</div>
@@ -17,7 +17,7 @@
                     </div>
                 </div>
 
-                <div class="tracking-number" v-show="itemName === 'Other'">
+                <div class="tracking-number" v-show="itemName === 'other'">
                     <div class="__hd">*Logistics Company Name:</div>
                     <!-- <div class="__bd">LS996855224CH</div> -->
                     <input type="text" v-model="logisticsName">
@@ -64,7 +64,7 @@
             </div>
         </div>
 
-        <div class="return-show" v-if="!returnLogisticsShow">
+        <div class="return-show" v-if="returnLogisticsShow">
             <div class="__hd st-table">
                 <div class="st-row" v-if="returnLogisticsValue.logisticsCompany">
                     <div class="st-cell">Logistics Company</div>
@@ -108,7 +108,7 @@
             </select-logistics>
         </transition>
 
-        <lodding v-if="returnLogisticsLoddingShow || (!!!this.returnLogistics)"></lodding>
+        <lodding v-if="returnLogisticsLoddingShow && (!!!this.returnLogistics)"></lodding>
 
         <image-magnification 
             :imageSrc="imageMagnificationSrc" 
@@ -170,13 +170,18 @@
             let _this = this;
             this.$store.dispatch('getLogisticsCompanies');
             this.$store.dispatch('getReturnLogistics',this.$route.params.orderId).then((result) => {
+                console.log("result",result);
                 if(result && result.length > 0){
                     var item = result[0];
                     _this.itemName = item.logisticsCompany ? item.logisticsCompany : "";
                     _this.logisticsNumber = item.trackingNumber ? item.trackingNumber : "";
                     _this.uploadedImages = item.receiptFiles && item.receiptFiles.length > 0 ? item.receiptFiles : [];
                     _this.addNum = item.receiptFiles && item.receiptFiles.length > 0 ? item.receiptFiles.length : 0;
+                }else{
+                    _this.returnLogisticsLoddingShow = false;
                 }
+            }).catch((e) => {
+                console.log("e",e);
             });
         },
         computed:{
@@ -191,6 +196,7 @@
         methods:{
             getSelectValue(value){
                 if(value){
+                    console.log("value",value);
                     this.itemName = value;                  
                 }
             },

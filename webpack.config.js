@@ -70,19 +70,6 @@ module.exports = {
         hot: true,
         inline: true,
         progress: true,
-        // contentBase: './dist',
-        // proxy: {
-        //     '/api': {
-        //         target: 'http://localhost:8080/wanna',
-		// 		pathRewrite: { '^/api': '' },
-		// 		// cookieDomainRewrite: 'localhost',
-		// 		// cookiePathRewrite: {
-		// 		// 	'/wanna': '/',
-		// 		// },
-		// 		// secure: true,
-		// 		// changeOrigin: true
-        //     }
-        // },
         proxy: {
 			'/api': {
 				// target: 'https://www.chicme.xyz',

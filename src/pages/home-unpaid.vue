@@ -1,9 +1,7 @@
 <template id="home-unpaid">
     <div>
         <order-list :orders="unpaid" :loading="unpaidLoading" @listing="loadUnpaid(20)" :currentListing="currentListing"/>
-        <div class="no-more-data" v-if="!(unpaid && unpaid.length > 0)">
-            No More Data.
-        </div>
+        <empty-order v-if="!unpaidLoading && !(unpaid && unpaid.length > 0)"></empty-order>
     </div>
 </template>
 
@@ -17,18 +15,13 @@
             color: #909393;
         }
     }
-
-    .no-more-data{
-        text-align: center;
-        font-size: 12px;
-        margin: 15px 0;
-    }
 </style>
 
 <script type="text/ecmascript-6">
 
     import {mapGetters,mapActions} from 'vuex';
     import OrderList from '../components/order-list.vue';
+    import EmptyOrder from "../components/empty-order.vue"
 
 
     export default {
@@ -50,7 +43,8 @@
             ])
         },
         components: {
-            'order-list': OrderList
+            'order-list': OrderList,
+            "empty-order":EmptyOrder
         },
         created(){
             this.loadUnpaid(20);

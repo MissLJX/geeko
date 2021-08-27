@@ -41,6 +41,8 @@
       this.timerId = setInterval(() => {
         this.lefting = this.timeLeft - offset;
         offset+=1000;
+        
+        this.$emit("getCountDown",this.countdowning);
 
         if(this.lefting <= 0){
           clearInterval(this.timerId)

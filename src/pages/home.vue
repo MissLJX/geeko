@@ -62,6 +62,10 @@
             padding: 10px 10px 3px 10px;
             // box-shadow: 0px 0px 10px rgba(0,0,0,.2);
         }
+
+        & .__bd{
+            margin-top: 8px;
+        }
     }
     
 </style>

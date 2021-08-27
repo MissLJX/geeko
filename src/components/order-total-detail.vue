@@ -1,8 +1,8 @@
 <template>
-    <div class="order-total-detail">
-        <div class="_title">
+    <div class="order-total-detail global-border-top-1">
+        <!-- <div class="_title">
             Order Total
-        </div>
+        </div> -->
 
         <div class="spend_price st-table">
             <div class="st-row">
@@ -53,8 +53,8 @@
 
 <style lang="scss" scoped>
     .order-total-detail{
-        border-bottom: 8px solid #f7f7f7;
-        padding-bottom: 12px;
+        margin-top: 10px;
+        padding: 0px 10px 12px 10px;
         ._title{
             height: 45px;
             line-height: 45px;

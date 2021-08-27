@@ -9,7 +9,7 @@
     <div class="swiper-slide st-product-item">
         <div class="content">
             <div class="">
-                <link-image href="#" :src="item.productImageUrl" :title="item.productName"/>
+                <link-image :src="item.productImageUrl" :title="item.productName"/>
             </div>
         </div>
     </div>
