@@ -32,10 +32,12 @@ const OutsideReview = () => import(/* webpackChunkName: "outside-review" */ '../
 
 const ReturnLogistics = () => import(/* webpackChunkName: "return-logistics" */ '../pages/return-logistics.vue');
 
+const SuccessReminder = () => import(/* webpackChunkName: "success-reminder" */ "../pages/success-reminder.vue");
 
 
 const Page404 = () => import(/* webpackChunkName: "404" */ '../pages/404.vue');
 const Page500 = () => import(/* webpackChunkName: "500" */ '../pages/500.vue');
+
 
 const routes = [
   {
@@ -71,12 +73,12 @@ const routes = [
         name: 'home-unpaid',
         meta: { keepAlive: true , headerShow :true }
       },
-      {
-          path: 'paid',
-          component: HomePaid,
-          name: 'home-paid',
-          meta: { keepAlive: true , headerShow :true  }
-      },
+      // {
+      //     path: 'paid',
+      //     component: HomePaid,
+      //     name: 'home-paid',
+      //     meta: { keepAlive: true , headerShow :true  }
+      // },
       {
         path: 'shipped',
         component: HomeShipped,
@@ -165,6 +167,11 @@ const routes = [
     path:ROUTER_PATH_ORDER + "/return-logistics/:orderId",
     name:"returnLogistics",
     component:ReturnLogistics
+  },
+  {
+    path:ROUTER_PATH_ORDER + "/success-reminder/:orderId/:type",
+    name:"success-reminder",
+    component:SuccessReminder
   }
 ];
 

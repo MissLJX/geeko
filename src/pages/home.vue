@@ -94,11 +94,11 @@
                         value: 'home-unpaid',
                         selected: 'home-unpaid' === tab
                     },
-                    {
-                        label: this.$t('label.paid'),
-                        value: 'home-paid',
-                        selected: 'home-paid' === tab
-                    },
+                    // {
+                    //     label: this.$t('label.paid'),
+                    //     value: 'home-paid',
+                    //     selected: 'home-paid' === tab
+                    // },
                     {
                         label: this.$t('label.processing'),
                         value: 'home-processing',

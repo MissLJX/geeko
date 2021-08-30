@@ -66,7 +66,12 @@
             'product-list': ProductList
         },
         created(){
-            this.loading = true
+            if(this.products && this.products.length > 0){
+                return;
+            }
+
+            this.loading = true;
+
             store.dispatch("getYouLikeProducts",{orderId:this.orderId,skip: 0}).then((products) => {
                 // store.dispatch("getYouLikeSkip")
                 if(products && products.length <= 0){

@@ -3,6 +3,7 @@
         <slot name="icon"></slot>
         <slot name="font"></slot>
         <span class="time">{{countdowning}}</span>
+        <span class="triangle"></span>
     </div>
 </template>
 
@@ -28,7 +29,10 @@
         const _lefthour = lefting % __houroffset;
         const minute = Math.floor(_lefthour / __minuteoffset);
         const second = Math.floor((lefting % __minuteoffset)/1000);
-        return `${this.getFullNumber(day)} : ${this.getFullNumber(hour)} : ${this.getFullNumber(minute)} : ${this.getFullNumber(second)}`;
+
+        let time = `${this.getFullNumber(hour)}:${this.getFullNumber(minute)}:${this.getFullNumber(second)}`;
+        this.$emit("getCountDown",time);
+        return `${this.getFullNumber(hour)}h:${this.getFullNumber(minute)}m:${this.getFullNumber(second)}s`;
       }
     },
     methods: {
@@ -41,8 +45,6 @@
       this.timerId = setInterval(() => {
         this.lefting = this.timeLeft - offset;
         offset+=1000;
-        
-        this.$emit("getCountDown",this.countdowning);
 
         if(this.lefting <= 0){
           clearInterval(this.timerId)
@@ -63,17 +65,29 @@
 
       .label{
         font-family: SlatePro;
-	      font-size: 14px;
+	      font-size: 12px;
       }
 
       .time{
         font-family: SlatePro-Medium;
-	      font-size: 13px;
+	      font-size: 12px;
         margin-left: 5px;
       }
 
       .icon{
         font-size: 14px;
+      }
+
+      .triangle{
+        position: absolute;
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        background-color: #f46e6d;
+        right: -5px;
+        top: 7px;
+        content: "";
+        transform: rotate(45deg);
       }
   }
 

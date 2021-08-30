@@ -2,7 +2,7 @@
     <div>
         <order-list :orders="shipped" :loading="shippedLoading" @listing="loadShipped(20)" :currentListing="currentListing"/>
 
-        <empty-order v-if="shipped && shipped.length <= 0"></empty-order>
+        <empty-order v-if="!shippedLoading && (shipped && shipped.length <= 0)"></empty-order>
     </div>
 </template>
 

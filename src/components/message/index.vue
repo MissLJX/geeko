@@ -103,7 +103,7 @@ export default {
 }
 
 .customization{
-    background-color: rgba(34, 34, 34, 0.8);
+  background-color: rgba(34, 34, 34, 0.8);
 	bottom: 130px;
 }
 </style>

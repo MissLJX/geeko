@@ -1,7 +1,8 @@
 <template id="home-canceled">
     <div>
-
         <order-list :orders="canceled" :loading="canceledLoading" @listing="loadCanceled(20)" :currentListing="currentListing"/>
+
+        <empty-order v-if="!canceledLoading && (canceled && canceled.length <= 0)"></empty-order>
     </div>
 </template>
 
@@ -21,8 +22,9 @@
 
     import {mapGetters,mapActions} from 'vuex';
     // import OrderList from '../components/order-list.vue';
-    import ConfirmedOrderList from '../components/confirmed/confirmed-order-list.vue'
-
+    // import ConfirmedOrderList from '../components/confirmed/confirmed-order-list.vue'
+    import OrderList from '../components/order-list.vue';
+    import EmptyOrder from "../components/empty-order.vue"
 
     export default {
         name: 'home-canceled',
@@ -43,7 +45,8 @@
             ])
         },
         components: {
-            'order-list': ConfirmedOrderList
+            'order-list': OrderList,
+            "empty-order":EmptyOrder
         },
         created(){
             this.loadCanceled(20);

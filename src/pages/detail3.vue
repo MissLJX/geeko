@@ -123,11 +123,6 @@
             >
             </order-total-detail>
             <div class="fd_fixed" ref="footerFixed" :class="{'no-border-top' : strutBottomPaddingNumber === 'p-b-0'}">
-                <!--未付款订单-->
-                <div class="l-time-out" v-if="order.status === 0">
-                    
-                </div>
-
                 <!-- unpaid status:0  Shipped status:3   Confirm status:5  :class="l-container-padding-0"-->
                 <div class="l-container" v-if="order.status === 0 || order.status === 3 || order.status === 5">
                     <a @click="toReviews(order.id)" class="l-btn" v-if="order.status === 5">
@@ -142,13 +137,13 @@
                         <div v-if="getPayUrl && order.status === 0" class="order-unpid">
                             <div class="timeLeft" v-if="orderoffset >= 1000 && getBtnText==='Imprimir boleto' && order.status == 0 && getPayUrl">
                                 <count-down :timeLeft="orderoffset">
-                                    <span class="iconfont icon" slot="icon">&#xe6c3;</span>
+                                    <!-- <span class="iconfont icon" slot="icon">&#xe6c3;</span> -->
                                     <span class="label" slot="font">Presente de cupão expirs</span>
                                 </count-down>
                             </div>
                             <div class="timeLeft" v-if="orderoffset >= 1000 && (getBtnText==='Generar Ticket' || getBtnText==='Gerar Ticket') && order.status == 0 && getPayUrl">
                                 <count-down :timeLeft="orderoffset">
-                                    <span class="iconfont icon" slot="icon">&#xe6c3;</span>
+                                    <!-- <span class="iconfont icon" slot="icon">&#xe6c3;</span> -->
                                     <span class="label" slot="font">Tiempo restante para realizar el pago</span>
                                 </count-down>
                             </div>
@@ -162,7 +157,7 @@
                         <div class="order-unpid" v-if="!order.mercadopagoPayURL && !order.boletoPayCodeURL && order.status === 0 && orderoffset >= 0">
                             <div class="timeLeft"  v-if="orderoffset >= 1000 && order.status === 0">
                                 <count-down :timeLeft="orderoffset" @getCountDown="getCountDown">
-                                    <span class="iconfont icon" slot="icon">&#xe6c3;</span>
+                                    <!-- <span class="iconfont icon" slot="icon">&#xe6c3;</span> -->
                                     <span class="label" slot="font">{{$t("label.remaining")}}:</span>
                                 </count-down>
                             </div>
@@ -183,7 +178,14 @@
             </div>
 
         </div>
-        <div v-else>no data..</div>
+               <div @click="aaaaa">
+            aaaaaaa
+        </div>
+
+        <you-likes class="el-me-like-area"  :orderId="order.id"/>
+
+        <!-- 为了让当底部有按钮时会遮挡一些内容 -->
+        <div class="strut-bottom-padding" :class="strutBottomPaddingNumber"></div>
 
         <div v-if="getBtnText==='Imprimir boleto' && order.status == 0 && orderoffset >= 1000 && couponshow && getPayUrl">
             <div class="mask"></div>
@@ -224,10 +226,6 @@
                 </div>
             </div>
         </div>
-        <you-likes class="el-me-like-area"  :orderId="order.id"/>
-
-        <!-- 为了让当底部有按钮时会遮挡一些内容 -->
-        <div class="strut-bottom-padding" :class="strutBottomPaddingNumber"></div>
 
         <transition name="cancel">
             <div class="cancel-window" v-if="isCancelOrder">
@@ -239,7 +237,6 @@
                     <ul class="reason-select" v-if="cancelReasons">
                         <li v-for="(reason,index) in cancelReasons" @click="selectedResaon=reason.value" :key="reason+index">
                             <label :for="reason.value">{{reason.label}}</label>
-                            <!-- <input type="radio" v-if="reason.value===selectedResaon"> -->
                             <input type="radio" :class="reason.value===selectedResaon ? 'active' : ''">
                         </li>
                     </ul>
@@ -250,18 +247,7 @@
 
         <div class="mask" v-if="isCancelOrder"></div>
         
-        <dialog-box v-if="dialogBoxCancleOrderISSHow">
-            <p class="title" slot="title">
-                Are you sure you want to cancel payment? If your order is not paid in 
-                <span class="time">{{countDownTime}}</span> 
-                , it will be canceled.
-            </p>
-
-            <template slot="btn">
-                <button class="_black" @click="blackClick">Confirm Cancel</button>
-                <button class="_white" @click="whiteClick">Continue To Pay</button>
-            </template>
-        </dialog-box>
+        <dialog-box :count-down-time="countDownTime" v-if="dialogBoxCancleOrderISSHow"></dialog-box>
     </div>
 </template>
 
@@ -477,22 +463,16 @@
 
             .timeLeft{
                 position: absolute;
-                // width: 192px;
-                // height: 50px;
-                line-height: 25px;
-                top: -59px;
-                left: -65px;
+                line-height: normal;
+                // height: 32px;
+                width: 155px;
+                line-height: 18px;
+                top: -1px;
+                /* left: -100%; */
+                right: 118%;
                 background-color: #f46e6d;
                 color: #fff;
-                .triangle{
-                    position: absolute;
-                    right: 53px;
-                    top: 50px;
-                    width:0;
-                    height:0;
-                    border:6px solid;
-                    border-color: #f46e6d transparent transparent transparent;
-                }
+                border: none;
             }
         }
 
@@ -504,8 +484,8 @@
             width: 100%;
 
             .l-btn{
-                height: 40px;
-                line-height: 40px;
+                height: 36px;
+                line-height: 36px;
                 background-color: #121314;
                 border-radius: 2px;
                 color: #ffffff;
@@ -516,8 +496,8 @@
 
             a{
                 text-decoration: none;
-                height: 40px;
-                line-height: 40px;
+                height: 36px;
+                line-height: 36px;
                 float: right;
             }
 
@@ -845,338 +825,390 @@
 
 <script type="text/ecmascript-6">
 
-  import { mapGetters, mapActions } from 'vuex';
-  import ShippingDetail from '../components/shipping-detail.vue';
-  import OrderDetailLi2 from '../components/order-detail-li2.vue';
-  import * as utils from '../utils/geekoutil';
-  import store from '../store';
-  import * as types from '../store/mutation-types';
-  import * as constant from '../utils/constant';
-  import PageHeader from '../components/page-header.vue'
-  import CountDown2 from '../components/countdow2.vue';
-  import YouLikes from '../components/you-likes.vue';
-  
-  import OrderTotalDetail from '../components/order-total-detail.vue'
+    import { mapGetters, mapActions } from 'vuex';
+    import ShippingDetail from '../components/shipping-detail.vue';
+    import OrderDetailLi2 from '../components/order-detail-li2.vue';
+    import * as utils from '../utils/geekoutil';
+    import store from '../store';
+    import * as types from '../store/mutation-types';
+    import * as constant from '../utils/constant';
+    import PageHeader from '../components/page-header.vue'
+    import CountDown2 from '../components/countdow2.vue';
+    import YouLikes from '../components/you-likes.vue';
+    
+    import OrderTotalDetail from '../components/order-total-detail.vue'
 
-  import DialogBox from "../components/dialog-box.vue"
+    import DialogBox from "../components/dialog-box.vue"
 
-  import _ from 'lodash'
-  import fecha from "fecha"
+    import _ from 'lodash'
+    import fecha from "fecha"
 
-
-  export default {
-    name: 'order-detail2',
-    data: function(){
-      return {
-        couponshow: true,
-        changePackage:{},
-        isCancelOrder:false,
-        selectedResaon:'',
-        strutBottomPaddingNumber:"",
-        countDownTime:"",
-        dialogBoxCancleOrderISSHow:false
-      }
-    },
-    components: {
-        'shipping-detail': ShippingDetail,
-        'order-detail-li': OrderDetailLi2,
-        'page-header': PageHeader,
-        'count-down': CountDown2,
-        'you-likes': YouLikes,
-        'order-total-detail':OrderTotalDetail,
-        "dialog-box":DialogBox
-    },
-    beforeRouteEnter(to, from, next) {
-      store.dispatch('clearTicket');
-      store.dispatch('paging', true);
-      store.dispatch('loadOrder', { id: to.params.orderId })
-        .then((order) => {
-          next((vm) => {
-            if(!order){
-                window.location.href = "/me/m/order/all";
-            }
-            vm.$store.dispatch('detailTicket', vm.$route.params.orderId);
-          });
-          store.dispatch('paging', false);
-        });
-
-      store.dispatch('getCancelReasons')
-    },
-    created:function(){
-        this.changePackage = _.cloneDeep(this.order.logistics.packages[0])
-    },
-    mounted(){
-        if(window.GeekoSensors){
-            window.GeekoSensors.Track('EventEnter', {
-                page: 'order',
-                orderId:this.order.id
-            })
-        }
-        this.strutBottomPaddingNumber = this.strutBottomPadding();
-    },
-    computed: {
-        ...mapGetters([
-            'order',
-            'latestTicket',
-        'cancelReasons'
-        ]),
-        getPayUrl(){
-            switch(this.order.payMethod){
-                case '20':
-                case '21':
-                    return this.order.mercadopagoPayURL
-                case '16':
-                case '23':
-                case '25':
-                case '29':
-                case '27':
-                case '28':
-                case '30':
-                case '31':
-                case '34':
-                case '35':
-                case '37':
-                case '38':
-                case '40':
-                case '41':
-                case '43':
-                case '44':
-                    return this.order.boletoPayCodeURL
-                    return null
+    export default {
+        name: 'order-detail2',
+        data: function(){
+            return {
+                couponshow: true,
+                changePackage:{},
+                isCancelOrder:false,
+                selectedResaon:'',
+                strutBottomPaddingNumber:"",
+                countDownTime:"",
+                dialogBoxCancleOrderISSHow:false,
             }
         },
-        getBtnText(){
-            switch(this.order.payMethod){
-                case '20':
-                case '21':
-                case '27':
-                case '28':
-                case '30':
-                case '31':
-                case '34':
-                case '35':
-                case '37':
-                case '38':
-                case '40':
-                case '41':
-                case '43':
-                case '44':
-                    return 'Generar Ticket'
-                case '29':
-                    return 'Gerar Ticket'
-                case '16':
-                case '23':
-                case '25':
-                    return 'Imprimir boleto'
-                default:
-                    return null
-            }
+        components: {
+            'shipping-detail': ShippingDetail,
+            'order-detail-li': OrderDetailLi2,
+            'page-header': PageHeader,
+            'count-down': CountDown2,
+            'you-likes': YouLikes,
+            'order-total-detail':OrderTotalDetail,
+            "dialog-box":DialogBox,
         },
-        getBtnText2(){
-            switch(this.order.payMethod){
-                case '20':
-                case '21':
-                case '27':
-                case '28':
-                case '30':
-                case '31':
-                case '34':
-                case '35':
-                case '37':
-                case '38':
-                case '40':
-                case '41':
-                case '43':
-                case '44':
-                    return 'Otro método de pago'
-                case '16':
-                case '23':
-                case '25':
-                case '29':
-                    return 'Outro método de pagamento'
-                default:
-                    return null
-            }
-        },
-      paymentItemTotal() {
-        return utils.price(this.order.paymentItemTotal);
-      },
-      orderTotal() {
-        return utils.price(this.order.orderTotal);
-      },
-      shippingPrice() {
-          if(this.order.shippingPrice && this.order.shippingPrice.amount > 0){
-              return utils.price(this.order.shippingPrice);
-          }else{
-              return ''
-          }
-      },
-      shippingInsurancePrice() {
-          if(this.order.shippingInsurancePrice && this.order.shippingInsurancePrice.amount > 0 ){
-              return utils.price(this.order.shippingInsurancePrice);
-          }else{
-              return ''
-          }
-      },
-      orderoffset() {
-        var orderVO = this.order;
-          if(orderVO && orderVO.expiredPaymentTime){
-              return  orderVO.expiredPaymentTime - orderVO.serverTime;
-          }else{
-              return  orderVO.orderTime + 5*24*60*60*1000 - orderVO.serverTime;
-          }
-      },
-        country(){
-            var order = this.order;
-            return order.orderItems[0].shippedCountryCode ? order.orderItems[0].shippedCountryCode : 'Overseas Warehouse'
-        },
-        status(){
-            return this.order.statusView
-        },
-        status_color(){
-            return constant.STATUS_COLOR(this.order.status)
-        },
-        payDate(){
-            var order = this.order;
-            if(order && order.paymentTime){
-                return utils.enTime(new Date(order.paymentTime))
-            }else{
-                return '-'
-            }
-
-        },
-        payMethod(){
-            if(this.order && this.order.paymentMethod){
-                return this.order.paymentMethod
-            }
-        },
-        showdetail(){
-            var order = this.order;
-            if(order && order.status !== 0){
-                return true
-            }else{
-                return false
-            }
-        },
-        disposeTime(){
-            return fecha.format(this.order.orderTime,"DD/MM/YYYY HH:mm:ss");
-            // return utils.dateFormat();
-        },
-        logisticsPackageShow(){
-            return !!(this.order && this.order.logistics && this.order.logistics.packages && this.order.logistics.packages.length > 1);
-        },
-        logisticsPackages(){
-            let sortValue = this.order.logistics.packages.sort(
-                (a,b) => {
-                    return a.status - b.status;
+        beforeRouteEnter(to, from, next) {
+        store.dispatch('clearTicket');
+        store.dispatch('paging', true);
+        store.dispatch('loadOrder', { id: to.params.orderId })
+            .then((order) => {
+                console.log(order)
+            next((vm) => {
+                if(!order){
+                    vm.$router.replace({path:vm.$GLOBAL.getUrl('/me/m/order/all')});
+                    return false;
                 }
-            );
-            let value = _.groupBy(sortValue,logistics => logistics.statusView);
-            return value;
-        }
-    },
-    methods: {
-        cancelHandle() {
-            let _this = this;
-            if(this.selectedResaon){
-                _this.$store.dispatch('cancelOrder', {orderId:_this.order.id,cancelReason:this.selectedResaon}).then(() => {
-                    _this.$store.dispatch('loadOrder', { id: this.$route.params.orderId });
-                    this.isCancelOrder=false
-                }).catch((e) => {
-                    alert(e);
-                    this.isCancelOrder=false
-                })
-            }
-        },
-        getReturnLabel(){
-            let _this = this;
-            window.recordReturnLabel ? window.recordReturnLabel(_this.order.id) : "";
-            return constant.PROJECT + "/v9/order/report-return-label?orderId="+_this.order.id ;
-        },
-        confirmHandle(evt) {
-            let _this = this;
-            this.$store.dispatch('confirmShow', {
-                show: true,
-                cfg: {
-                    btnFont:{
-                        yes:"Confirm",
-                        no:"Cancel"
-                    },
-                    message: _this.$t('message.confirmReceiptTip'),
-                    yes: function () {
-                        _this.$store.dispatch('confirmOrder', _this.order.id)
-                        .then(() => {
-                            _this.$store.dispatch('updateStatusInOrders', {
-                            id: _this.order.id,
-                            status: constant.STATUS_CONFIRMED
-                            });
-                        });
-                        _this.$store.dispatch('closeConfirm');
-                    },
-                    no: function () {
-                        _this.$store.dispatch('closeConfirm');
-                    }
-                }
+                vm.$store.dispatch('detailTicket', vm.$route.params.orderId);
             });
+            store.dispatch('paging', false);
+            });
+
+        store.dispatch('getCancelReasons')
         },
-        lastMessageHandle(evt) {
-        /*this.$router.push({
-            name: 'contact',
-            params: { orderId: this.$route.params.orderId }
-        });*/
+        created:function(){
+            this.changePackage = _.cloneDeep(this.order.logistics.packages[0])
         },
-        checkoutUrl(id){
-            if(id){
-                return constant.PROJECT + '/checkout/' +id
-            }
-        },
-        strutBottomPadding(){
-            // 1 29 69 99
-            let height = this.$refs.footerFixed.offsetHeight;
-            // 只有按钮没有时间时：69
-            if(height > 30 && height < 70){
-                return 'p-b-69';
-            // 有按钮也有时间时：99
-            }else if(height > 70 && height < 100){
-                return 'p-b-99';
-            }else{
-                return 'p-b-0';
-            }
-        },
-        toReviews(orderId){
+        mounted(){
             if(window.GeekoSensors){
-                window.GeekoSensors.Track('ELClick', {
-                    clicks: 'Order Review',
-                    orderId:orderId
+                window.GeekoSensors.Track('EventEnter', {
+                    page: 'order',
+                    orderId:this.order.id
                 })
             }
+            this.strutBottomPaddingNumber = this.strutBottomPadding();
+        },
+        computed: {
+            ...mapGetters([
+                'order',
+                'latestTicket',
+            'cancelReasons'
+            ]),
+            getPayUrl(){
+                switch(this.order.payMethod){
+                    case '20':
+                    case '21':
+                        return this.order.mercadopagoPayURL
+                    case '16':
+                    case '23':
+                    case '25':
+                    case '29':
+                    case '27':
+                    case '28':
+                    case '30':
+                    case '31':
+                    case '34':
+                    case '35':
+                    case '37':
+                    case '38':
+                    case '40':
+                    case '41':
+                    case '43':
+                    case '44':
+                        return this.order.boletoPayCodeURL
+                        return null
+                }
+            },
+            getBtnText(){
+                switch(this.order.payMethod){
+                    case '20':
+                    case '21':
+                    case '27':
+                    case '28':
+                    case '30':
+                    case '31':
+                    case '34':
+                    case '35':
+                    case '37':
+                    case '38':
+                    case '40':
+                    case '41':
+                    case '43':
+                    case '44':
+                        return 'Generar Ticket'
+                    case '29':
+                        return 'Gerar Ticket'
+                    case '16':
+                    case '23':
+                    case '25':
+                        return 'Imprimir boleto'
+                    default:
+                        return null
+                }
+            },
+            getBtnText2(){
+                switch(this.order.payMethod){
+                    case '20':
+                    case '21':
+                    case '27':
+                    case '28':
+                    case '30':
+                    case '31':
+                    case '34':
+                    case '35':
+                    case '37':
+                    case '38':
+                    case '40':
+                    case '41':
+                    case '43':
+                    case '44':
+                        return 'Otro método de pago'
+                    case '16':
+                    case '23':
+                    case '25':
+                    case '29':
+                        return 'Outro método de pagamento'
+                    default:
+                        return null
+                }
+            },
+        paymentItemTotal() {
+            return utils.price(this.order.paymentItemTotal);
+        },
+        orderTotal() {
+            return utils.price(this.order.orderTotal);
+        },
+        shippingPrice() {
+            if(this.order.shippingPrice && this.order.shippingPrice.amount > 0){
+                return utils.price(this.order.shippingPrice);
+            }else{
+                return ''
+            }
+        },
+        shippingInsurancePrice() {
+            if(this.order.shippingInsurancePrice && this.order.shippingInsurancePrice.amount > 0 ){
+                return utils.price(this.order.shippingInsurancePrice);
+            }else{
+                return ''
+            }
+        },
+        orderoffset() {
+            var orderVO = this.order;
+            if(orderVO && orderVO.expiredPaymentTime){
+                return  orderVO.expiredPaymentTime - orderVO.serverTime;
+            }else{
+                return  orderVO.orderTime + 5*24*60*60*1000 - orderVO.serverTime;
+            }
+        },
+            country(){
+                var order = this.order;
+                return order.orderItems[0].shippedCountryCode ? order.orderItems[0].shippedCountryCode : 'Overseas Warehouse'
+            },
+            status(){
+                return this.order.statusView
+            },
+            status_color(){
+                return constant.STATUS_COLOR(this.order.status)
+            },
+            payDate(){
+                var order = this.order;
+                if(order && order.paymentTime){
+                    return utils.enTime(new Date(order.paymentTime))
+                }else{
+                    return '-'
+                }
 
-            this.$router.push({ name: 'review', params: { orderId: orderId}});
+            },
+            payMethod(){
+                if(this.order && this.order.paymentMethod){
+                    return this.order.paymentMethod
+                }
+            },
+            showdetail(){
+                var order = this.order;
+                if(order && order.status !== 0){
+                    return true
+                }else{
+                    return false
+                }
+            },
+            disposeTime(){
+                return fecha.format(this.order.orderTime,"DD/MM/YYYY HH:mm:ss");
+                // return utils.dateFormat();
+            },
+            logisticsPackageShow(){
+                return !!(this.order && this.order.logistics && this.order.logistics.packages && this.order.logistics.packages.length > 1);
+            },
+            logisticsPackages(){
+                let sortValue = this.order.logistics.packages.sort(
+                    (a,b) => {
+                        return a.status - b.status;
+                    }
+                );
+                let value = _.groupBy(sortValue,logistics => logistics.statusView);
+                return value;
+            }
         },
-        onCopy: function (e) {
-            // alert('You just copied: ' + e.text)
+        methods: {
+            cancelHandle() {
+                let _this = this;
+                if(this.selectedResaon){
+                    _this.$store.dispatch('cancelOrder', {orderId:_this.order.id,cancelReason:this.selectedResaon}).then(() => {
+                        _this.$store.dispatch('loadOrder', { id: this.$route.params.orderId });
+                        this.isCancelOrder=false;
+
+                        _this.$store.dispatch('confirmShow', {
+                            show: true,
+                            cfg: {
+                                btnFont:{
+                                    yes:"Add To Bag",
+                                    no:"Continue Shopping"
+                                },
+                                message: "Submitted successfully! Would you like to add the product to your shopping bag again?",
+                                yes: function () {
+                                    _this.addProducts();
+                                    _this.$store.dispatch('closeConfirm');
+                                },
+                                no: function () {
+                                    _this.$store.dispatch('closeConfirm');
+                                }
+                            }
+                        });
+                    }).catch((e) => {
+                        alert(e);
+                        this.isCancelOrder=false
+                    })
+                }
+            },
+            getReturnLabel(){
+                let _this = this;
+                window.recordReturnLabel ? window.recordReturnLabel(_this.order.id) : "";
+                return constant.PROJECT + "/v9/order/report-return-label?orderId="+_this.order.id ;
+            },
+            confirmHandle(evt) {
+                let _this = this;
+                this.$store.dispatch('confirmShow', {
+                    show: true,
+                    cfg: {
+                        btnFont:{
+                            yes:"Confirm",
+                            no:"Cancel"
+                        },
+                        message: _this.$t('message.confirmReceiptTip'),
+                        yes: function () {
+                            _this.$store.dispatch('confirmOrder', _this.order.id)
+                            .then(() => {
+                                _this.$store.dispatch('updateStatusInOrders', {
+                                id: _this.order.id,
+                                status: constant.STATUS_CONFIRMED
+                                });
+                            });
+                            _this.$store.dispatch('closeConfirm');
+                        },
+                        no: function () {
+                            _this.$store.dispatch('closeConfirm');
+                        }
+                    }
+                });
+            },
+            lastMessageHandle(evt) {
+            /*this.$router.push({
+                name: 'contact',
+                params: { orderId: this.$route.params.orderId }
+            });*/
+            },
+            checkoutUrl(id){
+                if(id){
+                    return constant.PROJECT + '/checkout/' +id
+                }
+            },
+            strutBottomPadding(){
+                // 1 29 69 99
+                let height = this.$refs.footerFixed ? this.$refs.footerFixed.offsetHeight : 0;
+                // 只有按钮没有时间时：69
+                if(height > 30 && height < 70){
+                    return 'p-b-69';
+                // 有按钮也有时间时：99
+                }else if(height > 70 && height < 100){
+                    return 'p-b-99';
+                }else{
+                    return 'p-b-0';
+                }
+            },
+            toReviews(orderId){
+                if(window.GeekoSensors){
+                    window.GeekoSensors.Track('ELClick', {
+                        clicks: 'Order Review',
+                        orderId:orderId
+                    })
+                }
+
+                this.$router.push({ name: 'review', params: { orderId: orderId}});
+            },
+            onCopy: function (e) {
+                // alert('You just copied: ' + e.text)
+            },
+            onError: function (e) {
+                // alert('Failed to copy texts')
+            },
+            getCountDown(time){
+                this.countDownTime = time;
+            },
+            blackClick(){
+                this.dialogBoxCancleOrderISSHow = false;
+                this.isCancelOrder = true;
+            },
+            whiteClick(){
+                this.dialogBoxCancleOrderISSHow = false;
+            },
+            addProducts(){
+                let orderItems = this.order.orderItems;
+                let formData = [];
+                if(orderItems){
+                    console.log("出发了");
+                    orderItems.forEach(product => {
+                        formData.push({"variantId":product.variantId,"quantity":'1'})
+                    })
+                    this.$store.dispatch('addProducts',formData).then(()=>{
+                        this.$message({
+                            content:"Add Success",
+                            type:"customization",
+                            timer:2000
+                        }).show();
+
+                        if(window.name === 'chicme' || window.name === 'boutiquefeel' || window.name === 'ivrose'){
+                            window.countShoppingCart ? window.countShoppingCart() : "";
+                        }else{
+                            window.ninimour.shoppingcartutil.notify ? window.ninimour.shoppingcartutil.notify(true) : "";
+                        }
+                    }).catch((e) => {
+                        alert(e);
+                        this.$message({
+                            content:"Add Failed",
+                            type:"err",
+                            timer:2000
+                        }).show();
+                    })
+                }
+            },
+            aaaaa(){
+               this.$router.push({path:`/me/m/order/success-reminder/${this.order.id}/1`}); 
+            }
         },
-        onError: function (e) {
-            // alert('Failed to copy texts')
-        },
-        getCountDown(time){
-            this.countDownTime = time;
-        },
-        blackClick(){
-            this.dialogBoxCancleOrderISSHow = false;
-            this.isCancelOrder = true;
-        },
-        whiteClick(){
-            this.dialogBoxCancleOrderISSHow = false;
+        watcher: {
+            $route() {
+                console.log("天啊")
+                this.$store.dispatch('loadOrder', { id: this.$route.params.orderId });
+            }
         }
-    },
-    watcher: {
-      $route() {
-          console.log("天啊")
-          this.$store.dispatch('loadOrder', { id: this.$route.params.orderId });
-      }
-    }
 
 
-  };
+    };
 </script>

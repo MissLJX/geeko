@@ -70,7 +70,7 @@
                 // }
                 const scrollTop = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop);
                 if(scrollTop + window.innerHeight >= document.body.offsetHeight-300) {
-                    if (!this.loading) {
+                    if (!this.loading && !this.finished) {
                         this.$emit('listing');
                     }
                 }

@@ -1,10 +1,15 @@
 <template>
-    <div class="dialog-box">
+    <div class="dialog-box">            
         <div class="dialog-box-container">
-            <slot name="title"></slot>
+            <p class="title">
+                Are you sure you want to cancel payment? If your order is not paid in 
+                <span class="time">{{countDownTime}}</span> 
+                , it will be canceled.
+            </p>
 
             <div class="btn-container">
-                <slot name="btn"></slot>
+                <button class="_black" @click="blackClick">Confirm Cancel</button>
+                <button class="_white" @click="whiteClick">Continue To Pay</button>
             </div>
         </div>
 
@@ -14,7 +19,8 @@
 
 <script>
     export default {
-        name:"DialogBox"
+        name:"DialogBox",
+        props:["countDownTime"]
     }
 </script>
 

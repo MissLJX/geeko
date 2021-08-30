@@ -42,5 +42,12 @@
                 cursor: pointer;
             }
         }
+
+        .right{
+            a{
+                text-decoration: none;
+                display: block;
+            }
+        }
     }
 </style>

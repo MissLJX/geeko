@@ -12,55 +12,12 @@
         </div>
         
         <div class="order-li-container">
-
-        
-            <div v-if="order.status === 0" class="l-time-out">
-                <!-- 未付款订单  Unpaid  status:0 -->
-                <div v-if="getPayUrl(order) && order.status === 0" class="order-unpid">
-                    <div class="timeLeft" v-if="orderoffset >= 1000 && getBtnText(order)==='Imprimir boleto' && order.status == 0 && getPayUrl(order)">
-                        <count-down :timeLeft="orderoffset">
-                            <span class="iconfont icon" slot="icon">&#xe6c3;</span>
-                            <span class="label" slot="font">Presente de cupão expirs</span>
-                        </count-down>
-                    </div>
-                    <div class="timeLeft" v-if="orderoffset >= 1000 && (getBtnText(order)==='Generar Ticket' || getBtnText(order)==='Gerar Ticket') && order.status === 0 && getPayUrl(order)">
-                        <count-down :timeLeft="orderoffset">
-                            <span class="iconfont icon" slot="icon">&#xe6c3;</span>
-                            <span class="label" slot="font">Tiempo restante para realizar el pago</span>
-                        </count-down>
-                    </div>
-                </div>
-
-                <!--未付款订单-->
-                <div class="order-unpid" v-if="!order.mercadopagoPayURL && !order.boletoPayCodeURL && order.status === 0 && orderoffset >= 0">
-                    <div class="timeLeft">
-                        <count-down :timeLeft="orderoffset">
-                            <span class="iconfont icon" slot="icon">&#xe6c3;</span>
-                            <span class="label" slot="font">{{$t("label.remaining")}}:</span>
-                        </count-down>
-                    </div>
-                </div>
-            </div>
-
             <div class="bd">
                 <a @click="toOrderClickDetail(order.id)" style="cursor: pointer;">
-                    <!-- <ul class="st-order-items">
-                        <product-item :key="item.productId+order.id" :status="order.status" :orderId="order.id" v-for="item in order.orderItems" :item="item"/>
-                    </ul> -->
                     <div class="l-order-li-container">
                         <div v-swiper:myOrderLiSwiper="swiperOrderLiOptions" class="_swiper-container swiper-container">
                             <div class="swiper-wrapper">
                                 <product-item :key="item.productId+order.id" :status="order.status" :orderId="order.id" v-for="item in order.orderItems" :item="item"/>
-                                <!-- <div data-v-8fe1b470="" class="swiper-slide st-product-item swiper-slide-active" style="width: 68.8px; margin-right: 10px;"><div class="content"><div><a href="#" title="Sexy Solid Color Backless Casual Playsuit Romper Jumpsuit With Long Pants"><img alt="Sexy Solid Color Backless Casual Playsuit Romper Jumpsuit With Long Pants" src="https://dgzfssf1la12s.cloudfront.net/medium/06219ffe-505c-45b8-af25-5209ac4777c5"></a></div></div></div>
-                                <div data-v-8fe1b470="" class="swiper-slide st-product-item swiper-slide-active" style="width: 68.8px; margin-right: 10px;"><div class="content"><div><a href="#" title="Sexy Solid Color Backless Casual Playsuit Romper Jumpsuit With Long Pants"><img alt="Sexy Solid Color Backless Casual Playsuit Romper Jumpsuit With Long Pants" src="https://dgzfssf1la12s.cloudfront.net/medium/06219ffe-505c-45b8-af25-5209ac4777c5"></a></div></div></div>
-                                <div data-v-8fe1b470="" class="swiper-slide st-product-item swiper-slide-active" style="width: 68.8px; margin-right: 10px;"><div class="content"><div><a href="#" title="Sexy Solid Color Backless Casual Playsuit Romper Jumpsuit With Long Pants"><img alt="Sexy Solid Color Backless Casual Playsuit Romper Jumpsuit With Long Pants" src="https://dgzfssf1la12s.cloudfront.net/medium/06219ffe-505c-45b8-af25-5209ac4777c5"></a></div></div></div>
-                                <div data-v-8fe1b470="" class="swiper-slide st-product-item swiper-slide-active" style="width: 68.8px; margin-right: 10px;"><div class="content"><div><a href="#" title="Sexy Solid Color Backless Casual Playsuit Romper Jumpsuit With Long Pants"><img alt="Sexy Solid Color Backless Casual Playsuit Romper Jumpsuit With Long Pants" src="https://dgzfssf1la12s.cloudfront.net/medium/06219ffe-505c-45b8-af25-5209ac4777c5"></a></div></div></div>
-                                <div data-v-8fe1b470="" class="swiper-slide st-product-item swiper-slide-active" style="width: 68.8px; margin-right: 10px;"><div class="content"><div><a href="#" title="Sexy Solid Color Backless Casual Playsuit Romper Jumpsuit With Long Pants"><img alt="Sexy Solid Color Backless Casual Playsuit Romper Jumpsuit With Long Pants" src="https://dgzfssf1la12s.cloudfront.net/medium/06219ffe-505c-45b8-af25-5209ac4777c5"></a></div></div></div>
-                                <div data-v-8fe1b470="" class="swiper-slide st-product-item swiper-slide-active" style="width: 68.8px; margin-right: 10px;"><div class="content"><div><a href="#" title="Sexy Solid Color Backless Casual Playsuit Romper Jumpsuit With Long Pants"><img alt="Sexy Solid Color Backless Casual Playsuit Romper Jumpsuit With Long Pants" src="https://dgzfssf1la12s.cloudfront.net/medium/06219ffe-505c-45b8-af25-5209ac4777c5"></a></div></div></div>
-                                <div data-v-8fe1b470="" class="swiper-slide st-product-item swiper-slide-active" style="width: 68.8px; margin-right: 10px;"><div class="content"><div><a href="#" title="Sexy Solid Color Backless Casual Playsuit Romper Jumpsuit With Long Pants"><img alt="Sexy Solid Color Backless Casual Playsuit Romper Jumpsuit With Long Pants" src="https://dgzfssf1la12s.cloudfront.net/medium/06219ffe-505c-45b8-af25-5209ac4777c5"></a></div></div></div>
-                                <div data-v-8fe1b470="" class="swiper-slide st-product-item swiper-slide-active" style="width: 68.8px; margin-right: 10px;"><div class="content"><div><a href="#" title="Sexy Solid Color Backless Casual Playsuit Romper Jumpsuit With Long Pants"><img alt="Sexy Solid Color Backless Casual Playsuit Romper Jumpsuit With Long Pants" src="https://dgzfssf1la12s.cloudfront.net/medium/06219ffe-505c-45b8-af25-5209ac4777c5"></a></div></div></div>
-                                <div data-v-8fe1b470="" class="swiper-slide st-product-item swiper-slide-active" style="width: 68.8px; margin-right: 10px;"><div class="content"><div><a href="#" title="Sexy Solid Color Backless Casual Playsuit Romper Jumpsuit With Long Pants"><img alt="Sexy Solid Color Backless Casual Playsuit Romper Jumpsuit With Long Pants" src="https://dgzfssf1la12s.cloudfront.net/medium/06219ffe-505c-45b8-af25-5209ac4777c5"></a></div></div></div>
-                                <div data-v-8fe1b470="" class="swiper-slide st-product-item swiper-slide-active" style="width: 68.8px; margin-right: 10px;"><div class="content"><div><a href="#" title="Sexy Solid Color Backless Casual Playsuit Romper Jumpsuit With Long Pants"><img alt="Sexy Solid Color Backless Casual Playsuit Romper Jumpsuit With Long Pants" src="https://dgzfssf1la12s.cloudfront.net/medium/06219ffe-505c-45b8-af25-5209ac4777c5"></a></div></div></div> -->
                             </div>
                         </div>
                         <div class="_viewmore" v-show="order.orderItems.length > 4 && viewMoreShow">
@@ -88,20 +45,37 @@
                 <!-- 未付款订单  Unpaid  status:0 -->
                 <a :href="getPayUrl(order)" v-if="getPayUrl(order) && order.status === 0" class="btn black paycount" target="_blank">
                     {{getBtnText(order)}}
+                    <!-- 未付款订单  Unpaid  status:0 -->
+                    <div v-if="getPayUrl(order) && order.status === 0" class="order-unpid">
+                        <div class="timeLeft" v-if="orderoffset >= 1000 && getBtnText(order)==='Imprimir boleto' && order.status == 0 && getPayUrl(order)">
+                            <count-down :timeLeft="orderoffset">
+                                <span class="label" slot="font">Presente de cupão expirs</span>
+                            </count-down>
+                        </div>
+                        <div class="timeLeft" v-if="orderoffset >= 1000 && (getBtnText(order)==='Generar Ticket' || getBtnText(order)==='Gerar Ticket') && order.status === 0 && getPayUrl(order)">
+                            <count-down :timeLeft="orderoffset">
+                                <span class="label" slot="font">Tiempo restante para realizar el pago</span>
+                            </count-down>
+                        </div>
+                    </div>
                 </a>
                 <!--未付款订单-->
 
-                <!-- 
-                    暂时无法写的原因是因为,每一个元素对应的是一个循环，如果需要循环的话，值与内容是可以控制的，但是如果要在哪一个元素中书写这一个逻辑就需要面对的一个问题就是
-                    每一次循环都会产生一个对应的元素需要选择的元素    解决方案还是根据小标循环来控制内容    一个子组件里面存的是自己的状态
-                -->
                 <!-- <a v-if="!order.mercadopagoPayURL && !order.boletoPayCodeURL && order.status === 0 && orderoffset >= 0" class="cancel-btn">Cancel</a> -->
 
                 <a v-if="!order.mercadopagoPayURL && !order.boletoPayCodeURL && order.status === 0 && orderoffset >= 0" class="btn black" :href="checkoutUrl(order.id)">
                     {{$t("label.paynow")}}
+                    <!--未付款订单-->
+                    <div class="order-unpid" v-if="!order.mercadopagoPayURL && !order.boletoPayCodeURL && order.status === 0 && orderoffset >= 0">
+                        <div class="timeLeft">
+                            <count-down :timeLeft="orderoffset">
+                                <span class="label" slot="font">{{$t("label.remaining")}}:</span>
+                            </count-down>
+                        </div>
+                    </div>
                 </a>
                 <!--根据订单号重新加入购物车-->
-                <!-- <a @click="addProducts(order.orderItems)" v-if="order.status === 4 && order.orderItems" class="btn black" style="margin-right: 10px;">{{$t("label.repurchase")}}</a> -->
+                <a @click="addProducts(order.orderItems)" v-if="order.status === 4 && order.orderItems" class="btn black" style="margin-right: 10px;">{{$t("label.repurchase")}}</a>
             </div>
         </div>
 
@@ -280,27 +254,43 @@
                 }
             }
 
-            .l-time-out{
-                margin-top: 10px;
-                .order-unpid{
-                    .timeLeft{
-                        color: #f9a646;
-                    }
-                }
-            }
+            // .l-time-out{
+            //     margin-top: 10px;
+            //     .order-unpid{
+            //         .timeLeft{
+            //             color: #f9a646;
+            //         }
+            //     }
+            // }
 
             .btn{
-                width: 120px;
-                height: 30px;
-                line-height: 30px;
+                // width: 120px;
+                padding: 0px 15px;
+                height: 36px;
+                line-height: 36px;
                 border-radius: 2px;
+            }
+
+            .timeLeft{
+                position: absolute;
+                line-height: normal;
+                // height: 36px;
+                width: 155px;
+                line-height: 18px;
+                top: -1px;
+                /* left: -100%; */
+                right: 118%;
+                background-color: #f46e6d;
+                color: #fff;
+                border: none;
             }
 
             .cancel-btn{
                 display: inline-block;
-                width: 120px;
-                height: 30px;
-                line-height: 30px;
+                // width: 120px;
+                padding: 0px 15px;
+                height: 32px;
+                line-height: 32px;
                 border-radius: 2px;
                 border: solid 1px #222222;
                 background-color: #ffffff;
@@ -379,7 +369,7 @@
             },
             checkoutUrl(id){
                 if(id){
-                    return window.ctx + '/checkout/' +id
+                    return this.$GLOBAL.getUrl('/checkout/' +id);
                 }
             },
             addProducts(orderItems){
@@ -418,7 +408,7 @@
                             yes:"Confirm",
                             no:"Cancel"
                         },
-                        message: _this.$t('message.confirmReceiptTip'),
+                        message: "The item (s) is still in transit, are you sure you want to click confirm to receive it?",
                         yes: function () {
 
                             api.confirmOrder(orderId, function(){
@@ -494,9 +484,9 @@
         },
         computed:{
             status(){
-                if(this.order.statusView === "Unpaid"){
-                    return "Waiting for Payment";
-                }
+                // if(this.order.statusView === "Unpaid"){
+                //     return "Waiting for Payment";
+                // }
                 return this.order.statusView;
             },
             country(){

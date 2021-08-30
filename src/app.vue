@@ -30,9 +30,9 @@
         </transition>
 
         <div v-if="modalconfirmshow" class="mask"></div>
-        <!-- <div class="Testfixed">
+        <div class="Testfixed">
 
-        </div> -->
+        </div>
     </div>
 </template>
 
@@ -43,23 +43,23 @@
         padding-bottom: 51px;
     }
 
-    /* .Testfixed{
-        background-color: red;
+    .Testfixed{
+        background-color: rgb(35, 32, 192);
         height: 51px;
         position: fixed;
         bottom: 0;
         left: 0;
         width: 100%;
-        border-top: solid 1px #eeeeee;
+        border-top: solid 1px #eeeeee;  
         display: flex;
         padding-top: 7px;
         z-index: 10;
-    } */
+    }
 
     .mask{
         width: 100%;
         height: 100%;
-        position: absolute;
+        position: fixed;
         left: 0;
         top:0;
         background-color: rgba(0,0,0,0.4);
