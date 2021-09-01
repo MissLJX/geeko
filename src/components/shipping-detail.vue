@@ -1,24 +1,4 @@
 <template>
-    <!-- <address class="st-address">
-        <div class="_title">
-            <span>Delivery Details</span>
-        </div>
-        <div class="_content">
-            <p class="c-six">Delivery Address</p>
-            <p>
-                <span class="f-medium">{{address.name}} </span>
-                <span class="c-six">({{address.phoneNumber}})</span>
-            </p>
-            <p class="c-six">{{addressLabel}} {{address.zipCode}} {{address.city}}/{{stateCountry}}</p>
-        </div>
-
-        
-
-        <div class="_shipping-method" v-if="shipping">
-            <p class="c-nine">Shpping Method</p>
-            <p class="f-medium">{{shipping}}</p>
-        </div>
-    </address> -->
     <div class="st-address global-border-top-8">
         <div class="shipping-address address-item">
             <p class="_hd">
@@ -36,7 +16,7 @@
                 </div>
             </div>
 
-            <span class="iconfont editicon">&#xe778;</span>
+            <span class="iconfont editicon" v-if="orderStatus === 0">&#xe778;</span>
         </div>
 
         <div class="biling-address address-item global-border-top-1">
@@ -55,7 +35,7 @@
                 </div>
             </div>
 
-            <span class="iconfont editicon">&#xe778;</span>
+            <span class="iconfont editicon" v-if="orderStatus === 0">&#xe778;</span>
         </div>
 
         <div class="payment-method global-border-top-1" v-if="payMethodName != null && showdetail">
@@ -177,9 +157,7 @@
         }
 
         .payment-method{
-            padding-top: 10px;
-            padding-left: 10px;
-            padding-right: 10px;
+            padding: 10px;
 
             .__title{
                 font-size: 14px;
@@ -206,9 +184,7 @@
         }
 
         ._shipping-method{
-            padding: 0px 10px;
-            margin-top: 10px;
-            padding-top: 10px;
+            padding: 10px;
             .c-nine{
                 font-size: 14px;
                 font-family: 'SlatePro-Medium';

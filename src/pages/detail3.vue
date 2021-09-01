@@ -39,6 +39,25 @@
                 </div>
             </div>
 
+            <div class="return-record" v-if="false">
+                <p class="title">Return Record</p>
+                <div class="container">
+                    <div class="return-item">
+                        <p class="hd">Return Requested</p>
+                        <p class="bd">Please fill out and upload the return receipt</p>
+                    </div>
+
+                    <div class="return-item">
+                        <p class="hd">Refund Requested</p>
+                        <p class="bd">The refund will be made to your original payment after verifying the return receipt within 24h.</p>
+                    </div>
+
+                    <div class="return-item active">
+                        <p class="hd">Refunded</p>
+                    </div>
+                </div>
+            </div>
+
             <div class="st-order-bgline">
                 <div class="orderheader">
                     <div class="st-table st-fullwidth" style="border-bottom:1px solid #e6e6e6;">
@@ -71,6 +90,16 @@
                 </div>
             </div>
 
+
+            <shipping-detail 
+                :address="order.shippingDetail" 
+                :shipping="order.shippingMethodName"
+                :pay-method-name="order.payMethodName"
+                :order-status="order.status"
+                :showdetail="showdetail"
+                v-if="order.status === 0"
+            />
+
             <div class="package-con global-border-top-8">
                 <div>
                     <order-detail-li 
@@ -79,12 +108,22 @@
                         :packageLen="Object.keys(logisticsPackages).length" 
                         :orderStatus="order.status" 
                         :logistics-package-show="logisticsPackageShow"
+                        :statusView="order.statusView"
                     />
                 </div>
             </div>
 
+            <order-total-detail 
+                :payment-item-total="paymentItemTotal"
+                :order-total="orderTotal"
+                :shipping-price="shippingPrice"
+                :shipping-insurance-price="shippingInsurancePrice"
+            >
+            </order-total-detail>
+
+
             <div class="fd">
-                <span v-if="order.isCanCanceled" class="btn" @click="dialogBoxCancleOrderISSHow = true;">{{$t('label.cancelOrder')}}</span>
+                <span v-if="order.isCanCanceled" class="btn cancel" @click="dialogBoxCancleOrderISSHow = true;">{{$t('label.cancelOrder')}}</span>
                 <!-- <router-link v-if="order.trackingId" class="btn" :to="{ name: 'tracking', params: { orderId: order.id }}">
                     {{$t('label.track')}}
                 </router-link> -->
@@ -94,13 +133,13 @@
 
                 <!-- <span v-if="order.status === 3" class="btn" @click="confirmHandle">Order Confirm</span> -->
 
-                <!-- <router-link 
+                <router-link 
                     :to="{name : 'returnLogistics' , params: {orderId:order.id}}" 
                     class="btn b-black" 
                     v-if="order.status === 3 && order.hasReturnLabel"
                 >
                     Return Logistics
-                </router-link> -->
+                </router-link>
 
                 <div class="tipmsg" v-if="order && order.unPayMessage">
                     <p>{{order.unPayMessage}}</p>
@@ -113,40 +152,40 @@
                 :pay-method-name="order.payMethodName"
                 :order-status="order.status"
                 :showdetail="showdetail"
+                v-if="order.status !== 0"
             />
 
-            <order-total-detail 
-                :payment-item-total="paymentItemTotal"
-                :order-total="orderTotal"
-                :shipping-price="shippingPrice"
-                :shipping-insurance-price="shippingInsurancePrice"
-            >
-            </order-total-detail>
+
             <div class="fd_fixed" ref="footerFixed" :class="{'no-border-top' : strutBottomPaddingNumber === 'p-b-0'}">
                 <!-- unpaid status:0  Shipped status:3   Confirm status:5  :class="l-container-padding-0"-->
-                <div class="l-container" v-if="order.status === 0 || order.status === 3 || order.status === 5">
-                    <a @click="toReviews(order.id)" class="l-btn" v-if="order.status === 5">
+                <div 
+                    class="l-container" 
+                    v-if="order.status === 0 || order.status === 3 || order.status === 5 || order.status === 4"
+                    :style="strutBottomPaddingNumber === 'p-b-0' ? '' :'padding: 14px 12px;'"
+                >
+                    <a @click="toReviews(order.id)" class="btn" v-if="order.status === 5">
                         To Review
                     </a>
                     
-                    <a class="paybtn" :href="checkoutUrl(order.id)" v-if="getPayUrl && getBtnText && getBtnText2 && order.status === 0 && orderoffset >= 0">{{getBtnText2}}</a>
+                    <a class="paybtn global-overflow" :href="checkoutUrl(order.id)" v-if="getPayUrl && getBtnText && getBtnText2 && order.status === 0 && orderoffset >= 0">{{getBtnText2}}</a>
 
-                    <a :href="getPayUrl" v-if="getPayUrl && order.status === 0" class="btn" target="_blank">
+                    <a :href="getPayUrl" v-if="getPayUrl && order.status === 0" class="btn" style="margin-right:10px;" target="_blank">
                         {{getBtnText}}
                         <!-- 未付款订单  Unpaid  status:0 -->
                         <div v-if="getPayUrl && order.status === 0" class="order-unpid">
-                            <div class="timeLeft" v-if="orderoffset >= 1000 && getBtnText==='Imprimir boleto' && order.status == 0 && getPayUrl">
+                            <!-- 由于页面显示按钮太长其他支付的倒计时隐藏 -->
+                            <!-- <div class="timeLeft" v-if="orderoffset >= 1000 && getBtnText==='Imprimir boleto' && order.status == 0 && getPayUrl">
                                 <count-down :timeLeft="orderoffset">
-                                    <!-- <span class="iconfont icon" slot="icon">&#xe6c3;</span> -->
+                                    <span class="iconfont icon" slot="icon">&#xe6c3;</span>
                                     <span class="label" slot="font">Presente de cupão expirs</span>
                                 </count-down>
                             </div>
                             <div class="timeLeft" v-if="orderoffset >= 1000 && (getBtnText==='Generar Ticket' || getBtnText==='Gerar Ticket') && order.status == 0 && getPayUrl">
                                 <count-down :timeLeft="orderoffset">
-                                    <!-- <span class="iconfont icon" slot="icon">&#xe6c3;</span> -->
+                                    <span class="iconfont icon" slot="icon">&#xe6c3;</span>
                                     <span class="label" slot="font">Tiempo restante para realizar el pago</span>
                                 </count-down>
-                            </div>
+                            </div> -->
                         </div>
                     </a>
 
@@ -166,7 +205,7 @@
 
                     <!-- <a class="cancel-btn" v-if="order.isCanCanceled" @click="dialogBoxCancleOrderISSHow = true;">Cancel Order</a> -->
 
-                    <a class="btn" v-if="order.status === 3" @click="confirmHandle" :class="{'w-100' : logisticsPackageShow}">Order Confirm</a>
+                    <a class="btn" v-if="order.status === 3" @click="confirmHandle" :class="{'w-100' : logisticsPackageShow}">Confirm</a>
 
                     <router-link 
                         v-if="order.status === 3 && !logisticsPackageShow && changePackage.trackingId" 
@@ -174,14 +213,14 @@
                         :to="{ name: 'tracking', params: { orderId: order.id }}">
                         Logistics Status
                     </router-link>
+
+                    <!--根据订单号重新加入购物车-->
+                    <a @click="addProducts()" v-if="order.status === 4 || order.status === 5 && order.orderItems" class="btn black">{{$t("label.repurchase")}}</a>
                 </div>
             </div>
 
         </div>
-               <div @click="aaaaa">
-            aaaaaaa
-        </div>
-
+        <!-- <div @click="aaaa">aaaa</div> -->
         <you-likes class="el-me-like-area"  :orderId="order.id"/>
 
         <!-- 为了让当底部有按钮时会遮挡一些内容 -->
@@ -246,8 +285,15 @@
         </transition>
 
         <div class="mask" v-if="isCancelOrder"></div>
+
         
-        <dialog-box :count-down-time="countDownTime" v-if="dialogBoxCancleOrderISSHow"></dialog-box>
+        
+        <dialog-box 
+            :count-down-time="countDownTime"
+             v-if="dialogBoxCancleOrderISSHow"
+             :isCancelOrder.sync="isCancelOrder"
+             :dialogBoxCancleOrderISSHow.sync="dialogBoxCancleOrderISSHow"
+        ></dialog-box>
     </div>
 </template>
 
@@ -344,11 +390,11 @@
 
         .package-con{
             // border-bottom: 8px solid #f6f6f6;
-            padding: 0px 10px;
+            // padding: 0px 10px;
         }
 
         .s-pd-right{
-            padding-right: 10px;
+            // padding-right: 10px;
             .process-module{
                 background-color: #f7f7f7;
                 padding: 10px;
@@ -378,6 +424,64 @@
                     & > a{
                         color: #666666;
                         display: inline;
+                    }
+                }
+            }
+        }
+
+        .return-record{
+            padding: 0px 10px;
+
+            .title{
+                font-size: 14px;
+                color: #222222;
+                font-family: 'SlatePro-Medium';
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+
+            .container{
+                padding-left: 10px;
+                .return-item{
+                    position: relative;
+                    display: inline-block;
+                    padding-left: 10px;
+                    padding-bottom: 10px;
+                    border-left: 1px solid #f2f2f2;
+
+                    .hd{
+                        font-size: 12px;
+                        color: #666666;
+                        font-family: 'SlatePro-Medium';
+                    }
+
+                    .bd{
+                        font-size: 12px;
+                        color: #666666;
+                        margin-top: 2px;
+                    }
+
+                    &::after{
+                        content: "";
+                        position: absolute;
+                        width: 7px;
+                        height: 7px;
+                        background-color: #f2f2f2;
+                        border-radius: 50%;
+                        display: inline-block;
+                        top: 2px;
+                        left: -4px;
+                    }
+
+                    &.active{
+                        &::after{
+                            background-color: #222222;
+                        }
+
+                        .hd{
+                            color: #222222;
+                            font-family: 'AcuminPro-Bold';
+                        }
                     }
                 }
             }
@@ -435,7 +539,8 @@
 
         // padding: 5px 10px;
         .paybtn{
-            width: 185px;
+            width: 165px;
+            padding: 0px 10px;
             height: 40px;
             line-height: 40px;
             color: #fff;
@@ -456,6 +561,8 @@
             border-radius: 1px;
             position: relative;
             display: inline-block;
+            margin-right: 10px;
+
             a{
                 display: block;
                 width: 100%;
@@ -477,11 +584,11 @@
         }
 
         .l-container{
-            padding: 14px 12px;
-            text-align: center;
+            // text-align: center;
             // display: flex;
             // justify-content: space-between;
-            width: 100%;
+            // width: 100%;
+            margin-right: -10px;
 
             .l-btn{
                 height: 36px;
@@ -552,7 +659,7 @@
     .st-order-body > .fd{
         border-top: none;
         margin-top: 0;
-        margin-bottom: 13px;
+        // margin-bottom: 13px;
         .tipmsg{
             width: 100%;
             background-color: #fff9e8;
@@ -572,9 +679,14 @@
             background-color: #ffffff;
             color: #222222;
         }
+
+        .cancel{
+            color: #666666;
+        }
     }
     .st-order-body > .fd .btn{
         margin-top: 0;
+        margin-bottom: 13px;
         a{
             display: block;
             width: 100%;
@@ -870,7 +982,6 @@
         store.dispatch('paging', true);
         store.dispatch('loadOrder', { id: to.params.orderId })
             .then((order) => {
-                console.log(order)
             next((vm) => {
                 if(!order){
                     vm.$router.replace({path:vm.$GLOBAL.getUrl('/me/m/order/all')});
@@ -979,34 +1090,34 @@
                         return null
                 }
             },
-        paymentItemTotal() {
-            return utils.price(this.order.paymentItemTotal);
-        },
-        orderTotal() {
-            return utils.price(this.order.orderTotal);
-        },
-        shippingPrice() {
-            if(this.order.shippingPrice && this.order.shippingPrice.amount > 0){
-                return utils.price(this.order.shippingPrice);
-            }else{
-                return ''
-            }
-        },
-        shippingInsurancePrice() {
-            if(this.order.shippingInsurancePrice && this.order.shippingInsurancePrice.amount > 0 ){
-                return utils.price(this.order.shippingInsurancePrice);
-            }else{
-                return ''
-            }
-        },
-        orderoffset() {
-            var orderVO = this.order;
-            if(orderVO && orderVO.expiredPaymentTime){
-                return  orderVO.expiredPaymentTime - orderVO.serverTime;
-            }else{
-                return  orderVO.orderTime + 5*24*60*60*1000 - orderVO.serverTime;
-            }
-        },
+            paymentItemTotal() {
+                return utils.price(this.order.paymentItemTotal);
+            },
+            orderTotal() {
+                return utils.price(this.order.orderTotal);
+            },
+            shippingPrice() {
+                if(this.order.shippingPrice && this.order.shippingPrice.amount > 0){
+                    return utils.price(this.order.shippingPrice);
+                }else{
+                    return ''
+                }
+            },
+            shippingInsurancePrice() {
+                if(this.order.shippingInsurancePrice && this.order.shippingInsurancePrice.amount > 0 ){
+                    return utils.price(this.order.shippingInsurancePrice);
+                }else{
+                    return ''
+                }
+            },
+            orderoffset() {
+                var orderVO = this.order;
+                if(orderVO && orderVO.expiredPaymentTime){
+                    return  orderVO.expiredPaymentTime - orderVO.serverTime;
+                }else{
+                    return  orderVO.orderTime + 5*24*60*60*1000 - orderVO.serverTime;
+                }
+            },
             country(){
                 var order = this.order;
                 return order.orderItems[0].shippedCountryCode ? order.orderItems[0].shippedCountryCode : 'Overseas Warehouse'
@@ -1075,9 +1186,11 @@
                                 yes: function () {
                                     _this.addProducts();
                                     _this.$store.dispatch('closeConfirm');
+                                    _this.$router.replace({name:"success-reminder",params:{orderId:_this.order.id,type:"1"}});
                                 },
                                 no: function () {
                                     _this.$store.dispatch('closeConfirm');
+                                    window.location.href = _this.$GLOBAL.getUrl("/");
                                 }
                             }
                         });
@@ -1106,23 +1219,18 @@
                             _this.$store.dispatch('confirmOrder', _this.order.id)
                             .then(() => {
                                 _this.$store.dispatch('updateStatusInOrders', {
-                                id: _this.order.id,
-                                status: constant.STATUS_CONFIRMED
+                                    id: _this.order.id,
+                                    status: constant.DISPLAY_STATUS_REVIEW
                                 });
                             });
                             _this.$store.dispatch('closeConfirm');
+                            _this.$router.replace({name:"success-reminder",params:{orderId:_this.order.id,type:"2"}});
                         },
                         no: function () {
                             _this.$store.dispatch('closeConfirm');
                         }
                     }
                 });
-            },
-            lastMessageHandle(evt) {
-            /*this.$router.push({
-                name: 'contact',
-                params: { orderId: this.$route.params.orderId }
-            });*/
             },
             checkoutUrl(id){
                 if(id){
@@ -1161,18 +1269,10 @@
             getCountDown(time){
                 this.countDownTime = time;
             },
-            blackClick(){
-                this.dialogBoxCancleOrderISSHow = false;
-                this.isCancelOrder = true;
-            },
-            whiteClick(){
-                this.dialogBoxCancleOrderISSHow = false;
-            },
             addProducts(){
                 let orderItems = this.order.orderItems;
                 let formData = [];
                 if(orderItems){
-                    console.log("出发了");
                     orderItems.forEach(product => {
                         formData.push({"variantId":product.variantId,"quantity":'1'})
                     })
@@ -1198,9 +1298,9 @@
                     })
                 }
             },
-            aaaaa(){
-               this.$router.push({path:`/me/m/order/success-reminder/${this.order.id}/1`}); 
-            }
+            // aaaa(){
+            //     this.$router.replace({name:"home-all"});
+            // }
         },
         watcher: {
             $route() {

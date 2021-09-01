@@ -102,6 +102,13 @@ body {
   border-top: 8px solid #f6f6f6;
 }
 
+.global-overflow{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
 .st-fullwidth{
   width: 100%;
 }
@@ -268,7 +275,7 @@ body {
   }
 
   .btn {
-    width: 130px;
+    // width: 130px;
     line-height: 36px;
     margin-bottom: 15px;
     position: relative;

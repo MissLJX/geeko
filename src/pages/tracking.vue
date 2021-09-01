@@ -42,7 +42,7 @@
         }
     }
     .tracking-content{
-        padding-left: 10px;
+        padding: 0px 10px;
     }
     .el-tracking-hd {
         width: 100%;

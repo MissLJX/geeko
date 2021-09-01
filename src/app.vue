@@ -9,6 +9,11 @@
         <template v-if="$route.meta.headerShow">
             <page-header>
                 <span>My Order</span>
+                <span slot="oplabel">
+                    <a :href="$GLOBAL.getUrl('/f/mobile/contact_us')">
+                        <i class="iconfont contactseller">&#xe716;</i>
+                    </a>
+                </span>
             </page-header>
         </template>
         

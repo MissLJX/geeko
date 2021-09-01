@@ -17,7 +17,7 @@
                     </div>
                 </div>
 
-                <div class="tracking-number" v-show="itemName === 'other'">
+                <div class="tracking-number" v-show="itemName === 'other' || itemName === 'Other'">
                     <div class="__hd">*Logistics Company Name:</div>
                     <!-- <div class="__bd">LS996855224CH</div> -->
                     <input type="text" v-model="logisticsName">
@@ -93,7 +93,7 @@
             </div>
 
             <div class="footer">
-                <span>The information is wrong? </span><a @click="returnLogisticsShowActive = true;">Fill in again</a>
+                <span>The information is wrong? </span><a @click="returnLogisticsShowActive = false;">Fill in again</a>
             </div>
         </div>
         
@@ -108,7 +108,7 @@
             </select-logistics>
         </transition>
 
-        <lodding v-if="returnLogisticsLoddingShow && (!!!this.returnLogistics)"></lodding>
+        <lodding v-if="returnLogisticsLoddingShow"></lodding>
 
         <image-magnification 
             :imageSrc="imageMagnificationSrc" 
@@ -159,7 +159,7 @@
                 // logisticsNumber:'LS996855224CH',
                 logisticsNumber:'',
                 returnLogisticsLoddingShow:false,
-                returnLogisticsShowActive:false,
+                returnLogisticsShowActive:true,
                 imageMagnificationShow:false,
                 imageMagnificationSrc:'',
                 pdfActiveShow:false,
@@ -177,6 +177,7 @@
                     _this.logisticsNumber = item.trackingNumber ? item.trackingNumber : "";
                     _this.uploadedImages = item.receiptFiles && item.receiptFiles.length > 0 ? item.receiptFiles : [];
                     _this.addNum = item.receiptFiles && item.receiptFiles.length > 0 ? item.receiptFiles.length : 0;
+                    _this.logisticsName = item.logisticsCompanyName;
                 }else{
                     _this.returnLogisticsLoddingShow = false;
                 }
@@ -187,7 +188,7 @@
         computed:{
             ...mapGetters(['logisticsCompanies','returnLogistics']),
             returnLogisticsShow(){
-               return !!this.returnLogistics && this.returnLogistics.length < 0 || this.returnLogisticsShowActive;
+               return this.returnLogisticsShowActive && !!this.returnLogistics && this.returnLogistics.length > 0;
             },
             returnLogisticsValue(){
                 return !!this.returnLogistics && this.returnLogistics.length > 0 ? this.returnLogistics[0] : {};
@@ -258,18 +259,22 @@
 
                 this.returnLogisticsLoddingShow = true;
 
+                // orderId
                 if(this.$route.params.orderId && this.$route.params.orderId != null){
                     uploadFiles['orderId'] = this.$route.params.orderId;
                 }
 
+                // 已上传过退货凭证需要传id
                 if(!!this.returnLogisticsValue && Object.keys(this.returnLogisticsValue).length > 0){
                     uploadFiles['id'] = this.returnLogisticsValue.id;
                 }
-
-                if(!!this.itemName && this.itemName !== "" && this.itemName !== "Other"){
-                    // 物流选择后的值   物流名
+                // logisticsCompanyName
+                if(!!this.itemName && this.itemName !== "Other"){
                     uploadFiles['logisticsCompany'] = this.itemName;
-                }else if(this.itemName === "Other" && !!!this.logisticsName && this.logisticsName === ""){
+                }else if(this.itemName === "Other" && !!this.logisticsName){
+                    uploadFiles['logisticsCompany'] = this.itemName;
+                    uploadFiles['logisticsCompanyName'] = this.logisticsName;
+                }else{
                     this.$message({
                         content:"Logistics Company Name Can not be empty",
                         type:"err",
@@ -277,22 +282,36 @@
                     }).show();
                     this.returnLogisticsLoddingShow = false;
                     return;
-                }else{
-                    uploadFiles['logisticsCompany'] = this.logisticsName;
                 }
+
+                // 弹窗选择的值并且选择的值不是other
+                // if(!!this.itemName && this.itemName !== "" && this.itemName !== "Other"){
+                //     // 物流选择后的值   物流名
+                //     uploadFiles['logisticsCompany'] = this.itemName;
+                // }else if(this.itemName === "Other" && !!!this.logisticsName && this.logisticsName === ""){
+                //     // 当你选择other的时候但是自己填写的信息未空的提示
+                //     this.$message({
+                //         content:"Logistics Company Name Can not be empty",
+                //         type:"err",
+                //         timer:5000
+                //     }).show();
+                //     this.returnLogisticsLoddingShow = false;
+                //     return;
+                // }else{
+                //     uploadFiles['logisticsCompany'] = this.logisticsName;
+                // }
                 
-                if(this.itemName !== "" || this.logisticsName !== ""){
-                    if(!!!this.logisticsNumber && this.logisticsNumber === ""){
-                        this.$message({
-                            content:"trackingNumber can not be empty",
-                            type:"err",
-                            timer:5000
-                        }).show();
-                        this.returnLogisticsLoddingShow = false;
-                        return;
-                    }else{
-                        uploadFiles['trackingNumber'] = this.logisticsNumber;
-                    }
+                // 当你上面都选择完毕之后物流单号不为空的时候的提示
+                if(!!!this.logisticsNumber && this.logisticsNumber === ""){
+                    this.$message({
+                        content:"trackingNumber can not be empty",
+                        type:"err",
+                        timer:5000
+                    }).show();
+                    this.returnLogisticsLoddingShow = false;
+                    return;
+                }else{
+                    uploadFiles['trackingNumber'] = this.logisticsNumber;
                 }
 
                 console.log("_this",this);
@@ -303,6 +322,7 @@
                     console.log("uploadFiles",uploadFiles);
                 }
 
+                console.log("uploadFiles",uploadFiles);
                 this.$store.dispatch('addReturnLogistics',uploadFiles).then((result) => {
                     this.$message({
                         content:"Submitted successfully！",

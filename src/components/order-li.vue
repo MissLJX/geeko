@@ -17,7 +17,7 @@
                     <div class="l-order-li-container">
                         <div v-swiper:myOrderLiSwiper="swiperOrderLiOptions" class="_swiper-container swiper-container">
                             <div class="swiper-wrapper">
-                                <product-item :key="item.productId+order.id" :status="order.status" :orderId="order.id" v-for="item in order.orderItems" :item="item"/>
+                                <product-item :key="item.productId+order.id+index" :status="order.status" :orderId="order.id" v-for="(item,index) in order.orderItems" :item="item"/>
                             </div>
                         </div>
                         <div class="_viewmore" v-show="order.orderItems.length > 4 && viewMoreShow">
@@ -34,16 +34,18 @@
                 <span>{{ordercount}} item(s):</span><span>Total: <span class="b-total">{{orderTotal}}</span></span>
             </div>
             <div class="fd" v-if="showFooter">
+
+
                 <!-- 状态:status  Processing:2  Shipped:3 -->
                 <router-link v-if="order.status===2||order.status===3" style="margin-right:10px;" class="btn" :to="{ name: 'tracking', params: { orderId: order.id }}">
                     {{$t("label.track")}}
                 </router-link>
 
                 <!-- 状态  Shipped -->
-                <a @click="confirmHandle(order.id)" v-if="order.status===3" style="margin-right:10px;" class="btn black">Order Confirm</a>
+                <a @click="confirmHandle(order.id)" v-if="order.status===3" style="margin-right:10px;" class="btn black">Confirm</a>
 
                 <!-- 未付款订单  Unpaid  status:0 -->
-                <a :href="getPayUrl(order)" v-if="getPayUrl(order) && order.status === 0" class="btn black paycount" target="_blank">
+                <a :href="getPayUrl(order)" v-if="getPayUrl(order) && order.status === 0" class="btn black paycount" style="margin-right:10px;" target="_blank">
                     {{getBtnText(order)}}
                     <!-- 未付款订单  Unpaid  status:0 -->
                     <div v-if="getPayUrl(order) && order.status === 0" class="order-unpid">
@@ -63,7 +65,7 @@
 
                 <!-- <a v-if="!order.mercadopagoPayURL && !order.boletoPayCodeURL && order.status === 0 && orderoffset >= 0" class="cancel-btn">Cancel</a> -->
 
-                <a v-if="!order.mercadopagoPayURL && !order.boletoPayCodeURL && order.status === 0 && orderoffset >= 0" class="btn black" :href="checkoutUrl(order.id)">
+                <a v-if="!order.mercadopagoPayURL && !order.boletoPayCodeURL && order.status === 0 && orderoffset >= 0" style="margin-right: 10px;" class="btn black" :href="checkoutUrl(order.id)">
                     {{$t("label.paynow")}}
                     <!--未付款订单-->
                     <div class="order-unpid" v-if="!order.mercadopagoPayURL && !order.boletoPayCodeURL && order.status === 0 && orderoffset >= 0">
@@ -75,7 +77,11 @@
                     </div>
                 </a>
                 <!--根据订单号重新加入购物车-->
-                <a @click="addProducts(order.orderItems)" v-if="order.status === 4 && order.orderItems" class="btn black" style="margin-right: 10px;">{{$t("label.repurchase")}}</a>
+                <a @click="addProducts(order.orderItems)" v-if="order.status === 4 || order.status === 5 && order.orderItems" class="btn black" style="margin-right: 10px;">{{$t("label.repurchase")}}</a>
+            
+                <router-link class="btn black" style="margin-right: 10px;" :to="{ name: 'review', params: {orderId: order.id}}" v-if="order.status === 5">
+                    Reviewed
+                </router-link>
             </div>
         </div>
 
@@ -417,8 +423,8 @@
                                     status: constant.DISPLAY_STATUS_REVIEW
                                 });
                             })
-
                             _this.$store.dispatch('closeConfirm');
+                            _this.$router.replace({name:"success-reminder",params:{orderId:_this.order.id,type:"2"}});
                         },
                         no: function () {
                             _this.$store.dispatch('closeConfirm');

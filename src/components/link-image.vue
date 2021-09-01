@@ -4,7 +4,7 @@
     </a>
 </template>
 
-<style>
+<style scoped>
     a{
         display: block;
     }

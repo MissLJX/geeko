@@ -19,7 +19,6 @@
 
             <div class="btn-container">
                 <router-link 
-                    replace
                     :to="$GLOBAL.getUrl(item.href)" 
                     style="margin-right:10px;"
                     v-for="(item,index) in detailReminder.btn" :key="index+item.name"
@@ -78,9 +77,6 @@
         },
         created(){
             let type = this.$route.params.type;
-            console.log(type)
-            console.log(typeof type)
-            type = "2";
             if(type === "1"){
                 this.detailReminder = this.addToCart;
             }else if(type === "2"){

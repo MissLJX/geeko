@@ -1,9 +1,11 @@
 <template id="home-processing">
     <div>
         <div id="processing-tip">
-            {{$t("message.orderTip")}}<a class="st-grey-link" href="/fs/shipping-policy">{{$t("message.learnMore")}}</a>
+            We usually take 3 to 7 business days to process your order. <a class="st-grey-link" :href="$GLOBAL.getUrl('/fs/shipping-policy')">{{$t("message.learnMore")}}</a>
         </div>
         <order-list :orders="processing" :loading="processingLoading" @listing="loadProcessing(20)" :currentListing="currentListing"/>
+
+        <empty-order v-if="!processingLoading && (processing && processing.length <= 0)"></empty-order>
     </div>
 </template>
 
@@ -11,7 +13,9 @@
     #processing-tip{
         line-height: 18px;
         padding: 10px;
-        border-top: 1px solid #efefef;
+        padding-bottom: 0;
+        // border-top: 1px solid #efefef;
+        background-color: #f6f6f6;
 
         a{
             color: #909393;
@@ -23,6 +27,7 @@
 
     import {mapGetters,mapActions} from 'vuex';
     import OrderList from '../components/order-list.vue';
+    import EmptyOrder from "../components/empty-order.vue"
 
 
     export default {
@@ -44,7 +49,8 @@
             ])
         },
         components: {
-            'order-list': OrderList
+            'order-list': OrderList,
+            "empty-order":EmptyOrder
         },
         created(){
             this.loadProcessing(20);

@@ -9,7 +9,7 @@
 
             <div class="btn-container">
                 <button class="_black" @click="blackClick">Confirm Cancel</button>
-                <button class="_white" @click="whiteClick">Continue To Pay</button>
+                <button class="_white" @click="$emit('update:dialogBoxCancleOrderISSHow',false)">Continue To Pay</button>
             </div>
         </div>
 
@@ -20,7 +20,13 @@
 <script>
     export default {
         name:"DialogBox",
-        props:["countDownTime"]
+        props:["countDownTime"],
+        methods:{
+            blackClick(){
+                this.$emit("update:dialogBoxCancleOrderISSHow",false);
+                this.$emit("update:isCancelOrder",true);
+            }
+        }
     }
 </script>
 

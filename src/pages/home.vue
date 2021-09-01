@@ -1,7 +1,7 @@
 <template id="order-home">
     <div class="st-order-home">
         <div v-if="bbmessage" class="bbtip" v-html="bbmessage"></div>
-        <div class="st-flex hd">
+        <div class="st-flex hd global-border-top-1">
             <!--未付款订单-->
             <div v-swiper:mySwiper="swiperHomeOption">
                 <div class="swiper-wrapper">
@@ -133,6 +133,11 @@
             ])
         },
         mounted(){
+            let routeName = ["home-shipped","home-confirmed","home-canceled"];
+            let name = this.$route.name;
+            if(routeName.includes(name)){
+                this.mySwiper.slideTo(2,500,false);
+            }
         },
         created() {
             this.changeList(this.$route.name);
@@ -156,6 +161,13 @@
                     .then((newTab) => {
                         this.$router.replace({ name: newTab });
                     });
+            }
+        },
+        watch: {
+            $route(to,form) {
+                if(to.meta && to.meta.headerShow){
+                    this.isActive = to.name;
+                }
             }
         },
         components: {

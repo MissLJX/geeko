@@ -1,5 +1,5 @@
 <template id="product-item">
-    <li class="st-product-item">
+    <li class="st-product-item" :class="index != '0' ? 'global-border-top-1' : ''">
         <div class="st-table content">
             <div class="st-cell">
                 <link-image :href="productUrl" :src="item.imageURL" :title="item.name"/>
@@ -8,28 +8,18 @@
                 <div>
                     <p class="item-name">{{item.name}}</p>
                 </div>
-                <div style="margin: 10px 0px;" v-if="item.sku">
-                    <span>{{sizeColor(item)}}  &nbsp;&nbsp;&nbsp;x{{item.qty}}</span>
+                <div class="item-sku" style="margin: 10px 0px;" v-if="item.sku">
+                    <span>SKU:{{item.sku}}</span>
                 </div>
                 <div>
-                    <div class="repurchase" v-if="orderId && status === 4">
-                        <a @click="addProducts(item.variantId)">{{$t("label.repurchase")}}</a>
+                    <div>
+                        {{sizeColor(item)}}x{{item.qty}}
                     </div>
-
-                    <!-- <div class="returns">
-                        <span class="iconfont">&#xe7be;</span><span> Final sales can't be returned.</span>
-                    </div> -->
                 </div>
 
             </div>
             <div class="st-cell">
                 <div class="st-p-price">{{price(item.price)}}</div>
-                <!-- <div v-if="orderId && status === 5">
-                    <router-link class="btn reviewbtn"
-                                 :to="{ name: 'review', params: { productId: item.productId , orderId: orderId , variantId:item.variantId}}">
-                        Review
-                    </router-link>
-                </div> -->
 
                 <div class="st-p-repurchase" v-if="itemStatus === 2 && status === 4">
                     <a @click="addProducts(item.variantId)">{{$t("label.repurchase")}}</a>
@@ -90,7 +80,7 @@
     }
     .st-product-item{
         float: none;
-        padding: 0 10px 10px 0;
+        padding: 10px;
     }
     .st-product-item .content{
         width: 100%;
@@ -147,10 +137,16 @@
         color: #222;
         text-transform: capitalize;
         .item-name{
-            color: #999;
+            font-size: 14px;
+            color: #222222;
             visibility: visible;
             -webkit-box-orient: vertical;
             /*max-height: 64px;*/
+        }
+
+        .item-sku{
+            color: #999999;
+            font-size: 14px;
         }
     }
     .addProductsMask{
@@ -175,7 +171,7 @@
 </style>
 <script type="text/ecmascript-6">
     import * as utils from '../utils/geekoutil';
-    import LinkImage from './link-image.vue';
+    import LinkImage from './link-image2.vue';
     import _ from 'lodash'
 
     const _url_analyst = function (name) {
@@ -195,7 +191,8 @@
             'item',
             'orderId',
             'status',
-            'itemStatus'
+            'itemStatus',
+            "index"
         ],
         components: {
             'link-image': LinkImage
@@ -205,7 +202,7 @@
             sizeColor: function (item) {
 
                 if (item.size && item.color)
-                    return item.color + '/' + item.size;
+                    return item.color + ', ' + item.size;
                 if (item.size)
                     return item.size;
                 if (item.color)

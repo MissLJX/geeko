@@ -1,8 +1,8 @@
 <template id="order-li">
     <div class="order-detail-li">
-        <div  v-for="(logistics,index) in packages" :class="{'__container' : packageLen > 1}">
+        <div  v-for="(logistics,index) in packages" :class="{'__container' : packageLen > 1}" :key="index+logistics">
             <div class="__header" v-if="packageLen > 1 && index !== 'Canceled'">{{index}}</div>
-            <div v-for="parcel in logistics">
+            <div v-for="(parcel,index2) in logistics" :key="parcel.status+index2">
                 <div v-if="logisticsPackageShow">
                     <div class="__hd st-table">
                         <div 
@@ -33,9 +33,13 @@
                     </div>
                 </div>
 
-                <div class="__hd" v-else>
+                <div class="__hd _flex" v-else>
                     <div class="__name">
                         Items
+                    </div>
+
+                    <div class="status">
+                        {{statusView}}
                     </div>
                 </div>
                 <ul class="st-order-items">
@@ -43,9 +47,10 @@
                         :key="product.id"  
                         :orderId="orderId" 
                         :status="orderStatus" 
-                        v-for="product in parcel.products" 
+                        v-for="(product,inedx3) in parcel.products" 
                         :item="product"
                         :itemStatus="parcel.status"
+                        :index="inedx3"
                     />
                 </ul>
             </div>
@@ -56,9 +61,9 @@
 <style lang="scss" scoped>
     .order-detail-li{
         .__hd{
-            height: 45px;
-            line-height: 45px;
-            padding-right: 10px;
+            height: 35px;
+            line-height: 35px;
+            padding: 0px 10px;
             width: 100%;
 
             .__name{
@@ -77,6 +82,18 @@
 
             .__color{
                 color: #e64545;
+            }
+        }
+
+        ._flex{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .status{
+                font-family: 'SlatePro-Medium';
+                font-size: 14px;
+                color: #222222;
             }
         }
 
@@ -140,7 +157,7 @@
     import * as constant from '../utils/constant';
 
     export default {
-        props:['packages','packageLen','orderStatus','orderId','logisticsPackageShow'],
+        props:['packages','packageLen','orderStatus','orderId','logisticsPackageShow',"statusView"],
         components: {
           'product-item': ProductItem,
         },
