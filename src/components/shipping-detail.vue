@@ -38,13 +38,13 @@
             <span class="iconfont editicon" v-if="orderStatus === 0">&#xe778;</span>
         </div>
 
-        <div class="payment-method global-border-top-1" v-if="payMethodName != null && showdetail">
+        <div class="payment-method global-border-top-1" v-if="paymentMethod != null && showdetail">
             <div class="__title">
                 Payment Method
             </div>
             <div class="__content">
-                <img src="https://s3-us-west-2.amazonaws.com/image.chic-fusion.com/chicme/20210518/paypal.png" alt="PayPal" v-if="payMethodName === 'Paypal'">
-                <span>{{payMethodName}}</span>
+                <img :src="paymentMethod.icon" :alt="paymentMethod.name">
+                <span>{{paymentMethod.name}}</span>
             </div>
         </div>
 
@@ -64,7 +64,7 @@
     export default{
         name:"ShippingDetail",
         props: [
-            'address','shipping',"payMethodName","orderStatus","showdetail"
+            'address','shipping',"paymentMethod","orderStatus","showdetail"
         ],
         computed: {
             state(){

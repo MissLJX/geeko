@@ -50,7 +50,7 @@ const actions = {
         return new Promise((resolve, reject) => {
             api.confirmOrder(id, () => {
                 resolve()
-                commit(types.DETAIL_CONFIRM_ORDER, constant.DISPLAY_STATUS_REVIEW)
+                commit(types.DETAIL_CONFIRM_ORDER, constant.TOTAL_STATUS_REVIEW)
             })
         });
     },
@@ -58,7 +58,7 @@ const actions = {
         return new Promise((resolve, reject) => {
             api.cancelOrder({orderId,cancelReason}, () => {
                 resolve()
-                commit(types.DETAIL_CANCEL_ORDER, constant.DISPLAY_STATUS_CANCELED)
+                commit(types.DETAIL_CANCEL_ORDER, constant.TOTAL_STATUS_CANCELED)
             })
         });
     },

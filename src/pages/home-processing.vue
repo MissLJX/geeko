@@ -1,6 +1,6 @@
 <template id="home-processing">
     <div>
-        <div id="processing-tip">
+        <div id="processing-tip" v-if="!(!processingLoading && (processing && processing.length <= 0))">
             We usually take 3 to 7 business days to process your order. <a class="st-grey-link" :href="$GLOBAL.getUrl('/fs/shipping-policy')">{{$t("message.learnMore")}}</a>
         </div>
         <order-list :orders="processing" :loading="processingLoading" @listing="loadProcessing(20)" :currentListing="currentListing"/>

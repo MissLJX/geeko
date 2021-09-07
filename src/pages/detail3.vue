@@ -9,7 +9,7 @@
             </span>
         </page-header>
         <div v-if="order" class="st-order-body">
-            <div class="s-pd-right" v-if="order.status === 2">
+            <div class="s-pd-right" v-if="order.fulfillmentStatus === constant.TOTAL_STATUS_PROCCESSING">
                 <div class="process-module">
                     <div class="st-table">
                         <div class="st-cell st-v-m __icon">
@@ -19,12 +19,12 @@
                     </div>
 
                     <div class="_item">
-                        It normally takes 3-7 business days for us to process your order. <a href="/fs/shipping-policy">Learn More</a>
+                        It normally takes 3-7 business days for us to process your order. <a :href="$GLOBAL.getUrl('/fs/shipping-policy')">Learn More</a>
                     </div>
                 </div>
             </div>
 
-            <div class="s-pd-right" v-if="order.status === 5">
+            <div class="s-pd-right" v-if="order.fulfillmentStatus === constant.TOTAL_STATUS_REVIEW">
                 <div class="process-module">
                     <div class="st-table">
                         <div class="st-cell st-v-m __icon">
@@ -72,21 +72,6 @@
                             >&#xe776;</span>
                         </div>
                     </div>
-                    <!-- <div class="st-row" v-if="showdetail"> -->
-                    <div class="st-table st-fullwidth">
-                        <div class="st-cell st-v-m special-color">Payment Date:</div>
-                        <div class="st-cell st-v-m t-right">{{disposeTime}}</div>
-                    </div>
-
-                    <div class="st-table st-fullwidth" v-if="!logisticsPackageShow && changePackage.slug != null && (order.status === 3 || order.status === 5)">
-                        <div class="st-cell st-v-m special-color">Logistics Company</div>
-                        <div class="st-cell st-v-m t-right">{{changePackage.slug}}</div>
-                    </div>
-
-                    <div class="st-table st-fullwidth"  v-if="!logisticsPackageShow && changePackage.trackingNumber != null && (order.status === 3 || order.status === 5)">
-                        <div class="st-cell st-v-m special-color">Tracking Number</div>
-                        <div class="st-cell st-v-m t-right">{{changePackage.trackingNumber}}</div>
-                    </div>
                 </div>
             </div>
 
@@ -94,10 +79,10 @@
             <shipping-detail 
                 :address="order.shippingDetail" 
                 :shipping="order.shippingMethodName"
-                :pay-method-name="order.payMethodName"
-                :order-status="order.status"
+                :payment-method="order.payMethodInfo"
+                :order-status="order.fulfillmentStatus"
                 :showdetail="showdetail"
-                v-if="order.status === 0"
+                v-if="order.fulfillmentStatus === constant.TOTAL_STATUS_UNPAID"
             />
 
             <div class="package-con global-border-top-8">
@@ -106,9 +91,9 @@
                         :orderId="order.id" 
                         :packages="logisticsPackages" 
                         :packageLen="Object.keys(logisticsPackages).length" 
-                        :orderStatus="order.status" 
+                        :orderStatus="order.fulfillmentStatus" 
                         :logistics-package-show="logisticsPackageShow"
-                        :statusView="order.statusView"
+                        :statusView="order.fulfillmentStatusView"
                     />
                 </div>
             </div>
@@ -131,12 +116,12 @@
                     <a :href="getReturnLabel()">{{$t('label.returnlabel')}}</a>
                 </span>
 
-                <!-- <span v-if="order.status === 3" class="btn" @click="confirmHandle">Order Confirm</span> -->
+                <!-- <span v-if="order.fulfillmentStatus === 3" class="btn" @click="confirmHandle">Order Confirm</span> -->
 
                 <router-link 
                     :to="{name : 'returnLogistics' , params: {orderId:order.id}}" 
                     class="btn b-black" 
-                    v-if="order.status === 3 && order.hasReturnLabel"
+                    v-if="order.fulfillmentStatus === constant.TOTAL_STATUS_SHIPPED && order.hasReturnLabel"
                 >
                     Return Logistics
                 </router-link>
@@ -149,10 +134,10 @@
             <shipping-detail 
                 :address="order.shippingDetail" 
                 :shipping="order.shippingMethodName"
-                :pay-method-name="order.payMethodName"
-                :order-status="order.status"
+                :payment-method="order.payMethodInfo"
+                :order-status="order.fulfillmentStatus"
                 :showdetail="showdetail"
-                v-if="order.status !== 0"
+                v-if="order.fulfillmentStatus !== constant.TOTAL_STATUS_UNPAID"
             />
 
 
@@ -160,27 +145,30 @@
                 <!-- unpaid status:0  Shipped status:3   Confirm status:5  :class="l-container-padding-0"-->
                 <div 
                     class="l-container" 
-                    v-if="order.status === 0 || order.status === 3 || order.status === 5 || order.status === 4"
+                    v-if="order.fulfillmentStatus === constant.TOTAL_STATUS_UNPAID 
+                    || order.fulfillmentStatus === constant.TOTAL_STATUS_SHIPPED 
+                    || order.fulfillmentStatus === constant.TOTAL_STATUS_CANCELED 
+                    || order.fulfillmentStatus === constant.TOTAL_STATUS_REVIEW"
                     :style="strutBottomPaddingNumber === 'p-b-0' ? '' :'padding: 14px 12px;'"
                 >
-                    <a @click="toReviews(order.id)" class="btn" v-if="order.status === 5">
+                    <a @click="toReviews(order.id)" class="btn" v-if="order.fulfillmentStatus === constant.TOTAL_STATUS_REVIEW">
                         To Review
                     </a>
                     
-                    <a class="paybtn global-overflow" :href="checkoutUrl(order.id)" v-if="getPayUrl && getBtnText && getBtnText2 && order.status === 0 && orderoffset >= 0">{{getBtnText2}}</a>
+                    <a class="paybtn global-overflow" :href="checkoutUrl(order.id)" v-if="getPayUrl && getBtnText && getBtnText2 && order.fulfillmentStatus === constant.TOTAL_STATUS_UNPAID && orderoffset >= 0">{{getBtnText2}}</a>
 
-                    <a :href="getPayUrl" v-if="getPayUrl && order.status === 0" class="btn" style="margin-right:10px;" target="_blank">
+                    <a :href="getPayUrl" v-if="getPayUrl && order.fulfillmentStatus === constant.TOTAL_STATUS_UNPAID" class="btn" style="margin-right:10px;" target="_blank">
                         {{getBtnText}}
                         <!-- 未付款订单  Unpaid  status:0 -->
-                        <div v-if="getPayUrl && order.status === 0" class="order-unpid">
+                        <div v-if="getPayUrl && order.fulfillmentStatus === constant.TOTAL_STATUS_UNPAID" class="order-unpid">
                             <!-- 由于页面显示按钮太长其他支付的倒计时隐藏 -->
-                            <!-- <div class="timeLeft" v-if="orderoffset >= 1000 && getBtnText==='Imprimir boleto' && order.status == 0 && getPayUrl">
+                            <!-- <div class="timeLeft" v-if="orderoffset >= 1000 && getBtnText==='Imprimir boleto' && order.fulfillmentStatus == 0 && getPayUrl">
                                 <count-down :timeLeft="orderoffset">
                                     <span class="iconfont icon" slot="icon">&#xe6c3;</span>
                                     <span class="label" slot="font">Presente de cupão expirs</span>
                                 </count-down>
                             </div>
-                            <div class="timeLeft" v-if="orderoffset >= 1000 && (getBtnText==='Generar Ticket' || getBtnText==='Gerar Ticket') && order.status == 0 && getPayUrl">
+                            <div class="timeLeft" v-if="orderoffset >= 1000 && (getBtnText==='Generar Ticket' || getBtnText==='Gerar Ticket') && order.fulfillmentStatus == 0 && getPayUrl">
                                 <count-down :timeLeft="orderoffset">
                                     <span class="iconfont icon" slot="icon">&#xe6c3;</span>
                                     <span class="label" slot="font">Tiempo restante para realizar el pago</span>
@@ -190,11 +178,11 @@
                     </a>
 
                     <!--未付款订单-->
-                    <a v-if="!order.mercadopagoPayURL && !order.boletoPayCodeURL && order.status === 0 && orderoffset >= 0" class="btn black" :href="checkoutUrl(order.id)">
+                    <a v-if="!order.mercadopagoPayURL && !order.boletoPayCodeURL && order.fulfillmentStatus === constant.TOTAL_STATUS_UNPAID && orderoffset >= 0" class="btn black" :href="checkoutUrl(order.id)">
                         {{$t("label.paynow")}}
                         <!--未付款订单-->
-                        <div class="order-unpid" v-if="!order.mercadopagoPayURL && !order.boletoPayCodeURL && order.status === 0 && orderoffset >= 0">
-                            <div class="timeLeft"  v-if="orderoffset >= 1000 && order.status === 0">
+                        <div class="order-unpid" v-if="!order.mercadopagoPayURL && !order.boletoPayCodeURL && order.fulfillmentStatus === constant.TOTAL_STATUS_UNPAID && orderoffset >= 0">
+                            <div class="timeLeft"  v-if="orderoffset >= 1000 && order.fulfillmentStatus === constant.TOTAL_STATUS_UNPAID">
                                 <count-down :timeLeft="orderoffset" @getCountDown="getCountDown">
                                     <!-- <span class="iconfont icon" slot="icon">&#xe6c3;</span> -->
                                     <span class="label" slot="font">{{$t("label.remaining")}}:</span>
@@ -205,17 +193,20 @@
 
                     <!-- <a class="cancel-btn" v-if="order.isCanCanceled" @click="dialogBoxCancleOrderISSHow = true;">Cancel Order</a> -->
 
-                    <a class="btn" v-if="order.status === 3" @click="confirmHandle" :class="{'w-100' : logisticsPackageShow}">Confirm</a>
+                    <a class="btn" v-if="order.fulfillmentStatus === 3" @click="confirmHandle" :class="{'w-100' : logisticsPackageShow}">Confirm</a>
 
                     <router-link 
-                        v-if="order.status === 3 && !logisticsPackageShow && changePackage.trackingId" 
+                        v-if="order.fulfillmentStatus === constant.TOTAL_STATUS_SHIPPED && !logisticsPackageShow && changePackage.trackingId" 
                         class="cancel-btn"
                         :to="{ name: 'tracking', params: { orderId: order.id }}">
                         Logistics Status
                     </router-link>
 
                     <!--根据订单号重新加入购物车-->
-                    <a @click="addProducts()" v-if="order.status === 4 || order.status === 5 && order.orderItems" class="btn black">{{$t("label.repurchase")}}</a>
+                    <a @click="addProducts()" 
+                        v-if="order.fulfillmentStatus === constant.TOTAL_STATUS_CANCELED || order.fulfillmentStatus === constant.TOTAL_STATUS_REVIEW && order.orderItems" 
+                        class="btn black"
+                    >{{$t("label.repurchase")}}</a>
                 </div>
             </div>
 
@@ -226,7 +217,7 @@
         <!-- 为了让当底部有按钮时会遮挡一些内容 -->
         <div class="strut-bottom-padding" :class="strutBottomPaddingNumber"></div>
 
-        <div v-if="getBtnText==='Imprimir boleto' && order.status == 0 && orderoffset >= 1000 && couponshow && getPayUrl">
+        <div v-if="getBtnText==='Imprimir boleto' && order.fulfillmentStatus == constant.TOTAL_STATUS_UNPAID && orderoffset >= 1000 && couponshow && getPayUrl">
             <div class="mask"></div>
             <div class="coupon-window">
                 <span class="coupon-close" @click="() => {this.couponshow = false}">X</span>
@@ -246,7 +237,7 @@
             </div>
         </div>
 
-        <div v-if="(getBtnText==='Generar Ticket' || getBtnText==='Gerar Ticket') && order.status == 0 && orderoffset >= 1000 && couponshow && getPayUrl">
+        <div v-if="(getBtnText==='Generar Ticket' || getBtnText==='Gerar Ticket') && order.fulfillmentStatus == constant.TOTAL_STATUS_UNPAID && orderoffset >= 1000 && couponshow && getPayUrl">
             <div class="mask"></div>
             <div class="coupon-window">
                 <span class="coupon-close" @click="() => {this.couponshow = false}">X</span>
@@ -942,7 +933,6 @@
     import OrderDetailLi2 from '../components/order-detail-li2.vue';
     import * as utils from '../utils/geekoutil';
     import store from '../store';
-    import * as types from '../store/mutation-types';
     import * as constant from '../utils/constant';
     import PageHeader from '../components/page-header.vue'
     import CountDown2 from '../components/countdow2.vue';
@@ -966,6 +956,7 @@
                 strutBottomPaddingNumber:"",
                 countDownTime:"",
                 dialogBoxCancleOrderISSHow:false,
+                constant:constant
             }
         },
         components: {
@@ -1123,10 +1114,7 @@
                 return order.orderItems[0].shippedCountryCode ? order.orderItems[0].shippedCountryCode : 'Overseas Warehouse'
             },
             status(){
-                return this.order.statusView
-            },
-            status_color(){
-                return constant.STATUS_COLOR(this.order.status)
+                return this.order.fulfillmentStatusView
             },
             payDate(){
                 var order = this.order;
@@ -1143,28 +1131,21 @@
                 }
             },
             showdetail(){
-                var order = this.order;
-                if(order && order.status !== 0){
-                    return true
-                }else{
-                    return false
-                }
-            },
-            disposeTime(){
-                return fecha.format(this.order.orderTime,"DD/MM/YYYY HH:mm:ss");
-                // return utils.dateFormat();
+                return this.order && this.order.fulfillmentStatus !== 0;
             },
             logisticsPackageShow(){
                 return !!(this.order && this.order.logistics && this.order.logistics.packages && this.order.logistics.packages.length > 1);
             },
             logisticsPackages(){
-                let sortValue = this.order.logistics.packages.sort(
-                    (a,b) => {
-                        return a.status - b.status;
-                    }
-                );
-                let value = _.groupBy(sortValue,logistics => logistics.statusView);
-                return value;
+                // let sortValue = this.order.logistics.packages.sort(
+                //     (a,b) => {
+                //         return a.status - b.status;
+                //     }
+                // );
+                // console.log("sortValue",sortValue);
+                // let value = _.groupBy(sortValue,logistics => logistics.statusView);
+                // console.log("value",value);
+                return this.order && this.order.logistics && this.order.logistics.packages;
             }
         },
         methods: {
@@ -1220,7 +1201,7 @@
                             .then(() => {
                                 _this.$store.dispatch('updateStatusInOrders', {
                                     id: _this.order.id,
-                                    status: constant.DISPLAY_STATUS_REVIEW
+                                    status: constant.TOTAL_STATUS_REVIEW
                                 });
                             });
                             _this.$store.dispatch('closeConfirm');
@@ -1283,11 +1264,7 @@
                             timer:2000
                         }).show();
 
-                        if(window.name === 'chicme' || window.name === 'boutiquefeel' || window.name === 'ivrose'){
-                            window.countShoppingCart ? window.countShoppingCart() : "";
-                        }else{
-                            window.ninimour.shoppingcartutil.notify ? window.ninimour.shoppingcartutil.notify(true) : "";
-                        }
+                        window.countShoppingCart ? window.countShoppingCart() : "";
                     }).catch((e) => {
                         alert(e);
                         this.$message({

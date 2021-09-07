@@ -1,9 +1,9 @@
 <template>
     <a :href="href" :title="title">
         <img :alt="title" :src="src">
-        <span class="_status">
+        <!-- <span class="_status">
             <span class="_font">Cacale</span>
-        </span>
+        </span> -->
     </a>
 </template>
 

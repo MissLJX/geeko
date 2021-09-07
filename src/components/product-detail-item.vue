@@ -220,11 +220,7 @@
                             this.isAddProducts = false;
                         }, 2000);
 
-                        if(window.name === 'chicme' || window.name === 'boutiquefeel' || window.name === 'ivrose'){
-                            window.countShoppingCart();
-                        }else{
-                            window.ninimour.shoppingcartutil.notify(true);
-                        }
+                        window.countShoppingCart ? window.countShoppingCart() : "";
                     }).catch((e) => {
                             this.isAddProductstTip = 'Add Failed'
                             this.isAddProducts = true;
@@ -238,7 +234,7 @@
         },
         computed:{
             productUrl(){
-                return window.ctx + "/product/"+this.item.name+"/"+this.item.sku+"/"+this.item.productId+".html"
+                return this.$GLOBAL.getUrl("/product/"+this.item.name+"/"+this.item.sku+"/"+this.item.productId+".html");
             },
         }
     }

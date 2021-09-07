@@ -5,10 +5,6 @@
                 <span>{{$t("label.orderNo")}}:</span><span>{{order.id}}</span>
                 <span class="_status fl-r">{{status}}</span>
             </div>
-            <div class="el-order-line" v-if="showDetail">
-                <span class="label">{{$t("label.paymentDate")}}</span>
-                <span>{{payDate}}</span>
-            </div>
         </div>
         
         <div class="order-li-container">
@@ -17,7 +13,11 @@
                     <div class="l-order-li-container">
                         <div v-swiper:myOrderLiSwiper="swiperOrderLiOptions" class="_swiper-container swiper-container">
                             <div class="swiper-wrapper">
-                                <product-item :key="item.productId+order.id+index" :status="order.status" :orderId="order.id" v-for="(item,index) in order.orderItems" :item="item"/>
+                                <product-item 
+                                    :key="item.productId+order.id+index" 
+                                    :status="order.fulfillmentStatus" 
+                                    :orderId="order.id" v-for="(item,index) in order.orderItems" 
+                                    :item="item"/>
                             </div>
                         </div>
                         <div class="_viewmore" v-show="order.orderItems.length > 4 && viewMoreShow">
@@ -31,30 +31,44 @@
             </div>
 
             <div class="pd global-border-top-1">
-                <span>{{ordercount}} item(s):</span><span>Total: <span class="b-total">{{orderTotal}}</span></span>
+                <span>{{ordercount}} item(s):Total: </span><span><span class="b-total">{{orderTotal}}</span></span>
             </div>
             <div class="fd" v-if="showFooter">
 
 
                 <!-- 状态:status  Processing:2  Shipped:3 -->
-                <router-link v-if="order.status===2||order.status===3" style="margin-right:10px;" class="btn" :to="{ name: 'tracking', params: { orderId: order.id }}">
+                <router-link 
+                    v-if="order.fulfillmentStatus === constant.TOTAL_STATUS_SHIPPED" 
+                    style="margin-right:10px;" class="btn" 
+                    :to="{ name: 'tracking', params: { orderId: order.id }}"
+                >
                     {{$t("label.track")}}
                 </router-link>
 
                 <!-- 状态  Shipped -->
-                <a @click="confirmHandle(order.id)" v-if="order.status===3" style="margin-right:10px;" class="btn black">Confirm</a>
+                <a 
+                    @click="confirmHandle(order.id)" 
+                    v-if="order === constant.TOTAL_STATUS_SHIPPED" 
+                    style="margin-right:10px;" 
+                    class="btn black"
+                >Confirm</a>
 
                 <!-- 未付款订单  Unpaid  status:0 -->
-                <a :href="getPayUrl(order)" v-if="getPayUrl(order) && order.status === 0" class="btn black paycount" style="margin-right:10px;" target="_blank">
+                <a :href="getPayUrl(order)" 
+                    v-if="getPayUrl(order) && order.fulfillmentStatus === constant.TOTAL_STATUS_UNPAID" 
+                    class="btn black paycount" 
+                    style="margin-right:10px;" 
+                    target="_blank"
+                >
                     {{getBtnText(order)}}
                     <!-- 未付款订单  Unpaid  status:0 -->
-                    <div v-if="getPayUrl(order) && order.status === 0" class="order-unpid">
-                        <div class="timeLeft" v-if="orderoffset >= 1000 && getBtnText(order)==='Imprimir boleto' && order.status == 0 && getPayUrl(order)">
+                    <div v-if="getPayUrl(order) && order.fulfillmentStatus === constant.TOTAL_STATUS_UNPAID" class="order-unpid">
+                        <div class="timeLeft" v-if="orderoffset >= 1000 && getBtnText(order)==='Imprimir boleto' && order.fulfillmentStatus == constant.TOTAL_STATUS_UNPAID && getPayUrl(order)">
                             <count-down :timeLeft="orderoffset">
                                 <span class="label" slot="font">Presente de cupão expirs</span>
                             </count-down>
                         </div>
-                        <div class="timeLeft" v-if="orderoffset >= 1000 && (getBtnText(order)==='Generar Ticket' || getBtnText(order)==='Gerar Ticket') && order.status === 0 && getPayUrl(order)">
+                        <div class="timeLeft" v-if="orderoffset >= 1000 && (getBtnText(order)==='Generar Ticket' || getBtnText(order)==='Gerar Ticket') && order.fulfillmentStatus === constant.TOTAL_STATUS_UNPAID && getPayUrl(order)">
                             <count-down :timeLeft="orderoffset">
                                 <span class="label" slot="font">Tiempo restante para realizar el pago</span>
                             </count-down>
@@ -63,12 +77,12 @@
                 </a>
                 <!--未付款订单-->
 
-                <!-- <a v-if="!order.mercadopagoPayURL && !order.boletoPayCodeURL && order.status === 0 && orderoffset >= 0" class="cancel-btn">Cancel</a> -->
+                <!-- <a v-if="!order.mercadopagoPayURL && !order.boletoPayCodeURL && order.fulfillmentStatus === 0 && orderoffset >= 0" class="cancel-btn">Cancel</a> -->
 
-                <a v-if="!order.mercadopagoPayURL && !order.boletoPayCodeURL && order.status === 0 && orderoffset >= 0" style="margin-right: 10px;" class="btn black" :href="checkoutUrl(order.id)">
+                <a v-if="!order.mercadopagoPayURL && !order.boletoPayCodeURL && order.fulfillmentStatus === constant.TOTAL_STATUS_UNPAID && orderoffset >= 0" style="margin-right: 10px;" class="btn black" :href="checkoutUrl(order.id)">
                     {{$t("label.paynow")}}
                     <!--未付款订单-->
-                    <div class="order-unpid" v-if="!order.mercadopagoPayURL && !order.boletoPayCodeURL && order.status === 0 && orderoffset >= 0">
+                    <div class="order-unpid" v-if="!order.mercadopagoPayURL && !order.boletoPayCodeURL && order.fulfillmentStatus === constant.TOTAL_STATUS_UNPAID && orderoffset >= 0">
                         <div class="timeLeft">
                             <count-down :timeLeft="orderoffset">
                                 <span class="label" slot="font">{{$t("label.remaining")}}:</span>
@@ -77,9 +91,13 @@
                     </div>
                 </a>
                 <!--根据订单号重新加入购物车-->
-                <a @click="addProducts(order.orderItems)" v-if="order.status === 4 || order.status === 5 && order.orderItems" class="btn black" style="margin-right: 10px;">{{$t("label.repurchase")}}</a>
+                <a @click="addProducts(order.orderItems)" 
+                    v-if="order.fulfillmentStatus === constant.TOTAL_STATUS_CANCELED || order.fulfillmentStatus === constant.TOTAL_STATUS_REVIEW && order.orderItems" 
+                    class="btn black" 
+                    style="margin-right: 10px;"
+                >{{$t("label.repurchase")}}</a>
             
-                <router-link class="btn black" style="margin-right: 10px;" :to="{ name: 'review', params: {orderId: order.id}}" v-if="order.status === 5">
+                <router-link class="btn black" style="margin-right: 10px;" :to="{ name: 'review', params: {orderId: order.id}}" v-if="order.fulfillmentStatus === constant.TOTAL_STATUS_REVIEW">
                     Reviewed
                 </router-link>
             </div>
@@ -339,7 +357,8 @@
                             }
                         }
                     }
-                }
+                },
+                constant:constant
             }
         },
         props: {
@@ -390,11 +409,7 @@
                         setTimeout(() => {
                             this.isAddProducts = false;
                         }, 2000);
-                        if(window.name === 'chicme' || window.name === 'boutiquefeel' || window.name === 'ivrose'){
-                            window.countShoppingCart();
-                        }else{
-                            window.ninimour.shoppingcartutil.notify(true);
-                        }
+                        window.countShoppingCart ? window.countShoppingCart() : "";
                     }).catch((e) => {
                         this.isAddProductstTip = 'Add Failed';
                         this.isAddProducts = true;
@@ -420,7 +435,7 @@
                             api.confirmOrder(orderId, function(){
                                 _this.$store.dispatch('updateStatusInOrders', {
                                     id: orderId,
-                                    status: constant.DISPLAY_STATUS_REVIEW
+                                    status: constant.TOTAL_STATUS_REVIEW
                                 });
                             })
                             _this.$store.dispatch('closeConfirm');

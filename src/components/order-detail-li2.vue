@@ -1,8 +1,8 @@
 <template id="order-li">
     <div class="order-detail-li">
-        <div  v-for="(logistics,index) in packages" :class="{'__container' : packageLen > 1}" :key="index+logistics">
-            <div class="__header" v-if="packageLen > 1 && index !== 'Canceled'">{{index}}</div>
-            <div v-for="(parcel,index2) in logistics" :key="parcel.status+index2">
+        <div  v-for="(parcel,index) in packages" :class="{'__container' : packageLen > 1}" :key="index+parcel">
+            <!-- <div class="__header" v-if="packageLen > 1 && index !== 'Canceled'">{{index}}</div> -->
+            <div>
                 <div v-if="logisticsPackageShow">
                     <div class="__hd st-table">
                         <div 
@@ -11,18 +11,11 @@
                             {{parcel.status === 2 && orderStatus === 3 ? "Returns" : parcel.name}}
                         </div>
                         <div class="st-cell __status">
-                            <a 
-                                v-if="parcel.logisticsSupplierWebsiteURL" 
-                                :href="parcel.logisticsSupplierWebsiteURL"
-                            >Logistics Status ></a>
-                            <a 
-                                v-if="parcel.trackingId && !parcel.logisticsSupplierWebsiteURL" 
-                                @click="checkPackageLogistics(parcel.status,parcel.trackingId)"
-                            >Logistics Status ></a>
+                           {{parcel.statusView}}
                         </div>
                     </div>
 
-                    <div class="st-table logistics-information" v-if="parcel.status === 1">
+                    <!-- <div class="st-table logistics-information" v-if="parcel.status === 1">
                         <div class="st-cell">Logistics Company</div>
                         <div class="st-cell">{{parcel.slug}}</div>
                     </div>
@@ -30,7 +23,7 @@
                     <div class="st-table logistics-information" style="margin-bottom:10px;" v-if="parcel.status === 1">
                         <div class="st-cell">Tracking Number</div>
                         <div class="st-cell">{{parcel.trackingNumber}}</div>
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="__hd _flex" v-else>
@@ -39,7 +32,7 @@
                     </div>
 
                     <div class="status">
-                        {{statusView}}
+                        {{parcel.statusView}}
                     </div>
                 </div>
                 <ul class="st-order-items">
@@ -68,13 +61,12 @@
 
             .__name{
                 font-family: SlatePro-Medium;
-                font-size: 15px;
+                font-size: 14px;
                 color: #222222;
             }
 
             .__status{
-                font-family: SlatePro;
-                text-decoration: underline;
+                font-family: 'SlatePro-Medium';
                 font-size: 13px;
                 color: #222222;
                 text-align: right;
@@ -97,25 +89,25 @@
             }
         }
 
-        .logistics-information{
-            height: 25px;
-            line-height: 25px;
-            width: 100%;
-            padding-right: 10px;
+        // .logistics-information{
+        //     height: 25px;
+        //     line-height: 25px;
+        //     width: 100%;
+        //     padding-right: 10px;
 
-            & > div:first-child{
-                font-family: SlatePro;
-                font-size: 14px;
-                color: #666666;
-            }
+        //     & > div:first-child{
+        //         font-family: SlatePro;
+        //         font-size: 14px;
+        //         color: #666666;
+        //     }
 
-            & > div:last-child{
-                font-family: SlatePro-Medium;
-                font-size: 14px;
-                color: #222222;
-                text-align: right;
-            }
-        }
+        //     & > div:last-child{
+        //         font-family: SlatePro-Medium;
+        //         font-size: 14px;
+        //         color: #222222;
+        //         text-align: right;
+        //     }
+        // }
 
         .__header{
             height: 30px;
